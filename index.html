@@ -421,32 +421,69 @@
 
         // Initialize database with sample data
         function initializeDatabase() {
+            console.log('Checking Firebase database...');
+            
             database.ref('menuItems').once('value', (snapshot) => {
                 if (!snapshot.exists()) {
-                    console.log('Initializing database with sample data...');
+                    console.log('Database is empty - adding 8 menu items...');
                     
                     const sampleMenuItems = {
-                        item_001: {name: "Butter Chicken", description: "Creamy butter chicken with rice", price: 280},
-                        item_002: {name: "Paneer Tikka", description: "Grilled paneer with spices", price: 220},
-                        item_003: {name: "Dal Makhani", description: "Creamy lentil curry", price: 180},
-                        item_004: {name: "Biryani", description: "Fragrant rice with meat", price: 250},
-                        item_005: {name: "Tandoori Chicken", description: "Spicy tandoori chicken", price: 320},
-                        item_006: {name: "Samosa", description: "Crispy fried pastry", price: 50},
-                        item_007: {name: "Naan", description: "Soft Indian bread", price: 40},
-                        item_008: {name: "Gulab Jamun", description: "Sweet milk solids in syrup", price: 80}
+                        item_001: {
+                            name: "Butter Chicken",
+                            description: "Creamy butter chicken with rice",
+                            price: 280
+                        },
+                        item_002: {
+                            name: "Paneer Tikka",
+                            description: "Grilled paneer with spices",
+                            price: 220
+                        },
+                        item_003: {
+                            name: "Dal Makhani",
+                            description: "Creamy lentil curry",
+                            price: 180
+                        },
+                        item_004: {
+                            name: "Biryani",
+                            description: "Fragrant rice with meat",
+                            price: 250
+                        },
+                        item_005: {
+                            name: "Tandoori Chicken",
+                            description: "Spicy tandoori chicken",
+                            price: 320
+                        },
+                        item_006: {
+                            name: "Samosa",
+                            description: "Crispy fried pastry",
+                            price: 50
+                        },
+                        item_007: {
+                            name: "Naan",
+                            description: "Soft Indian bread",
+                            price: 40
+                        },
+                        item_008: {
+                            name: "Gulab Jamun",
+                            description: "Sweet milk solids in syrup",
+                            price: 80
+                        }
                     };
 
                     database.ref('menuItems').set(sampleMenuItems).then(() => {
-                        console.log('✓ Sample data initialized');
+                        console.log('✅ SUCCESS! 8 menu items added to Firebase!');
                         loadMenu();
+                    }).catch((error) => {
+                        console.error('❌ Error adding data:', error);
                     });
                 } else {
+                    console.log('✓ Database has data - loading menu...');
                     loadMenu();
                 }
             });
         }
 
-        // Load menu items
+        // Load menu items from Firebase
         function loadMenu() {
             database.ref('menuItems').on('value', (snapshot) => {
                 menuItems = [];
@@ -455,11 +492,13 @@
                     Object.keys(data).forEach(key => {
                         menuItems.push({id: key, ...data[key]});
                     });
+                    console.log(`Loaded ${menuItems.length} menu items`);
                 }
                 displayMenu();
             });
         }
 
+        // Display menu items on page
         function displayMenu() {
             const container = document.getElementById('menuContainer');
             if (menuItems.length === 0) {
@@ -483,6 +522,7 @@
             `).join('');
         }
 
+        // Update cart when user clicks +/-
         function updateCart(itemId, change) {
             const item = menuItems.find(m => m.id === itemId);
             if (!item) return;
@@ -500,6 +540,7 @@
             updateCartDisplay();
         }
 
+        // Update cart display
         function updateCartDisplay() {
             const cartItems = document.getElementById('cartItems');
             const items = Object.entries(cart);
@@ -527,6 +568,7 @@
             document.getElementById('total').textContent = '₹' + (subtotal + DELIVERY_FEE);
         }
 
+        // Place order
         function placeOrder() {
             const name = document.getElementById('customerName').value.trim();
             const phone = document.getElementById('customerPhone').value.trim();
@@ -543,7 +585,10 @@
             }
 
             const items = Object.entries(cart).map(([id, item]) => ({
-                id, name: item.name, price: item.price, qty: item.qty
+                id, 
+                name: item.name, 
+                price: item.price, 
+                qty: item.qty
             }));
 
             const subtotal = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -565,6 +610,7 @@
             document.querySelector('.place-order-btn').disabled = true;
 
             database.ref('orders').child(order.id).set(order).then(() => {
+                console.log('✅ Order placed successfully!');
                 document.getElementById('successMessage').style.display = 'block';
                 cart = {};
                 document.getElementById('customerName').value = '';
@@ -583,8 +629,11 @@
             });
         }
 
-        // Initialize
-        window.addEventListener('load', initializeDatabase);
+        // Start everything when page loads
+        window.addEventListener('load', () => {
+            console.log('🚀 FoodHub app loading...');
+            initializeDatabase();
+        });
     </script>
 </body>
 </html>
