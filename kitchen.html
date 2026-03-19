@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodHub - Kitchen Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: #764ba2;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #667eea;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .order-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-left: 5px solid #667eea;
+        }
+
+        .order-card.preparing {
+            border-left-color: #ffc107;
+        }
+
+        .order-card.ready {
+            border-left-color: #28a745;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-id {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .order-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .status-preparing {
+            background: #ffc107;
+            color: white;
+        }
+
+        .status-ready {
+            background: #28a745;
+            color: white;
+        }
+
+        .order-items {
+            margin-bottom: 15px;
+        }
+
+        .order-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-total {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 16px;
+            margin: 15px 0;
+        }
+
+        .order-customer {
+            background: #f8f9ff;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .customer-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .customer-phone {
+            color: #667eea;
+        }
+
+        .order-actions {
+            display: grid;
+            gap: 10px;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .action-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-prepare {
+            background: #ffc107;
+            color: white;
+        }
+
+        .btn-prepare:hover {
+            background: #ffb300;
+        }
+
+        .btn-ready {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-ready:hover {
+            background: #218838;
+        }
+
+        .btn-done {
+            background: #6c757d;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .empty-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .tab-content.active {
+                grid-template-columns: 1fr;
+            }
+
+            .order-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👨‍🍳 Kitchen Dashboard</h1>
+            <div class="nav-links">
+                <a href="index.html">🛒 Order</a>
+                <a href="kitchen.html" class="active">👨‍🍳 Kitchen</a>
+                <a href="delivery.html">🚚 Delivery</a>
+                <a href="admin.html">⚙️ Admin</a>
+                <a href="reports.html">📊 Reports</a>
+            </div>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Pending</div>
+                <div class="stat-number" id="pendingCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Preparing</div>
+                <div class="stat-number" id="preparingCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Ready</div>
+                <div class="stat-number" id="readyCount">0</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('pending')">Pending Orders</button>
+            <button class="tab-btn" onclick="switchTab('preparing')">Preparing</button>
+            <button class="tab-btn" onclick="switchTab('ready')">Ready for Pickup</button>
+        </div>
+
+        <div id="pending" class="tab-content active"></div>
+        <div id="preparing" class="tab-content"></div>
+        <div id="ready" class="tab-content"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
+            authDomain: "train-parcel.firebaseapp.com",
+            databaseURL: "https://train-parcel-default-rtdb.firebaseio.com",
+            projectId: "train-parcel",
+            storageBucket: "train-parcel.firebasestorage.app",
+            messagingSenderId: "357680905494",
+            appId: "1:357680905494:web:072f547f8fc7c05a1ce437",
+            measurementId: "G-SQX8M0MKHT"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let allOrders = [];
+
+        function loadOrders() {
+            database.ref('orders').on('value', (snapshot) => {
+                allOrders = [];
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        allOrders.push({id: key, ...data[key]});
+                    });
+                }
+                allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                updateDisplay();
+            });
+        }
+
+        function updateDisplay() {
+            const pending = allOrders.filter(o => o.status === 'pending');
+            const preparing = allOrders.filter(o => o.status === 'preparing');
+            const ready = allOrders.filter(o => o.status === 'ready');
+
+            document.getElementById('pendingCount').textContent = pending.length;
+            document.getElementById('preparingCount').textContent = preparing.length;
+            document.getElementById('readyCount').textContent = ready.length;
+
+            displayOrders('pending', pending);
+            displayOrders('preparing', preparing);
+            displayOrders('ready', ready);
+        }
+
+        function displayOrders(status, orders) {
+            const container = document.getElementById(status);
+            if (orders.length === 0) {
+                container.innerHTML = '<div class="empty-message">No orders</div>';
+                return;
+            }
+
+            container.innerHTML = orders.map(order => `
+                <div class="order-card ${order.status}">
+                    <div class="order-header">
+                        <div class="order-id">Order #${order.id.substring(0, 8)}</div>
+                        <div class="order-status status-${order.status}">${order.status.toUpperCase()}</div>
+                    </div>
+                    <div class="order-items">
+                        ${order.items.map(item => `
+                            <div class="order-item">
+                                ${item.name} x${item.qty} = ₹${item.price * item.qty}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="order-total">Total: ₹${order.total}</div>
+                    <div class="order-customer">
+                        <div class="customer-name">📱 ${order.customerName}</div>
+                        <div class="customer-phone">${order.customerPhone}</div>
+                    </div>
+                    <div class="order-actions">
+                        ${order.status === 'pending' ? `
+                            <button class="action-btn btn-prepare" onclick="updateStatus('${order.id}', 'preparing')">Start Preparing</button>
+                            <button class="action-btn" style="background: #6c757d; color: white;" onclick="cancelOrder('${order.id}')">Cancel</button>
+                        ` : order.status === 'preparing' ? `
+                            <button class="action-btn btn-ready" onclick="updateStatus('${order.id}', 'ready')">Mark Ready</button>
+                            <button class="action-btn" style="background: #6c757d; color: white;" onclick="updateStatus('${order.id}', 'pending')">Back to Pending</button>
+                        ` : `
+                            <button class="action-btn btn-done" disabled>✓ Ready for Pickup</button>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStatus(orderId, newStatus) {
+            database.ref('orders').child(orderId).update({status: newStatus});
+        }
+
+        function cancelOrder(orderId) {
+            if (confirm('Are you sure you want to cancel this order?')) {
+                database.ref('orders').child(orderId).remove();
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        loadOrders();
+    </script>
+</body>
+</html>
