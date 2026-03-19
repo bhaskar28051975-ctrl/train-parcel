@@ -2,119 +2,142 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>FoodHub - Order Food</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding-top: 0;
+            padding-bottom: 20px;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
         }
 
         header {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
         }
 
         header h1 {
             color: #667eea;
-            font-size: 28px;
+            font-size: 24px;
             margin-bottom: 10px;
         }
 
         .nav-links {
             display: flex;
-            gap: 15px;
+            gap: 8px;
             flex-wrap: wrap;
+            overflow-x: auto;
+            padding: 5px 0;
+        }
+
+        .nav-links::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .nav-links::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .nav-links::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 2px;
         }
 
         .nav-links a {
-            padding: 10px 20px;
+            padding: 8px 12px;
             background: #667eea;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
+            font-size: 12px;
+            white-space: nowrap;
             transition: background 0.3s;
         }
 
-        .nav-links a:hover,
+        .nav-links a:active,
         .nav-links a.active {
             background: #764ba2;
         }
 
         .content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
+            padding: 0 10px;
         }
 
-        .menu-section {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .menu-section h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 22px;
+        .section-title {
+            color: white;
+            font-size: 18px;
+            margin: 20px 0 15px 0;
+            font-weight: bold;
         }
 
         .menu-items {
             display: grid;
-            gap: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .menu-item {
-            background: #f8f9ff;
-            padding: 15px;
+            background: white;
+            padding: 12px;
             border-radius: 8px;
             border-left: 4px solid #667eea;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: transform 0.3s;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .menu-item:hover {
-            transform: translateX(5px);
-            background: #f0f2ff;
+        .item-info {
+            flex: 1;
         }
 
         .item-info h3 {
             color: #333;
-            font-size: 16px;
-            margin-bottom: 5px;
+            font-size: 14px;
+            margin-bottom: 3px;
         }
 
         .item-info p {
             color: #666;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .item-price {
             color: #667eea;
             font-weight: bold;
-            font-size: 18px;
-            margin: 0 15px;
+            font-size: 16px;
+            min-width: 45px;
+            text-align: right;
         }
 
         .item-controls {
@@ -127,55 +150,60 @@
             background: #667eea;
             color: white;
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 14px;
             transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .qty-btn:hover {
+        .qty-btn:active {
             background: #764ba2;
         }
 
         .qty-display {
-            width: 30px;
+            width: 28px;
             text-align: center;
             font-weight: bold;
+            color: #333;
+            font-size: 14px;
         }
 
         .cart-section {
             background: white;
-            padding: 30px;
+            padding: 15px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
         }
 
         .cart-section h2 {
             color: #667eea;
-            margin-bottom: 20px;
-            font-size: 22px;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: bold;
         }
 
         .cart-items {
-            max-height: 300px;
+            max-height: 200px;
             overflow-y: auto;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .cart-item {
             background: #f8f9ff;
-            padding: 10px;
+            padding: 8px;
             border-radius: 5px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .cart-item-name {
@@ -185,44 +213,44 @@
         .cart-item-price {
             color: #667eea;
             font-weight: bold;
-            margin: 0 10px;
+            margin: 0 8px;
         }
 
         .cart-item-qty {
             background: #667eea;
             color: white;
-            width: 25px;
-            height: 25px;
+            width: 22px;
+            height: 22px;
             border-radius: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .cart-summary {
             border-top: 2px solid #667eea;
-            padding-top: 15px;
-            margin-bottom: 15px;
+            padding-top: 12px;
+            margin-bottom: 12px;
         }
 
         .summary-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 13px;
         }
 
         .summary-row.total {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #667eea;
         }
 
         .customer-info {
             display: grid;
-            gap: 12px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 12px;
         }
 
         .customer-info input {
@@ -241,20 +269,19 @@
 
         .place-order-btn {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
             transition: transform 0.3s;
         }
 
-        .place-order-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .place-order-btn:active {
+            transform: scale(0.98);
         }
 
         .place-order-btn:disabled {
@@ -266,34 +293,52 @@
         .empty-message {
             text-align: center;
             color: #999;
-            padding: 30px 10px;
-            font-size: 14px;
+            padding: 20px 10px;
+            font-size: 13px;
         }
 
         .success-message {
             background: #d4edda;
             color: #155724;
-            padding: 15px;
+            padding: 12px;
             border-radius: 5px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: none;
+            font-size: 13px;
+            border-left: 4px solid #28a745;
         }
 
-        @media (max-width: 768px) {
-            .content {
-                grid-template-columns: 1fr;
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 12px;
             }
 
-            .cart-section {
-                position: static;
-            }
-
-            .nav-links {
-                flex-direction: column;
+            header h1 {
+                font-size: 20px;
             }
 
             .nav-links a {
-                text-align: center;
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+
+            .menu-item {
+                padding: 10px;
+            }
+
+            .item-info h3 {
+                font-size: 13px;
+            }
+
+            .item-info p {
+                font-size: 11px;
             }
         }
     </style>
@@ -312,17 +357,15 @@
         </header>
 
         <div class="content">
-            <div class="menu-section">
-                <h2>📋 Menu</h2>
-                <div class="menu-items" id="menuContainer">
-                    <div class="empty-message">Loading menu...</div>
-                </div>
+            <h2 class="section-title">📋 Menu</h2>
+            <div class="menu-items" id="menuContainer">
+                <div class="loading">Loading menu...</div>
             </div>
 
             <div class="cart-section">
                 <h2>🛒 Your Order</h2>
                 <div class="success-message" id="successMessage">
-                    ✓ Order placed successfully! Check order tracking below.
+                    ✓ Order placed successfully!
                 </div>
                 <div class="cart-items" id="cartItems">
                     <div class="empty-message">No items in cart</div>
@@ -345,8 +388,8 @@
 
                 <div class="customer-info">
                     <input type="text" id="customerName" placeholder="Your Name *" required>
-                    <input type="tel" id="customerPhone" placeholder="Your Phone Number *" required>
-                    <input type="text" id="customerAddress" placeholder="Delivery Address *" required>
+                    <input type="tel" id="customerPhone" placeholder="Phone Number *" required>
+                    <input type="text" id="customerAddress" placeholder="Address *" required>
                 </div>
 
                 <button class="place-order-btn" onclick="placeOrder()">Place Order</button>
@@ -376,6 +419,33 @@
         let menuItems = [];
         const DELIVERY_FEE = 50;
 
+        // Initialize database with sample data
+        function initializeDatabase() {
+            database.ref('menuItems').once('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    console.log('Initializing database with sample data...');
+                    
+                    const sampleMenuItems = {
+                        item_001: {name: "Butter Chicken", description: "Creamy butter chicken with rice", price: 280},
+                        item_002: {name: "Paneer Tikka", description: "Grilled paneer with spices", price: 220},
+                        item_003: {name: "Dal Makhani", description: "Creamy lentil curry", price: 180},
+                        item_004: {name: "Biryani", description: "Fragrant rice with meat", price: 250},
+                        item_005: {name: "Tandoori Chicken", description: "Spicy tandoori chicken", price: 320},
+                        item_006: {name: "Samosa", description: "Crispy fried pastry", price: 50},
+                        item_007: {name: "Naan", description: "Soft Indian bread", price: 40},
+                        item_008: {name: "Gulab Jamun", description: "Sweet milk solids in syrup", price: 80}
+                    };
+
+                    database.ref('menuItems').set(sampleMenuItems).then(() => {
+                        console.log('✓ Sample data initialized');
+                        loadMenu();
+                    });
+                } else {
+                    loadMenu();
+                }
+            });
+        }
+
         // Load menu items
         function loadMenu() {
             database.ref('menuItems').on('value', (snapshot) => {
@@ -401,7 +471,7 @@
                 <div class="menu-item">
                     <div class="item-info">
                         <h3>${item.name}</h3>
-                        <p>${item.description || 'Delicious food'}</p>
+                        <p>${item.description || ''}</p>
                     </div>
                     <div class="item-price">₹${item.price}</div>
                     <div class="item-controls">
@@ -463,7 +533,7 @@
             const address = document.getElementById('customerAddress').value.trim();
 
             if (!name || !phone || !address) {
-                alert('❌ Please fill all customer details');
+                alert('❌ Please fill all details');
                 return;
             }
 
@@ -473,10 +543,7 @@
             }
 
             const items = Object.entries(cart).map(([id, item]) => ({
-                id,
-                name: item.name,
-                price: item.price,
-                qty: item.qty
+                id, name: item.name, price: item.price, qty: item.qty
             }));
 
             const subtotal = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -511,13 +578,13 @@
                     document.querySelector('.place-order-btn').disabled = false;
                 }, 3000);
             }).catch(err => {
-                alert('❌ Error placing order: ' + err.message);
+                alert('❌ Error: ' + err.message);
                 document.querySelector('.place-order-btn').disabled = false;
             });
         }
 
         // Initialize
-        loadMenu();
+        window.addEventListener('load', initializeDatabase);
     </script>
 </body>
 </html>
