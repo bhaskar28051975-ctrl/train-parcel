@@ -2,76 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodHub - Kitchen Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>FoodHub - Kitchen</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
         }
 
         header {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
         }
 
         header h1 {
             color: #667eea;
-            font-size: 28px;
+            font-size: 24px;
             margin-bottom: 10px;
         }
 
         .nav-links {
             display: flex;
-            gap: 15px;
+            gap: 8px;
             flex-wrap: wrap;
+            overflow-x: auto;
         }
 
         .nav-links a {
-            padding: 10px 20px;
+            padding: 8px 12px;
             background: #667eea;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
+            font-size: 12px;
+            white-space: nowrap;
             transition: background 0.3s;
         }
 
-        .nav-links a:hover,
         .nav-links a.active {
             background: #764ba2;
         }
 
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 8px 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 11px;
+        }
+
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            overflow-x: auto;
         }
 
         .tab-btn {
-            padding: 12px 25px;
+            padding: 8px 12px;
             background: white;
-            border: 2px solid #ddd;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 12px;
+            white-space: nowrap;
             color: #667eea;
             transition: all 0.3s;
         }
@@ -79,7 +120,11 @@
         .tab-btn.active {
             background: #667eea;
             color: white;
-            border-color: #667eea;
+        }
+
+        .content {
+            padding: 10px;
+            min-height: calc(100vh - 300px);
         }
 
         .tab-content {
@@ -87,17 +132,20 @@
         }
 
         .tab-content.active {
+            display: block;
+        }
+
+        .orders-list {
             display: grid;
-            gap: 20px;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
         }
 
         .order-card {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            border-left: 5px solid #667eea;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .order-card.preparing {
@@ -112,21 +160,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #eee;
         }
 
         .order-id {
             font-weight: bold;
             color: #333;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .order-status {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
             font-weight: bold;
         }
 
@@ -146,32 +194,25 @@
         }
 
         .order-items {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .order-item {
-            padding: 8px 0;
+            padding: 6px 0;
             border-bottom: 1px solid #f0f0f0;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .order-item:last-child {
             border-bottom: none;
         }
 
-        .order-total {
-            font-weight: bold;
-            color: #667eea;
-            font-size: 16px;
-            margin: 15px 0;
-        }
-
         .order-customer {
             background: #f8f9ff;
-            padding: 10px;
+            padding: 8px;
             border-radius: 5px;
-            font-size: 13px;
-            margin-bottom: 15px;
+            font-size: 12px;
+            margin-bottom: 10px;
         }
 
         .customer-name {
@@ -185,16 +226,17 @@
 
         .order-actions {
             display: grid;
-            gap: 10px;
+            gap: 8px;
             grid-template-columns: 1fr 1fr;
         }
 
         .action-btn {
-            padding: 10px;
+            padding: 8px;
             border: none;
             border-radius: 5px;
             font-weight: bold;
             cursor: pointer;
+            font-size: 12px;
             transition: all 0.3s;
         }
 
@@ -203,7 +245,7 @@
             color: white;
         }
 
-        .btn-prepare:hover {
+        .btn-prepare:active {
             background: #ffb300;
         }
 
@@ -212,58 +254,46 @@
             color: white;
         }
 
-        .btn-ready:hover {
+        .btn-ready:active {
             background: #218838;
         }
 
-        .btn-done {
+        .btn-cancel {
             background: #6c757d;
             color: white;
-            cursor: not-allowed;
+        }
+
+        .btn-cancel:active {
+            background: #5a6268;
         }
 
         .empty-message {
-            grid-column: 1 / -1;
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 20px;
             color: white;
-            font-size: 18px;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .stat-number {
-            font-size: 32px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 10px 0;
-        }
-
-        .stat-label {
-            color: #666;
             font-size: 14px;
         }
 
-        @media (max-width: 768px) {
-            .tab-content.active {
-                grid-template-columns: 1fr;
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 20px;
             }
 
-            .order-actions {
-                grid-template-columns: 1fr;
+            .nav-links a {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+
+            .stat-card {
+                padding: 10px;
+            }
+
+            .stat-number {
+                font-size: 20px;
+            }
+
+            .stat-label {
+                font-size: 10px;
             }
         }
     </style>
@@ -271,7 +301,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>👨‍🍳 Kitchen Dashboard</h1>
+            <h1>👨‍🍳 Kitchen</h1>
             <div class="nav-links">
                 <a href="index.html">🛒 Order</a>
                 <a href="kitchen.html" class="active">👨‍🍳 Kitchen</a>
@@ -297,14 +327,16 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('pending')">Pending Orders</button>
+            <button class="tab-btn active" onclick="switchTab('pending')">Pending</button>
             <button class="tab-btn" onclick="switchTab('preparing')">Preparing</button>
-            <button class="tab-btn" onclick="switchTab('ready')">Ready for Pickup</button>
+            <button class="tab-btn" onclick="switchTab('ready')">Ready</button>
         </div>
 
-        <div id="pending" class="tab-content active"></div>
-        <div id="preparing" class="tab-content"></div>
-        <div id="ready" class="tab-content"></div>
+        <div class="content">
+            <div id="pending" class="tab-content active"></div>
+            <div id="preparing" class="tab-content"></div>
+            <div id="ready" class="tab-content"></div>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
@@ -362,37 +394,34 @@
                 return;
             }
 
-            container.innerHTML = orders.map(order => `
+            container.innerHTML = `<div class="orders-list">${orders.map(order => `
                 <div class="order-card ${order.status}">
                     <div class="order-header">
-                        <div class="order-id">Order #${order.id.substring(0, 8)}</div>
+                        <div class="order-id">#${order.id.substring(0, 8)}</div>
                         <div class="order-status status-${order.status}">${order.status.toUpperCase()}</div>
                     </div>
                     <div class="order-items">
                         ${order.items.map(item => `
-                            <div class="order-item">
-                                ${item.name} x${item.qty} = ₹${item.price * item.qty}
-                            </div>
+                            <div class="order-item">• ${item.name} x${item.qty}</div>
                         `).join('')}
                     </div>
-                    <div class="order-total">Total: ₹${order.total}</div>
                     <div class="order-customer">
-                        <div class="customer-name">📱 ${order.customerName}</div>
-                        <div class="customer-phone">${order.customerPhone}</div>
+                        <div class="customer-name">${order.customerName}</div>
+                        <div class="customer-phone">📱 ${order.customerPhone}</div>
                     </div>
                     <div class="order-actions">
                         ${order.status === 'pending' ? `
-                            <button class="action-btn btn-prepare" onclick="updateStatus('${order.id}', 'preparing')">Start Preparing</button>
-                            <button class="action-btn" style="background: #6c757d; color: white;" onclick="cancelOrder('${order.id}')">Cancel</button>
+                            <button class="action-btn btn-prepare" onclick="updateStatus('${order.id}', 'preparing')">Prepare</button>
+                            <button class="action-btn btn-cancel" onclick="cancelOrder('${order.id}')">Cancel</button>
                         ` : order.status === 'preparing' ? `
-                            <button class="action-btn btn-ready" onclick="updateStatus('${order.id}', 'ready')">Mark Ready</button>
-                            <button class="action-btn" style="background: #6c757d; color: white;" onclick="updateStatus('${order.id}', 'pending')">Back to Pending</button>
+                            <button class="action-btn btn-ready" onclick="updateStatus('${order.id}', 'ready')">Ready</button>
+                            <button class="action-btn btn-cancel" onclick="updateStatus('${order.id}', 'pending')">Back</button>
                         ` : `
-                            <button class="action-btn btn-done" disabled>✓ Ready for Pickup</button>
+                            <button class="action-btn" style="grid-column: 1/-1; background: #28a745; color: white; cursor: default;">✓ Ready</button>
                         `}
                     </div>
                 </div>
-            `).join('');
+            `).join('')}</div>`;
         }
 
         function updateStatus(orderId, newStatus) {
@@ -400,7 +429,7 @@
         }
 
         function cancelOrder(orderId) {
-            if (confirm('Are you sure you want to cancel this order?')) {
+            if (confirm('Cancel order?')) {
                 database.ref('orders').child(orderId).remove();
             }
         }
@@ -408,12 +437,11 @@
         function switchTab(tab) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById(tab).classList.add('active');
-
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             event.target.classList.add('active');
         }
 
-        loadOrders();
+        window.addEventListener('load', loadOrders);
     </script>
 </body>
 </html>
