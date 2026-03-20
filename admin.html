@@ -2,344 +2,128 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>FoodHub - Admin</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 0;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 100%;
-            padding: 0;
-        }
-
-        header {
-            background: white;
-            padding: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            width: 100%;
-        }
-
-        header h1 {
-            color: #667eea;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            overflow-x: auto;
-        }
-
-        .nav-links a {
-            padding: 8px 12px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 12px;
-            white-space: nowrap;
-            transition: background 0.3s;
-        }
-
-        .nav-links a.active {
-            background: #764ba2;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 15px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 8px 0;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 11px;
-        }
-
-        .content {
-            padding: 15px;
-            min-height: calc(100vh - 300px);
-        }
-
-        .form-section {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        .form-section h2 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
-            font-size: 13px;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            font-family: Arial, sans-serif;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 70px;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .submit-btn:active {
-            transform: scale(0.98);
-        }
-
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .menu-list-section {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .menu-list-section h2 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-
-        .menu-items {
-            display: grid;
-            gap: 12px;
-        }
-
-        .menu-item-card {
-            background: #f8f9ff;
-            padding: 12px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .menu-item-info {
-            flex: 1;
-        }
-
-        .menu-item-info h3 {
-            color: #333;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .menu-item-info p {
-            color: #666;
-            font-size: 12px;
-            margin-bottom: 4px;
-        }
-
-        .menu-item-price {
-            color: #667eea;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .delete-btn {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-            transition: background 0.3s;
-            white-space: nowrap;
-        }
-
-        .delete-btn:active {
-            background: #ee5a52;
-        }
-
-        .empty-message {
-            text-align: center;
-            color: #999;
-            padding: 30px 10px;
-            font-size: 13px;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 12px;
-            display: none;
-            font-size: 13px;
-            border-left: 4px solid #28a745;
-        }
-
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 20px;
-            }
-
-            .nav-links a {
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-
-            .form-section,
-            .menu-list-section {
-                padding: 12px;
-            }
-
-            .menu-item-card {
-                flex-direction: column;
-            }
-
-            .delete-btn {
-                width: 100%;
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - FoodHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>⚙️ Admin</h1>
-            <div class="nav-links">
-                <a href="index.html">🛒 Order</a>
-                <a href="kitchen.html">👨‍🍳 Kitchen</a>
-                <a href="delivery.html">🚚 Delivery</a>
-                <a href="admin.html" class="active">⚙️ Admin</a>
-                <a href="reports.html">📊 Reports</a>
-            </div>
-        </header>
+<body class="bg-red-50 pb-40">
 
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-label">Menu Items</div>
-                <div class="stat-number" id="menuCount">0</div>
+    <header class="bg-white shadow-md sticky top-0 z-40 border-b-4 border-red-600">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-black text-red-600">⚙️ Admin Panel</h1>
+            <a href="control.html" class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-home mr-1"></i>Home</a>
+        </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto px-4 space-y-6 py-6">
+
+        <!-- TABS -->
+        <div class="flex gap-2 bg-white p-2 rounded-lg shadow-md flex-wrap sticky top-20 z-30">
+            <button onclick="switchTab('hotels')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-red-600 text-white" id="tab-hotels">🏢 Hotels</button>
+            <button onclick="switchTab('menu')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-gray-200 text-gray-700" id="tab-menu">📋 Menu Items</button>
+            <button onclick="switchTab('drivers')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-gray-200 text-gray-700" id="tab-drivers">🚚 Drivers</button>
+        </div>
+
+        <!-- HOTELS TAB -->
+        <div id="hotels-tab" class="space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-red-600">
+                <h2 class="text-xl font-black text-gray-800 mb-4">➕ Add New Hotel</h2>
+                <div class="space-y-3">
+                    <input type="text" id="hotel-name" placeholder="Hotel Name *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
+                    <input type="text" id="hotel-cuisines" placeholder="Cuisines (e.g., Indian, Chinese)" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
+                    <input type="text" id="hotel-image" placeholder="Hotel Image URL" class="w-full p-3 border rounded-lg bg-gray-50 text-sm" placeholder="https://example.com/image.jpg">
+                    <button onclick="addHotel()" class="w-full bg-green-600 text-white py-3 rounded-lg font-black uppercase shadow-md active:scale-95">Add Hotel</button>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Total Orders</div>
-                <div class="stat-number" id="orderCount">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Revenue</div>
-                <div class="stat-number" id="totalRevenue">₹0</div>
+
+            <div>
+                <h2 class="text-xl font-black text-gray-800 mb-4">🏢 All Hotels</h2>
+                <div id="hotels-list" class="space-y-3"></div>
             </div>
         </div>
 
-        <div class="content">
-            <div class="form-section">
-                <h2>➕ Add Menu Item</h2>
-                <div class="success-message" id="successMessage">
-                    ✓ Item added successfully!
+        <!-- MENU TAB -->
+        <div id="menu-tab" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-purple-600">
+                <h2 class="text-xl font-black text-gray-800 mb-4">➕ Add Menu Item</h2>
+                <div class="space-y-3">
+                    <select id="menu-hotel" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
+                        <option value="">Select Hotel *</option>
+                    </select>
+                    <input type="text" id="item-name" placeholder="Item Name *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
+                    <input type="text" id="item-description" placeholder="Description" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
+                    <input type="number" id="item-price" placeholder="Price *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" step="10" required>
+                    <input type="text" id="item-image" placeholder="Item Image URL" class="w-full p-3 border rounded-lg bg-gray-50 text-sm" placeholder="https://example.com/food.jpg">
+                    <button onclick="addMenuItem()" class="w-full bg-green-600 text-white py-3 rounded-lg font-black uppercase shadow-md active:scale-95">Add Item</button>
                 </div>
-                <form id="menuForm">
-                    <div class="form-group">
-                        <label>Item Name *</label>
-                        <input type="text" id="itemName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="itemDesc"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Price (₹) *</label>
-                        <input type="number" id="itemPrice" min="0" step="10" required>
-                    </div>
-                    <button type="submit" class="submit-btn">Add Item</button>
-                </form>
             </div>
 
-            <div class="menu-list-section">
-                <h2>📋 All Menu Items</h2>
-                <div class="menu-items" id="menuList">
-                    <div class="empty-message">Loading...</div>
+            <div>
+                <h2 class="text-xl font-black text-gray-800 mb-4">📋 Menu Items</h2>
+                <div id="menu-list" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- DRIVERS TAB -->
+        <div id="drivers-tab" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-blue-600">
+                <h2 class="text-xl font-black text-gray-800 mb-4">➕ Register Delivery Boy</h2>
+                <div class="space-y-3">
+                    <input type="text" id="driver-name" placeholder="Full Name *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
+                    <input type="tel" id="driver-phone" placeholder="Phone Number *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
+                    <input type="email" id="driver-email" placeholder="Email (optional)" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
+                    <input type="text" id="driver-vehicle" placeholder="Vehicle Type (Bike/Cycle) *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm" required>
+                    <button onclick="addDriver()" class="w-full bg-green-600 text-white py-3 rounded-lg font-black uppercase shadow-md active:scale-95">Register Driver</button>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-black text-gray-800 mb-4">🚚 Registered Drivers</h2>
+                <div id="drivers-list" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-red-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Hotels</p>
+                <p id="stat-hotels" class="text-3xl font-black text-red-600 mt-2">0</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-purple-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Items</p>
+                <p id="stat-items" class="text-3xl font-black text-purple-600 mt-2">0</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-blue-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Drivers</p>
+                <p id="stat-drivers" class="text-3xl font-black text-blue-600 mt-2">0</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-green-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Orders</p>
+                <p id="stat-orders" class="text-3xl font-black text-green-600 mt-2">0</p>
+            </div>
+        </div>
+
+        <!-- NAV -->
+        <div class="flex gap-2 mt-8">
+            <a href="index.html" class="flex-1 bg-yellow-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">🛒 Customer</a>
+            <a href="kitchen.html" class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">👨‍🍳 Kitchen</a>
+            <a href="delivery.html" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">🚚 Delivery</a>
+        </div>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div id="editModal" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl">
+            <h3 class="text-lg font-black text-gray-800 mb-4">✏️ Edit Item</h3>
+            <div class="space-y-3">
+                <input type="text" id="edit-name" placeholder="Name" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold">
+                <input type="text" id="edit-desc" placeholder="Description" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
+                <input type="number" id="edit-price" placeholder="Price" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" step="10">
+                <input type="text" id="edit-image" placeholder="Image URL" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
+                <div class="flex gap-2">
+                    <button onclick="saveEdit()" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-black uppercase">Save</button>
+                    <button onclick="closeEditModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-black uppercase">Cancel</button>
                 </div>
             </div>
         </div>
@@ -356,102 +140,251 @@
             projectId: "train-parcel",
             storageBucket: "train-parcel.firebasestorage.app",
             messagingSenderId: "357680905494",
-            appId: "1:357680905494:web:072f547f8fc7c05a1ce437",
-            measurementId: "G-SQX8M0MKHT"
+            appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
         };
 
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
-        let menuItems = [];
-        let allOrders = [];
+        let hotels = {};
+        let editingId = null, editingHotelId = null;
 
-        document.getElementById('menuForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // SWITCH TABS
+        function switchTab(tab) {
+            document.getElementById('hotels-tab').classList.toggle('hidden', tab !== 'hotels');
+            document.getElementById('menu-tab').classList.toggle('hidden', tab !== 'menu');
+            document.getElementById('drivers-tab').classList.toggle('hidden', tab !== 'drivers');
 
-            const item = {
-                name: document.getElementById('itemName').value,
-                description: document.getElementById('itemDesc').value,
-                price: parseInt(document.getElementById('itemPrice').value),
-                createdAt: new Date().toISOString()
-            };
-
-            const newRef = database.ref('menuItems').push();
-            newRef.set(item).then(() => {
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('menuForm').reset();
-
-                setTimeout(() => {
-                    document.getElementById('successMessage').style.display = 'none';
-                }, 3000);
-            }).catch(err => {
-                alert('❌ Error: ' + err.message);
+            ['hotels', 'menu', 'drivers'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.toggle('bg-red-600', tab === 'hotels' && t === 'hotels');
+                document.getElementById(`tab-${t}`).classList.toggle('bg-purple-600', tab === 'menu' && t === 'menu');
+                document.getElementById(`tab-${t}`).classList.toggle('bg-blue-600', tab === 'drivers' && t === 'drivers');
+                document.getElementById(`tab-${t}`).classList.toggle('text-white', ['hotels', 'menu', 'drivers'].includes(tab));
             });
-        });
 
-        function loadMenu() {
-            database.ref('menuItems').on('value', (snapshot) => {
-                menuItems = [];
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(key => {
-                        menuItems.push({id: key, ...data[key]});
-                    });
-                }
-                displayMenu();
-                updateStats();
+            if (tab === 'menu') loadHotelsDropdown();
+        }
+
+        // ===== HOTELS =====
+        function addHotel() {
+            const name = document.getElementById('hotel-name').value.trim();
+            const cuisines = document.getElementById('hotel-cuisines').value.trim();
+            const image = document.getElementById('hotel-image').value.trim();
+
+            if (!name) return alert('❌ Please fill hotel name');
+
+            db.ref('hotels').push({name, cuisines, image, createdAt: new Date().toISOString()}).then(() => {
+                document.getElementById('hotel-name').value = '';
+                document.getElementById('hotel-cuisines').value = '';
+                document.getElementById('hotel-image').value = '';
+                alert('✅ Hotel added!');
             });
         }
 
-        function displayMenu() {
-            const container = document.getElementById('menuList');
-            document.getElementById('menuCount').textContent = menuItems.length;
+        function deleteHotel(id) {
+            if (confirm('❌ Delete hotel and ALL items?')) {
+                db.ref('hotels').child(id).remove();
+                db.ref('menuItems').child(id).remove();
+            }
+        }
 
-            if (menuItems.length === 0) {
-                container.innerHTML = '<div class="empty-message">No items yet</div>';
+        function loadHotels() {
+            db.ref('hotels').on('value', snap => {
+                hotels = snap.val() || {};
+                displayHotels();
+                document.getElementById('stat-hotels').textContent = Object.keys(hotels).length;
+            });
+        }
+
+        function displayHotels() {
+            const container = document.getElementById('hotels-list');
+            if (Object.keys(hotels).length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-8">No hotels</p>';
                 return;
             }
 
-            container.innerHTML = menuItems.map(item => `
-                <div class="menu-item-card">
-                    <div class="menu-item-info">
-                        <h3>${item.name}</h3>
-                        <p>${item.description || 'No description'}</p>
-                        <div class="menu-item-price">₹${item.price}</div>
+            container.innerHTML = Object.entries(hotels).map(([id, h]) => `
+                <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-red-600">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 class="font-black text-lg text-gray-800">${h.name}</h4>
+                            <p class="text-xs text-gray-500">${h.cuisines || 'Multi-cuisine'}</p>
+                            ${h.image ? `<p class="text-xs text-gray-400 mt-1">🖼️ Image: ${h.image.substring(0, 40)}...</p>` : ''}
+                        </div>
                     </div>
-                    <button class="delete-btn" onclick="deleteMenuItem('${item.id}')">Delete</button>
+                    <button onclick="deleteHotel('${id}')" class="w-full bg-red-600 text-white py-2 rounded-lg text-xs font-bold uppercase mt-2">Delete</button>
                 </div>
             `).join('');
         }
 
-        function deleteMenuItem(id) {
-            if (confirm('Delete this item?')) {
-                database.ref('menuItems').child(id).remove();
-            }
-        }
-
-        function loadOrders() {
-            database.ref('orders').on('value', (snapshot) => {
-                allOrders = [];
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(key => {
-                        allOrders.push({id: key, ...data[key]});
-                    });
-                }
-                updateStats();
+        // ===== MENU =====
+        function loadHotelsDropdown() {
+            const select = document.getElementById('menu-hotel');
+            select.innerHTML = '<option value="">Select Hotel</option>';
+            Object.entries(hotels).forEach(([id, h]) => {
+                select.innerHTML += `<option value="${id}">${h.name}</option>`;
             });
         }
 
-        function updateStats() {
-            document.getElementById('orderCount').textContent = allOrders.length;
+        function addMenuItem() {
+            const hotelId = document.getElementById('menu-hotel').value;
+            const name = document.getElementById('item-name').value.trim();
+            const desc = document.getElementById('item-description').value.trim();
+            const price = parseInt(document.getElementById('item-price').value);
+            const image = document.getElementById('item-image').value.trim();
 
-            const totalRevenue = allOrders.reduce((sum, order) => sum + (order.total || 0), 0);
-            document.getElementById('totalRevenue').textContent = '₹' + totalRevenue;
+            if (!hotelId || !name || !price) return alert('❌ Fill required fields');
+
+            db.ref(`menuItems/${hotelId}`).push({name, description: desc, price, image, createdAt: new Date().toISOString()}).then(() => {
+                document.getElementById('item-name').value = '';
+                document.getElementById('item-description').value = '';
+                document.getElementById('item-price').value = '';
+                document.getElementById('item-image').value = '';
+                alert('✅ Item added!');
+            });
         }
 
+        function deleteMenuItem(hotelId, itemId) {
+            if (confirm('❌ Delete item?')) {
+                db.ref(`menuItems/${hotelId}/${itemId}`).remove();
+            }
+        }
+
+        function openEditModal(hotelId, itemId, name, desc, price, image) {
+            editingId = itemId;
+            editingHotelId = hotelId;
+            document.getElementById('edit-name').value = name;
+            document.getElementById('edit-desc').value = desc;
+            document.getElementById('edit-price').value = price;
+            document.getElementById('edit-image').value = image;
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        function saveEdit() {
+            const name = document.getElementById('edit-name').value.trim();
+            const desc = document.getElementById('edit-desc').value.trim();
+            const price = parseInt(document.getElementById('edit-price').value);
+            const image = document.getElementById('edit-image').value.trim();
+
+            if (!name || !price) return alert('❌ Fill required fields');
+
+            db.ref(`menuItems/${editingHotelId}/${editingId}`).update({name, description: desc, price, image}).then(() => {
+                closeEditModal();
+                alert('✅ Item updated!');
+            });
+        }
+
+        function loadMenu() {
+            db.ref('menuItems').on('value', snap => {
+                const allItems = snap.val() || {};
+                displayMenu(allItems);
+
+                let totalItems = 0;
+                Object.keys(allItems).forEach(hid => {
+                    totalItems += Object.keys(allItems[hid] || {}).length;
+                });
+                document.getElementById('stat-items').textContent = totalItems;
+            });
+        }
+
+        function displayMenu(allItems) {
+            const container = document.getElementById('menu-list');
+            let html = '';
+
+            Object.entries(allItems).forEach(([hotelId, items]) => {
+                const hotelName = hotels[hotelId]?.name || 'Unknown';
+                html += `<div class="bg-gray-100 p-4 rounded-lg mb-4"><h3 class="font-black text-gray-800 mb-2">${hotelName}</h3>`;
+                
+                Object.entries(items || {}).forEach(([itemId, item]) => {
+                    html += `
+                    <div class="bg-white p-3 rounded-lg mb-2 border-l-4 border-purple-600">
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="flex-1">
+                                <p class="font-bold text-gray-800">${item.name}</p>
+                                <p class="text-xs text-gray-500">${item.description || ''}</p>
+                                <p class="text-lg font-black text-purple-600 mt-1">₹${item.price}</p>
+                                ${item.image ? `<p class="text-xs text-gray-400 mt-1">🖼️ ${item.image.substring(0, 35)}...</p>` : ''}
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="openEditModal('${hotelId}', '${itemId}', '${item.name}', '${item.description || ''}', ${item.price}, '${item.image || ''}')" class="flex-1 bg-blue-600 text-white py-1 rounded text-xs font-bold uppercase">✏️ Edit</button>
+                            <button onclick="deleteMenuItem('${hotelId}', '${itemId}')" class="flex-1 bg-red-600 text-white py-1 rounded text-xs font-bold uppercase">🗑️ Delete</button>
+                        </div>
+                    </div>`;
+                });
+                html += '</div>';
+            });
+
+            container.innerHTML = html || '<p class="text-center text-gray-500 py-8">No items</p>';
+        }
+
+        // ===== DRIVERS =====
+        function addDriver() {
+            const name = document.getElementById('driver-name').value.trim();
+            const phone = document.getElementById('driver-phone').value.trim();
+            const email = document.getElementById('driver-email').value.trim();
+            const vehicle = document.getElementById('driver-vehicle').value.trim();
+
+            if (!name || !phone || !vehicle) return alert('❌ Fill required fields');
+
+            db.ref('drivers').push({name, phone, email, vehicle, status: 'active', createdAt: new Date().toISOString()}).then(() => {
+                document.getElementById('driver-name').value = '';
+                document.getElementById('driver-phone').value = '';
+                document.getElementById('driver-email').value = '';
+                document.getElementById('driver-vehicle').value = '';
+                alert('✅ Driver registered!');
+            });
+        }
+
+        function deleteDriver(id) {
+            if (confirm('❌ Remove driver?')) {
+                db.ref('drivers').child(id).remove();
+            }
+        }
+
+        function loadDrivers() {
+            db.ref('drivers').on('value', snap => {
+                const drivers = snap.val() || {};
+                displayDrivers(drivers);
+                document.getElementById('stat-drivers').textContent = Object.keys(drivers).length;
+            });
+        }
+
+        function displayDrivers(drivers) {
+            const container = document.getElementById('drivers-list');
+            if (Object.keys(drivers).length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-8">No drivers</p>';
+                return;
+            }
+
+            container.innerHTML = Object.entries(drivers).map(([id, d]) => `
+                <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-blue-600">
+                    <p class="font-black text-lg text-gray-800">${d.name}</p>
+                    <p class="text-xs text-gray-500">📱 ${d.phone}</p>
+                    <p class="text-xs text-gray-500">🏍️ ${d.vehicle}</p>
+                    ${d.email ? `<p class="text-xs text-gray-500">✉️ ${d.email}</p>` : ''}
+                    <p class="text-xs text-green-600 font-bold mt-1">Status: ${d.status}</p>
+                    <button onclick="deleteDriver('${id}')" class="w-full bg-red-600 text-white py-2 rounded-lg text-xs font-bold uppercase mt-2">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        // LOAD ORDERS
+        function loadOrders() {
+            db.ref('orders').on('value', snap => {
+                document.getElementById('stat-orders').textContent = snap.val() ? Object.keys(snap.val()).length : 0;
+            });
+        }
+
+        // INITIALIZE
         window.addEventListener('load', () => {
+            loadHotels();
             loadMenu();
+            loadDrivers();
             loadOrders();
         });
     </script>
