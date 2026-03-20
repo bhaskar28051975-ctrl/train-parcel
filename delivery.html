@@ -2,354 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>FoodHub - Delivery</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 0;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 100%;
-            padding: 0;
-        }
-
-        header {
-            background: white;
-            padding: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            width: 100%;
-        }
-
-        header h1 {
-            color: #667eea;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            overflow-x: auto;
-        }
-
-        .nav-links a {
-            padding: 8px 12px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 12px;
-            white-space: nowrap;
-            transition: background 0.3s;
-        }
-
-        .nav-links a.active {
-            background: #764ba2;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 15px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 8px 0;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 11px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 8px;
-            padding: 10px;
-            background: rgba(255,255,255,0.1);
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            padding: 8px 12px;
-            background: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-            white-space: nowrap;
-            color: #667eea;
-            transition: all 0.3s;
-        }
-
-        .tab-btn.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .content {
-            padding: 10px;
-            min-height: calc(100vh - 300px);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .deliveries-list {
-            display: grid;
-            gap: 12px;
-        }
-
-        .delivery-card {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .delivery-card.on-way {
-            border-left-color: #ffc107;
-        }
-
-        .delivery-card.delivered {
-            border-left-color: #28a745;
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .order-id {
-            font-weight: bold;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .order-status {
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .status-ready {
-            background: #28a745;
-            color: white;
-        }
-
-        .status-on-way {
-            background: #ffc107;
-            color: white;
-        }
-
-        .status-delivered {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .customer-info {
-            background: #fff3cd;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            border-left: 3px solid #ffc107;
-        }
-
-        .customer-name {
-            font-weight: bold;
-            color: #333;
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-
-        .customer-phone {
-            color: #667eea;
-            font-size: 13px;
-            text-decoration: none;
-        }
-
-        .delivery-address {
-            background: #f8f9ff;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .address-label {
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 4px;
-        }
-
-        .order-items {
-            background: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            font-size: 12px;
-        }
-
-        .order-item {
-            padding: 4px 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .order-item:last-child {
-            border-bottom: none;
-        }
-
-        .order-total {
-            font-weight: bold;
-            color: #667eea;
-            text-align: right;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .delivery-actions {
-            display: grid;
-            gap: 8px;
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .action-btn {
-            padding: 8px;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s;
-        }
-
-        .btn-pickup {
-            background: #ffc107;
-            color: white;
-        }
-
-        .btn-pickup:active {
-            background: #ffb300;
-        }
-
-        .btn-deliver {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-deliver:active {
-            background: #218838;
-        }
-
-        .btn-cancel {
-            background: #6c757d;
-            color: white;
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 40px 20px;
-            color: white;
-            font-size: 14px;
-        }
-
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 20px;
-            }
-
-            .nav-links a {
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery - FoodHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🚚 Delivery</h1>
-            <div class="nav-links">
-                <a href="index.html">🛒 Order</a>
-                <a href="kitchen.html">👨‍🍳 Kitchen</a>
-                <a href="delivery.html" class="active">🚚 Delivery</a>
-                <a href="admin.html">⚙️ Admin</a>
-                <a href="reports.html">📊 Reports</a>
-            </div>
-        </header>
+<body class="bg-green-50 pb-40">
 
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-label">Ready</div>
-                <div class="stat-number" id="readyCount">0</div>
+    <header class="bg-white shadow-md sticky top-0 z-40 border-b-4 border-green-600">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-black text-green-600">🚚 Delivery</h1>
+            <a href="control.html" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-home mr-1"></i>Home</a>
+        </div>
+    </header>
+
+    <!-- LOGIN FORM -->
+    <div id="login-panel" class="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-2xl w-full max-w-sm shadow-2xl">
+            <h2 class="text-2xl font-black text-gray-800 mb-4">Driver Login</h2>
+            <p class="text-sm text-gray-500 mb-6">Enter your details to start accepting orders</p>
+            <div class="space-y-3">
+                <input type="text" id="driver-select" placeholder="Select Your Name" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" list="drivers-list">
+                <datalist id="drivers-list"></datalist>
+                <button onclick="driverLogin()" class="w-full bg-green-600 text-white py-4 rounded-lg font-black uppercase shadow-lg active:scale-95">Login as Driver</button>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">On Way</div>
-                <div class="stat-number" id="onWayCount">0</div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 space-y-6 py-6">
+
+        <!-- DRIVER INFO -->
+        <div class="bg-green-600 text-white p-6 rounded-2xl shadow-lg">
+            <p class="text-xs font-bold uppercase mb-2 opacity-90">Driver Logged In</p>
+            <h2 id="driver-name-display" class="text-2xl font-black">--</h2>
+            <p id="driver-earnings" class="text-3xl font-black text-green-100 mt-3">₹0</p>
+            <p class="text-xs text-green-100 mt-1">Today's Earnings</p>
+        </div>
+
+        <!-- STATS -->
+        <div class="grid grid-cols-3 gap-4">
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-blue-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Ready</p>
+                <p id="stat-ready" class="text-3xl font-black text-blue-600 mt-2">0</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Delivered</div>
-                <div class="stat-number" id="deliveredCount">0</div>
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-orange-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">On Way</p>
+                <p id="stat-onway" class="text-3xl font-black text-orange-600 mt-2">0</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-green-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Delivered</p>
+                <p id="stat-delivered" class="text-3xl font-black text-green-600 mt-2">0</p>
             </div>
         </div>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('ready')">Ready</button>
-            <button class="tab-btn" onclick="switchTab('on-way')">On Way</button>
-            <button class="tab-btn" onclick="switchTab('delivered')">Delivered</button>
+        <!-- TABS -->
+        <div class="flex gap-2 bg-white p-2 rounded-lg shadow-md flex-wrap sticky top-20 z-30">
+            <button onclick="switchTab('ready')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-blue-600 text-white" id="tab-ready">🔵 Ready</button>
+            <button onclick="switchTab('onway')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-gray-200 text-gray-700" id="tab-onway">🟠 On Way</button>
+            <button onclick="switchTab('delivered')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-gray-200 text-gray-700" id="tab-delivered">✅ Delivered</button>
         </div>
 
-        <div class="content">
-            <div id="ready" class="tab-content active"></div>
-            <div id="on-way" class="tab-content"></div>
-            <div id="delivered" class="tab-content"></div>
+        <!-- READY ORDERS -->
+        <div id="ready-tab" class="space-y-4">
+            <h2 class="text-xl font-black text-gray-800">🔵 Ready for Pickup</h2>
+            <div id="ready-orders" class="space-y-3"></div>
+        </div>
+
+        <!-- ON WAY ORDERS -->
+        <div id="onway-tab" class="hidden space-y-4">
+            <h2 class="text-xl font-black text-gray-800">🟠 Orders On The Way</h2>
+            <div id="onway-orders" class="space-y-3"></div>
+        </div>
+
+        <!-- DELIVERED ORDERS -->
+        <div id="delivered-tab" class="hidden space-y-4">
+            <h2 class="text-xl font-black text-gray-800">✅ Delivered Today</h2>
+            <div id="delivered-orders" class="space-y-3"></div>
+        </div>
+
+        <!-- NAV -->
+        <div class="flex gap-2 mt-8">
+            <a href="index.html" class="flex-1 bg-yellow-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">🛒 Customer</a>
+            <a href="admin.html" class="flex-1 bg-red-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">⚙️ Admin</a>
+            <a href="kitchen.html" class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">👨‍🍳 Kitchen</a>
         </div>
     </div>
 
@@ -364,108 +99,165 @@
             projectId: "train-parcel",
             storageBucket: "train-parcel.firebasestorage.app",
             messagingSenderId: "357680905494",
-            appId: "1:357680905494:web:072f547f8fc7c05a1ce437",
-            measurementId: "G-SQX8M0MKHT"
+            appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
         };
 
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
-        let allOrders = [];
+        let driverId = localStorage.getItem('driver_id');
+        let driverName = localStorage.getItem('driver_name');
+        const COMMISSION_RATE = 10; // 10% commission
 
-        function loadOrders() {
-            database.ref('orders').on('value', (snapshot) => {
-                allOrders = [];
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(key => {
-                        allOrders.push({id: key, ...data[key]});
-                    });
-                }
-                allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                updateDisplay();
+        function driverLogin() {
+            const select = document.getElementById('driver-select').value;
+            if (!select) return alert('❌ Select a driver');
+
+            db.ref('drivers').orderByChild('name').equalTo(select).once('value', snap => {
+                snap.forEach(child => {
+                    driverId = child.key;
+                    driverName = child.val().name;
+                    localStorage.setItem('driver_id', driverId);
+                    localStorage.setItem('driver_name', driverName);
+                    document.getElementById('login-panel').classList.add('hidden');
+                    document.getElementById('driver-name-display').textContent = driverName;
+                    loadOrders();
+                });
             });
         }
 
-        function updateDisplay() {
-            const ready = allOrders.filter(o => o.status === 'ready');
-            const onWay = allOrders.filter(o => o.status === 'on-way');
-            const delivered = allOrders.filter(o => o.status === 'delivered');
-
-            document.getElementById('readyCount').textContent = ready.length;
-            document.getElementById('onWayCount').textContent = onWay.length;
-            document.getElementById('deliveredCount').textContent = delivered.length;
-
-            displayOrders('ready', ready);
-            displayOrders('on-way', onWay);
-            displayOrders('delivered', delivered);
-        }
-
-        function displayOrders(status, orders) {
-            const container = document.getElementById(status);
-            if (orders.length === 0) {
-                container.innerHTML = '<div class="empty-message">No orders</div>';
-                return;
-            }
-
-            container.innerHTML = `<div class="deliveries-list">${orders.map(order => `
-                <div class="delivery-card ${status === 'on-way' ? 'on-way' : status === 'delivered' ? 'delivered' : ''}">
-                    <div class="order-header">
-                        <div class="order-id">#${order.id.substring(0, 8)}</div>
-                        <div class="order-status status-${status}">${status === 'on-way' ? 'ON WAY' : status.toUpperCase()}</div>
-                    </div>
-
-                    <div class="customer-info">
-                        <div class="customer-name">👤 ${order.customerName}</div>
-                        <a href="tel:${order.customerPhone}" class="customer-phone">📱 ${order.customerPhone}</a>
-                    </div>
-
-                    <div class="delivery-address">
-                        <div class="address-label">📍 Address:</div>
-                        ${order.customerAddress}
-                    </div>
-
-                    <div class="order-items">
-                        ${order.items.map(item => `
-                            <div class="order-item">• ${item.name} x${item.qty}</div>
-                        `).join('')}
-                    </div>
-
-                    <div class="order-total">₹${order.total}</div>
-
-                    <div class="delivery-actions">
-                        ${order.status === 'ready' ? `
-                            <button class="action-btn btn-pickup" onclick="updateStatus('${order.id}', 'on-way')">Pickup</button>
-                            <button class="action-btn btn-cancel" onclick="cancelDelivery('${order.id}')">Cancel</button>
-                        ` : order.status === 'on-way' ? `
-                            <button class="action-btn btn-deliver" onclick="updateStatus('${order.id}', 'delivered')">Delivered</button>
-                            <button class="action-btn btn-cancel" onclick="updateStatus('${order.id}', 'ready')">Back</button>
-                        ` : `
-                            <button class="action-btn" style="grid-column: 1/-1; background: #28a745; color: white; cursor: default;">✓ Complete</button>
-                        `}
-                    </div>
-                </div>
-            `).join('')}</div>`;
-        }
-
-        function updateStatus(orderId, newStatus) {
-            database.ref('orders').child(orderId).update({status: newStatus});
-        }
-
-        function cancelDelivery(orderId) {
-            if (confirm('Cancel delivery?')) {
-                database.ref('orders').child(orderId).update({status: 'ready'});
-            }
+        function loadDriversList() {
+            db.ref('drivers').on('value', snap => {
+                const list = document.getElementById('drivers-list');
+                list.innerHTML = '';
+                snap.forEach(child => {
+                    const option = document.createElement('option');
+                    option.value = child.val().name;
+                    list.appendChild(option);
+                });
+            });
         }
 
         function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tab).classList.add('active');
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
+            document.getElementById('ready-tab').classList.toggle('hidden', tab !== 'ready');
+            document.getElementById('onway-tab').classList.toggle('hidden', tab !== 'onway');
+            document.getElementById('delivered-tab').classList.toggle('hidden', tab !== 'delivered');
+
+            const tabs = ['ready', 'onway', 'delivered'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    btn.classList.add('bg-green-600', 'text-white');
+                    btn.classList.remove('bg-gray-200', 'text-gray-700');
+                } else {
+                    btn.classList.remove('bg-green-600', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                }
+            });
         }
 
-        window.addEventListener('load', loadOrders);
+        function loadOrders() {
+            db.ref('orders').on('value', snap => {
+                const orders = snap.val() || {};
+                const ready = Object.entries(orders).filter(([_, o]) => o.status === 'ready').reverse();
+                const onway = Object.entries(orders).filter(([_, o]) => o.status === 'on-way' && o.deliveryDriver === driverId).reverse();
+                const delivered = Object.entries(orders).filter(([_, o]) => o.status === 'delivered' && o.deliveryDriver === driverId).reverse();
+
+                document.getElementById('stat-ready').textContent = ready.length;
+                document.getElementById('stat-onway').textContent = onway.length;
+                document.getElementById('stat-delivered').textContent = delivered.length;
+
+                // Calculate earnings
+                let earnings = 0;
+                delivered.forEach(([_, o]) => {
+                    earnings += (o.total * COMMISSION_RATE / 100);
+                });
+                document.getElementById('driver-earnings').textContent = '₹' + earnings.toFixed(0);
+
+                displayOrders('ready-orders', ready);
+                displayOrders('onway-orders', onway);
+                displayOrders('delivered-orders', delivered);
+            });
+        }
+
+        function displayOrders(containerId, orders) {
+            const container = document.getElementById(containerId);
+            if (orders.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-8">No orders</p>';
+                return;
+            }
+
+            container.innerHTML = orders.map(([id, order]) => {
+                const commission = (order.total * COMMISSION_RATE / 100).toFixed(0);
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-600">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="text-lg font-black text-gray-800">#${id.substring(0, 8)}</h3>
+                                <p class="text-xs text-gray-500">Hotel: ${order.hotelName}</p>
+                            </div>
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-black uppercase">${order.status}</span>
+                        </div>
+
+                        <div class="bg-yellow-50 p-3 rounded-lg mb-3 border-l-2 border-yellow-600">
+                            <p class="text-sm font-bold text-gray-800">${order.customerName}</p>
+                            <p class="text-xs text-gray-600">📱 <a href="tel:${order.customerPhone}" class="text-blue-600 hover:underline">${order.customerPhone}</a></p>
+                            <p class="text-xs text-gray-600">📍 ${order.customerAddress}</p>
+                        </div>
+
+                        <div class="bg-blue-50 p-3 rounded-lg mb-3">
+                            <h4 class="font-bold text-gray-800 text-sm mb-2">📦 Items:</h4>
+                            <div class="space-y-1">
+                                ${order.items.map(item => `
+                                    <div class="flex justify-between text-xs">
+                                        <span>${item.name}</span>
+                                        <span>×${item.qty} @ ₹${item.price}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div class="bg-purple-50 p-3 rounded-lg text-center">
+                                <p class="text-xs text-gray-600">Total Amount</p>
+                                <p class="text-xl font-black text-purple-600">₹${order.total}</p>
+                            </div>
+                            <div class="bg-green-50 p-3 rounded-lg text-center">
+                                <p class="text-xs text-gray-600">Your Commission</p>
+                                <p class="text-xl font-black text-green-600">₹${commission}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            ${order.status === 'ready' ? `
+                                <button onclick="updateStatus('${id}', 'on-way')" class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">Pickup Order</button>
+                            ` : order.status === 'on-way' ? `
+                                <button onclick="updateStatus('${id}', 'delivered')" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">Mark Delivered</button>
+                            ` : `
+                                <span class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase text-center">✅ Delivered</span>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStatus(orderId, newStatus) {
+            db.ref('orders').child(orderId).update({
+                status: newStatus,
+                deliveryDriver: driverId,
+                deliveryName: driverName
+            });
+        }
+
+        window.addEventListener('load', () => {
+            loadDriversList();
+            if (driverId) {
+                document.getElementById('login-panel').classList.add('hidden');
+                document.getElementById('driver-name-display').textContent = driverName;
+                loadOrders();
+            }
+        });
     </script>
 </body>
 </html>
