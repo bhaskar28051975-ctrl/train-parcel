@@ -3,74 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodHub - Order Food</title>
+    <title>FoodHub - Initialize Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 pb-40">
-
-    <header class="bg-white shadow-md sticky top-0 z-40 border-b-4 border-purple-600">
-        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-black text-purple-600">🍔 FoodHub</h1>
-            <a href="control.html" class="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-home mr-1"></i>Home</a>
-        </div>
-    </header>
-
-    <div class="max-w-4xl mx-auto px-4 space-y-6 py-6">
-
-        <!-- HOTELS -->
-        <div id="hotels-section">
-            <h2 class="text-2xl font-black text-gray-800 mb-4">🏢 Available Hotels</h2>
-            <div id="hotels-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="text-center py-8"><i class="fa-solid fa-spinner animate-spin text-3xl text-purple-600"></i><p class="text-gray-500 mt-2">Loading...</p></div>
-            </div>
-        </div>
-
-        <!-- MENU -->
-        <div id="menu-section" class="hidden">
-            <div class="bg-white p-4 rounded-xl shadow-md mb-4 flex justify-between items-center sticky top-20 z-30">
-                <div>
-                    <h2 class="text-xl font-black text-gray-800" id="hotel-name"></h2>
-                    <p class="text-xs text-gray-500" id="hotel-cuisines"></p>
-                </div>
-                <button onclick="backToHotels()" class="bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-gray-300">← Back</button>
-            </div>
-
-            <div id="items-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        </div>
-    </div>
-
-    <!-- CART PANEL -->
-    <div id="cart-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t-4 border-purple-600 shadow-2xl z-50 max-h-screen overflow-y-auto">
-        <div class="max-w-4xl mx-auto px-4 py-4">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-black text-gray-800">🛒 Your Cart</h3>
-                <button onclick="closeCart()" class="text-gray-500 text-2xl">✕</button>
-            </div>
-
-            <div id="cart-items-list" class="space-y-2 mb-4 bg-gray-50 p-4 rounded-lg"></div>
-
-            <div class="bg-purple-50 p-4 rounded-lg mb-4 space-y-2 border-l-4 border-purple-600">
-                <div class="flex justify-between text-sm"><span class="text-gray-600">Subtotal:</span><span id="subtotal-display" class="font-bold">₹0</span></div>
-                <div class="flex justify-between text-sm"><span class="text-gray-600">Delivery:</span><span id="delivery-display" class="font-bold">₹50</span></div>
-                <div class="border-t border-purple-200 pt-2 flex justify-between text-lg"><span class="font-black text-purple-600">Total:</span><span id="total-display" class="font-black text-purple-600">₹0</span></div>
-            </div>
-
-            <div class="space-y-2">
-                <input type="text" id="cust-name" placeholder="Your Name *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
-                <input type="tel" id="cust-phone" placeholder="Phone Number *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
-                <input type="text" id="cust-address" placeholder="Delivery Address *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm" required>
-                <button onclick="placeOrder()" class="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-4 rounded-lg font-black uppercase shadow-lg active:scale-95">Place Order Now</button>
-                <button onclick="closeCart()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-bold uppercase">Continue Shopping</button>
-            </div>
+<body class="bg-purple-600 text-white min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full space-y-6 text-center">
+        <h1 class="text-4xl font-black">🍔 FoodHub</h1>
+        <p class="text-lg">Initializing Database...</p>
+        <div id="status" class="bg-white/20 p-6 rounded-lg space-y-3 text-left">
+            <p id="msg1">⏳ Connecting to Firebase...</p>
+            <p id="msg2" style="display:none">📝 Adding Hotels...</p>
+            <p id="msg3" style="display:none">🍽️ Adding Menu Items...</p>
+            <p id="msg4" style="display:none">🚚 Adding Drivers...</p>
+            <p id="msg5" style="display:none">✅ Done! Redirecting...</p>
+            <p id="error" style="display:none" class="text-red-300"></p>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js"></script>
 
     <script>
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
             authDomain: "train-parcel.firebaseapp.com",
@@ -81,291 +35,103 @@
             appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
         };
 
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let cart = {};
-        let selectedHotel = null;
-        const DELIVERY_FEE = 50;
+        console.log("✅ Firebase initialized");
 
-        // AUTO-INITIALIZE DATABASE WITH SAMPLE DATA
-        function initializeDatabase() {
-            console.log('🔄 Checking Firebase database...');
-            
-            db.ref('hotels').once('value', snap => {
-                if (!snap.exists()) {
-                    console.log('📝 Database empty! Adding sample data...');
-                    
-                    const sampleHotels = {
-                        hotel_001: {
-                            name: "The Grill on Duty",
-                            cuisines: "Indian, North Indian",
-                            image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500"
-                        },
-                        hotel_002: {
-                            name: "Spice Route",
-                            cuisines: "Indian, Chinese, Continental",
-                            image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500"
-                        },
-                        hotel_003: {
-                            name: "Royal Kitchen",
-                            cuisines: "Mughlai, Tandoori",
-                            image: "https://images.unsplash.com/photo-1504674900969-f2df05b3252d?w=500"
-                        }
-                    };
-
-                    const sampleMenu = {
-                        hotel_001: {
-                            item_001: {name: "Butter Chicken", description: "Creamy butter chicken with rice", price: 280, image: "https://images.unsplash.com/photo-1603549820556-a8a47baee46f?w=400"},
-                            item_002: {name: "Paneer Tikka", description: "Grilled paneer with spices", price: 220, image: "https://images.unsplash.com/photo-1567184109191-378eb2446c53?w=400"},
-                            item_003: {name: "Dal Makhani", description: "Creamy lentil curry", price: 180, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
-                            item_004: {name: "Biryani", description: "Fragrant rice with meat", price: 250, image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400"},
-                            item_005: {name: "Samosa", description: "Crispy fried pastry", price: 50, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
-                            item_006: {name: "Tandoori Chicken", description: "Spicy tandoori chicken", price: 320, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
-                            item_007: {name: "Naan", description: "Soft Indian bread", price: 40, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
-                            item_008: {name: "Gulab Jamun", description: "Sweet milk solids in syrup", price: 80, image: "https://images.unsplash.com/photo-1585238341710-57b0e4bee4b1?w=400"}
-                        },
-                        hotel_002: {
-                            item_009: {name: "Chicken Hakka Noodles", description: "Indo-Chinese noodles", price: 200, image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400"},
-                            item_010: {name: "Veg Fried Rice", description: "Fragrant fried rice", price: 150, image: "https://images.unsplash.com/photo-1512058560366-cd24270083cd?w=400"},
-                            item_011: {name: "Chilli Garlic Naan", description: "Naan with chilli and garlic", price: 50, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
-                            item_012: {name: "Manchow Soup", description: "Indo-Chinese soup", price: 120, image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400"},
-                            item_013: {name: "Spring Rolls", description: "Crispy spring rolls", price: 100, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
-                            item_014: {name: "Gobi Manchurian", description: "Indo-Chinese cauliflower", price: 180, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
-                            item_015: {name: "Hakka Balls", description: "Spiced vegetable balls", price: 160, image: "https://images.unsplash.com/photo-1606787620884-fdf8222cf81f?w=400"},
-                            item_016: {name: "Chilli Paneer", description: "Spicy paneer with peppers", price: 240, image: "https://images.unsplash.com/photo-1567184109191-378eb2446c53?w=400"}
-                        },
-                        hotel_003: {
-                            item_017: {name: "Nihari", description: "Traditional slow-cooked meat", price: 280, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
-                            item_018: {name: "Seekh Kebab", description: "Grilled minced meat kebab", price: 250, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
-                            item_019: {name: "Shahi Tukda", description: "Royal bread pudding", price: 120, image: "https://images.unsplash.com/photo-1585238341710-57b0e4bee4b1?w=400"},
-                            item_020: {name: "Haleem", description: "Meat and lentil stew", price: 260, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
-                            item_021: {name: "Galauti Kebab", description: "Soft minced meat kebab", price: 240, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
-                            item_022: {name: "Phirni", description: "Rice pudding dessert", price: 100, image: "https://images.unsplash.com/photo-1585238341710-57b0e4bee4b1?w=400"},
-                            item_023: {name: "Roghni Naan", description: "Buttered naan", price: 50, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
-                            item_024: {name: "Mughlai Paratha", description: "Egg-stuffed paratha", price: 80, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"}
-                        }
-                    };
-
-                    // Add hotels
-                    db.ref('hotels').set(sampleHotels).then(() => {
-                        console.log('✅ Hotels added!');
-                    });
-
-                    // Add menu items
-                    db.ref('menuItems').set(sampleMenu).then(() => {
-                        console.log('✅ Menu items added!');
-                    });
-
-                    // Add sample drivers
-                    const sampleDrivers = {
-                        driver_001: {
-                            name: "Raj Kumar",
-                            phone: "9876543210",
-                            email: "raj@foodhub.com",
-                            vehicle: "Bike",
-                            status: "active",
-                            createdAt: new Date().toISOString()
-                        },
-                        driver_002: {
-                            name: "Priya Singh",
-                            phone: "9876543211",
-                            email: "priya@foodhub.com",
-                            vehicle: "Bike",
-                            status: "active",
-                            createdAt: new Date().toISOString()
-                        },
-                        driver_003: {
-                            name: "Arjun Patel",
-                            phone: "9876543212",
-                            email: "arjun@foodhub.com",
-                            vehicle: "Cycle",
-                            status: "active",
-                            createdAt: new Date().toISOString()
-                        }
-                    };
-
-                    db.ref('drivers').set(sampleDrivers).then(() => {
-                        console.log('✅ Drivers added!');
-                        alert('✅ Database initialized with 3 hotels, 24 items, and 3 drivers!');
-                        loadHotels();
-                    });
-
-                } else {
-                    console.log('✓ Database has data - loading...');
-                    loadHotels();
+        async function initData() {
+            try {
+                // Check if data exists
+                console.log("Checking database...");
+                const snapshot = await db.ref('hotels').get();
+                
+                if (snapshot.exists()) {
+                    console.log("✅ Data already exists!");
+                    document.getElementById('msg5').style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = 'customer.html';
+                    }, 2000);
+                    return;
                 }
-            });
-        }
 
-        function loadHotels() {
-            db.ref('hotels').on('value', snap => {
-                const hotels = snap.val() || {};
-                displayHotels(hotels);
-            });
-        }
+                console.log("Database empty, adding data...");
 
-        function displayHotels(hotels) {
-            const container = document.getElementById('hotels-container');
-            if (Object.keys(hotels).length === 0) {
-                container.innerHTML = '<p class="col-span-2 text-center text-gray-500 py-8">No hotels available</p>';
-                return;
+                // Step 1: Add Hotels
+                document.getElementById('msg2').style.display = 'block';
+                const hotels = {
+                    hotel_001: {name: "The Grill on Duty", cuisines: "Indian, North Indian", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500"},
+                    hotel_002: {name: "Spice Route", cuisines: "Indian, Chinese, Continental", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500"},
+                    hotel_003: {name: "Royal Kitchen", cuisines: "Mughlai, Tandoori", image: "https://images.unsplash.com/photo-1504674900969-f2df05b3252d?w=500"}
+                };
+                await db.ref('hotels').set(hotels);
+                console.log("✅ Hotels added");
+
+                // Step 2: Add Menu Items
+                document.getElementById('msg3').style.display = 'block';
+                const menuItems = {
+                    hotel_001: {
+                        item_001: {name: "Butter Chicken", description: "Creamy butter chicken", price: 280},
+                        item_002: {name: "Paneer Tikka", description: "Grilled paneer", price: 220},
+                        item_003: {name: "Dal Makhani", description: "Creamy lentils", price: 180},
+                        item_004: {name: "Biryani", description: "Fragrant rice", price: 250},
+                        item_005: {name: "Samosa", description: "Fried pastry", price: 50},
+                        item_006: {name: "Tandoori Chicken", description: "Spicy chicken", price: 320},
+                        item_007: {name: "Naan", description: "Indian bread", price: 40},
+                        item_008: {name: "Gulab Jamun", description: "Sweet dessert", price: 80}
+                    },
+                    hotel_002: {
+                        item_009: {name: "Hakka Noodles", description: "Indo-Chinese noodles", price: 200},
+                        item_010: {name: "Fried Rice", description: "Fragrant rice", price: 150},
+                        item_011: {name: "Chilli Garlic Naan", description: "Spiced naan", price: 50},
+                        item_012: {name: "Manchow Soup", description: "Indo-Chinese soup", price: 120},
+                        item_013: {name: "Spring Rolls", description: "Crispy rolls", price: 100},
+                        item_014: {name: "Gobi Manchurian", description: "Spiced cauliflower", price: 180},
+                        item_015: {name: "Hakka Balls", description: "Spiced balls", price: 160},
+                        item_016: {name: "Chilli Paneer", description: "Spicy paneer", price: 240}
+                    },
+                    hotel_003: {
+                        item_017: {name: "Nihari", description: "Slow-cooked meat", price: 280},
+                        item_018: {name: "Seekh Kebab", description: "Minced meat kebab", price: 250},
+                        item_019: {name: "Shahi Tukda", description: "Bread pudding", price: 120},
+                        item_020: {name: "Haleem", description: "Meat stew", price: 260},
+                        item_021: {name: "Galauti Kebab", description: "Soft kebab", price: 240},
+                        item_022: {name: "Phirni", description: "Rice pudding", price: 100},
+                        item_023: {name: "Roghni Naan", description: "Buttered naan", price: 50},
+                        item_024: {name: "Mughlai Paratha", description: "Egg paratha", price: 80}
+                    }
+                };
+                await db.ref('menuItems').set(menuItems);
+                console.log("✅ Menu items added");
+
+                // Step 3: Add Drivers
+                document.getElementById('msg4').style.display = 'block';
+                const drivers = {
+                    driver_001: {name: "Raj Kumar", phone: "9876543210", vehicle: "Bike", status: "active"},
+                    driver_002: {name: "Priya Singh", phone: "9876543211", vehicle: "Bike", status: "active"},
+                    driver_003: {name: "Arjun Patel", phone: "9876543212", vehicle: "Cycle", status: "active"}
+                };
+                await db.ref('drivers').set(drivers);
+                console.log("✅ Drivers added");
+
+                // Done
+                document.getElementById('msg5').style.display = 'block';
+                console.log("🎉 Database initialization complete!");
+                
+                setTimeout(() => {
+                    window.location.href = 'customer.html';
+                }, 2000);
+
+            } catch (error) {
+                console.error("❌ Error:", error);
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = "Error: " + error.message;
             }
-
-            container.innerHTML = Object.entries(hotels).map(([id, h]) => `
-                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all cursor-pointer border-2 border-gray-200 hover:border-purple-600" onclick="selectHotel('${id}')">
-                    <div class="h-40 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center overflow-hidden">
-                        ${h.image ? `<img src="${h.image}" class="w-full h-full object-cover" onerror="this.style.display='none'">` : ''}
-                        <i class="fa-solid fa-store text-5xl text-white opacity-30"></i>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-black text-gray-800">${h.name}</h3>
-                        <p class="text-xs text-gray-500 mt-1">${h.cuisines || 'Multi-cuisine'}</p>
-                        <div class="flex items-center gap-2 mt-3">
-                            <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded">⭐ 4.5</span>
-                            <span class="text-xs text-gray-500">🚚 Free</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
         }
 
-        function selectHotel(hotelId) {
-            db.ref(`hotels/${hotelId}`).once('value', snap => {
-                selectedHotel = {id: hotelId, ...snap.val()};
-                document.getElementById('hotel-name').textContent = selectedHotel.name;
-                document.getElementById('hotel-cuisines').textContent = selectedHotel.cuisines || 'Multi-cuisine';
-                document.getElementById('hotels-section').classList.add('hidden');
-                document.getElementById('menu-section').classList.remove('hidden');
-                cart = {};
-                loadMenu();
-            });
-        }
-
-        function backToHotels() {
-            document.getElementById('hotels-section').classList.remove('hidden');
-            document.getElementById('menu-section').classList.add('hidden');
-            document.getElementById('cart-panel').classList.add('hidden');
-            selectedHotel = null;
-            cart = {};
-            updateCartDisplay();
-        }
-
-        function loadMenu() {
-            db.ref(`menuItems/${selectedHotel.id}`).on('value', snap => {
-                const items = snap.val() || {};
-                displayMenu(items);
-            });
-        }
-
-        function displayMenu(items) {
-            const container = document.getElementById('items-container');
-            if (Object.keys(items).length === 0) {
-                container.innerHTML = '<p class="col-span-2 text-center text-gray-500 py-8">No items available</p>';
-                return;
-            }
-
-            container.innerHTML = Object.entries(items).map(([id, item]) => {
-                const qty = cart[id] ? cart[id].qty : 0;
-                return `
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all">
-                        <div class="h-32 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center overflow-hidden">
-                            ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover" onerror="this.style.display='none'">` : ''}
-                            <i class="fa-solid fa-utensils text-3xl text-gray-400 opacity-50"></i>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-bold text-gray-800 line-clamp-1">${item.name}</h4>
-                            <p class="text-xs text-gray-500 mt-1 line-clamp-2">${item.description || 'Delicious food'}</p>
-                            <p class="text-lg font-black text-purple-600 mt-2">₹${item.price}</p>
-                            <div class="mt-3">
-                                ${qty === 0 ? `
-                                    <button onclick="updateCart('${id}', '${item.name}', ${item.price}, 1)" class="w-full bg-purple-600 text-white py-2 rounded-lg text-sm font-bold hover:bg-purple-700 active:scale-95">Add to Cart</button>
-                                ` : `
-                                    <div class="flex items-center justify-between gap-2 border-2 border-purple-600 rounded-lg p-1">
-                                        <button onclick="updateCart('${id}', '${item.name}', ${item.price}, -1)" class="text-purple-600 font-bold text-lg w-8 h-8 flex items-center justify-center">−</button>
-                                        <span class="font-black text-lg">${qty}</span>
-                                        <button onclick="updateCart('${id}', '${item.name}', ${item.price}, 1)" class="text-purple-600 font-bold text-lg w-8 h-8 flex items-center justify-center">+</button>
-                                    </div>
-                                `}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function updateCart(itemId, name, price, change) {
-            if (!cart[itemId]) cart[itemId] = {name, price: parseInt(price), qty: 0};
-            cart[itemId].qty += change;
-            if (cart[itemId].qty <= 0) delete cart[itemId];
-            updateCartDisplay();
-            loadMenu();
-        }
-
-        function updateCartDisplay() {
-            const items = Object.entries(cart);
-            if (items.length === 0) {
-                document.getElementById('cart-panel').classList.add('hidden');
-                return;
-            }
-
-            document.getElementById('cart-panel').classList.remove('hidden');
-
-            const subtotal = items.reduce((s, [_, i]) => s + (i.price * i.qty), 0);
-            const total = subtotal + DELIVERY_FEE;
-
-            document.getElementById('cart-items-list').innerHTML = items.map(([_, i]) => `
-                <div class="flex justify-between text-sm p-2 bg-white rounded border border-gray-200">
-                    <span class="font-bold">${i.name}</span>
-                    <span class="text-gray-600">×${i.qty}</span>
-                    <span class="text-purple-600 font-bold">₹${i.price * i.qty}</span>
-                </div>
-            `).join('');
-
-            document.getElementById('subtotal-display').textContent = '₹' + subtotal;
-            document.getElementById('total-display').textContent = '₹' + total;
-        }
-
-        function closeCart() {
-            document.getElementById('cart-panel').classList.add('hidden');
-        }
-
-        function placeOrder() {
-            const name = document.getElementById('cust-name').value.trim();
-            const phone = document.getElementById('cust-phone').value.trim();
-            const address = document.getElementById('cust-address').value.trim();
-
-            if (!name || !phone || !address) return alert('❌ Please fill all details');
-            if (Object.keys(cart).length === 0) return alert('❌ Cart is empty');
-
-            const items = Object.entries(cart).map(([id, i]) => ({id, name: i.name, price: i.price, qty: i.qty}));
-            const subtotal = items.reduce((s, i) => s + (i.price * i.qty), 0);
-
-            const order = {
-                id: Date.now().toString(),
-                hotelId: selectedHotel.id,
-                hotelName: selectedHotel.name,
-                customerName: name,
-                customerPhone: phone,
-                customerAddress: address,
-                items: items,
-                subtotal: subtotal,
-                deliveryFee: DELIVERY_FEE,
-                total: subtotal + DELIVERY_FEE,
-                status: 'pending',
-                createdAt: new Date().toISOString()
-            };
-
-            db.ref('orders').child(order.id).set(order).then(() => {
-                alert('✅ Order placed! Track it in Delivery section');
-                backToHotels();
-            }).catch(e => alert('❌ Error: ' + e.message));
-        }
-
-        window.addEventListener('load', () => {
-            console.log('🚀 FoodHub loading...');
-            initializeDatabase();
-        });
+        // Start initialization
+        initData();
     </script>
 </body>
 </html>
