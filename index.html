@@ -2,403 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodHub - Order Food</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding-top: 0;
-            padding-bottom: 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 100%;
-            padding: 0;
-            margin: 0;
-        }
-
-        header {
-            background: white;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            width: 100%;
-        }
-
-        header h1 {
-            color: #667eea;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            overflow-x: auto;
-            padding: 5px 0;
-        }
-
-        .nav-links::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .nav-links::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .nav-links::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 2px;
-        }
-
-        .nav-links a {
-            padding: 8px 12px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 12px;
-            white-space: nowrap;
-            transition: background 0.3s;
-        }
-
-        .nav-links a:active,
-        .nav-links a.active {
-            background: #764ba2;
-        }
-
-        .content {
-            padding: 0 10px;
-        }
-
-        .section-title {
-            color: white;
-            font-size: 18px;
-            margin: 20px 0 15px 0;
-            font-weight: bold;
-        }
-
-        .menu-items {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .menu-item {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .item-info {
-            flex: 1;
-        }
-
-        .item-info h3 {
-            color: #333;
-            font-size: 14px;
-            margin-bottom: 3px;
-        }
-
-        .item-info p {
-            color: #666;
-            font-size: 12px;
-        }
-
-        .item-price {
-            color: #667eea;
-            font-weight: bold;
-            font-size: 16px;
-            min-width: 45px;
-            text-align: right;
-        }
-
-        .item-controls {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .qty-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: background 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .qty-btn:active {
-            background: #764ba2;
-        }
-
-        .qty-display {
-            width: 28px;
-            text-align: center;
-            font-weight: bold;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .cart-section {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-        }
-
-        .cart-section h2 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-
-        .cart-items {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-bottom: 12px;
-        }
-
-        .cart-item {
-            background: #f8f9ff;
-            padding: 8px;
-            border-radius: 5px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-        }
-
-        .cart-item-name {
-            flex: 1;
-        }
-
-        .cart-item-price {
-            color: #667eea;
-            font-weight: bold;
-            margin: 0 8px;
-        }
-
-        .cart-item-qty {
-            background: #667eea;
-            color: white;
-            width: 22px;
-            height: 22px;
-            border-radius: 3px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-        }
-
-        .cart-summary {
-            border-top: 2px solid #667eea;
-            padding-top: 12px;
-            margin-bottom: 12px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 13px;
-        }
-
-        .summary-row.total {
-            font-size: 16px;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .customer-info {
-            display: grid;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .customer-info input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .customer-info input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
-        }
-
-        .place-order-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .place-order-btn:active {
-            transform: scale(0.98);
-        }
-
-        .place-order-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .empty-message {
-            text-align: center;
-            color: #999;
-            padding: 20px 10px;
-            font-size: 13px;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 12px;
-            display: none;
-            font-size: 13px;
-            border-left: 4px solid #28a745;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: white;
-            font-size: 14px;
-        }
-
-        @media (max-width: 480px) {
-            header {
-                padding: 12px;
-            }
-
-            header h1 {
-                font-size: 20px;
-            }
-
-            .nav-links a {
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-
-            .menu-item {
-                padding: 10px;
-            }
-
-            .item-info h3 {
-                font-size: 13px;
-            }
-
-            .item-info p {
-                font-size: 11px;
-            }
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🍔 FoodHub</h1>
-            <div class="nav-links">
-                <a href="index.html" class="active">🛒 Order</a>
-                <a href="kitchen.html">👨‍🍳 Kitchen</a>
-                <a href="delivery.html">🚚 Delivery</a>
-                <a href="admin.html">⚙️ Admin</a>
-                <a href="reports.html">📊 Reports</a>
+<body class="bg-gray-50 pb-40">
+
+    <header class="bg-white shadow-md sticky top-0 z-40 border-b-4 border-purple-600">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-black text-purple-600">🍔 FoodHub</h1>
+            <a href="control.html" class="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-home mr-1"></i>Home</a>
+        </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto px-4 space-y-6 py-6">
+
+        <!-- HOTELS -->
+        <div id="hotels-section">
+            <h2 class="text-2xl font-black text-gray-800 mb-4">🏢 Available Hotels</h2>
+            <div id="hotels-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="text-center py-8"><i class="fa-solid fa-spinner animate-spin text-3xl text-purple-600"></i><p class="text-gray-500 mt-2">Loading...</p></div>
             </div>
-        </header>
+        </div>
 
-        <div class="content">
-            <h2 class="section-title">📋 Menu</h2>
-            <div class="menu-items" id="menuContainer">
-                <div class="loading">Loading menu...</div>
+        <!-- MENU -->
+        <div id="menu-section" class="hidden">
+            <div class="bg-white p-4 rounded-xl shadow-md mb-4 flex justify-between items-center sticky top-20 z-30">
+                <div>
+                    <h2 class="text-xl font-black text-gray-800" id="hotel-name"></h2>
+                    <p class="text-xs text-gray-500" id="hotel-cuisines"></p>
+                </div>
+                <button onclick="backToHotels()" class="bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-gray-300">← Back</button>
             </div>
 
-            <div class="cart-section">
-                <h2>🛒 Your Order</h2>
-                <div class="success-message" id="successMessage">
-                    ✓ Order placed successfully!
-                </div>
-                <div class="cart-items" id="cartItems">
-                    <div class="empty-message">No items in cart</div>
-                </div>
+            <div id="items-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+    </div>
 
-                <div class="cart-summary">
-                    <div class="summary-row">
-                        <span>Subtotal:</span>
-                        <span id="subtotal">₹0</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Delivery:</span>
-                        <span id="delivery">₹50</span>
-                    </div>
-                    <div class="summary-row total">
-                        <span>Total:</span>
-                        <span id="total">₹0</span>
-                    </div>
-                </div>
+    <!-- CART PANEL -->
+    <div id="cart-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t-4 border-purple-600 shadow-2xl z-50 max-h-screen overflow-y-auto">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-black text-gray-800">🛒 Your Cart</h3>
+                <button onclick="closeCart()" class="text-gray-500 text-2xl">✕</button>
+            </div>
 
-                <div class="customer-info">
-                    <input type="text" id="customerName" placeholder="Your Name *" required>
-                    <input type="tel" id="customerPhone" placeholder="Phone Number *" required>
-                    <input type="text" id="customerAddress" placeholder="Address *" required>
-                </div>
+            <div id="cart-items-list" class="space-y-2 mb-4 bg-gray-50 p-4 rounded-lg"></div>
 
-                <button class="place-order-btn" onclick="placeOrder()">Place Order</button>
+            <div class="bg-purple-50 p-4 rounded-lg mb-4 space-y-2 border-l-4 border-purple-600">
+                <div class="flex justify-between text-sm"><span class="text-gray-600">Subtotal:</span><span id="subtotal-display" class="font-bold">₹0</span></div>
+                <div class="flex justify-between text-sm"><span class="text-gray-600">Delivery:</span><span id="delivery-display" class="font-bold">₹50</span></div>
+                <div class="border-t border-purple-200 pt-2 flex justify-between text-lg"><span class="font-black text-purple-600">Total:</span><span id="total-display" class="font-black text-purple-600">₹0</span></div>
+            </div>
+
+            <div class="space-y-2">
+                <input type="text" id="cust-name" placeholder="Your Name *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
+                <input type="tel" id="cust-phone" placeholder="Phone Number *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
+                <input type="text" id="cust-address" placeholder="Delivery Address *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm" required>
+                <button onclick="placeOrder()" class="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-4 rounded-lg font-black uppercase shadow-lg active:scale-95">Place Order Now</button>
+                <button onclick="closeCart()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-bold uppercase">Continue Shopping</button>
             </div>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -408,232 +78,181 @@
             projectId: "train-parcel",
             storageBucket: "train-parcel.firebasestorage.app",
             messagingSenderId: "357680905494",
-            appId: "1:357680905494:web:072f547f8fc7c05a1ce437",
-            measurementId: "G-SQX8M0MKHT"
+            appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
         };
 
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
         let cart = {};
-        let menuItems = [];
+        let selectedHotel = null;
         const DELIVERY_FEE = 50;
 
-        // Initialize database with sample data
-        function initializeDatabase() {
-            console.log('Checking Firebase database...');
-            
-            database.ref('menuItems').once('value', (snapshot) => {
-                if (!snapshot.exists()) {
-                    console.log('Database is empty - adding 8 menu items...');
-                    
-                    const sampleMenuItems = {
-                        item_001: {
-                            name: "Butter Chicken",
-                            description: "Creamy butter chicken with rice",
-                            price: 280
-                        },
-                        item_002: {
-                            name: "Paneer Tikka",
-                            description: "Grilled paneer with spices",
-                            price: 220
-                        },
-                        item_003: {
-                            name: "Dal Makhani",
-                            description: "Creamy lentil curry",
-                            price: 180
-                        },
-                        item_004: {
-                            name: "Biryani",
-                            description: "Fragrant rice with meat",
-                            price: 250
-                        },
-                        item_005: {
-                            name: "Tandoori Chicken",
-                            description: "Spicy tandoori chicken",
-                            price: 320
-                        },
-                        item_006: {
-                            name: "Samosa",
-                            description: "Crispy fried pastry",
-                            price: 50
-                        },
-                        item_007: {
-                            name: "Naan",
-                            description: "Soft Indian bread",
-                            price: 40
-                        },
-                        item_008: {
-                            name: "Gulab Jamun",
-                            description: "Sweet milk solids in syrup",
-                            price: 80
-                        }
-                    };
-
-                    database.ref('menuItems').set(sampleMenuItems).then(() => {
-                        console.log('✅ SUCCESS! 8 menu items added to Firebase!');
-                        loadMenu();
-                    }).catch((error) => {
-                        console.error('❌ Error adding data:', error);
-                    });
-                } else {
-                    console.log('✓ Database has data - loading menu...');
-                    loadMenu();
-                }
+        function loadHotels() {
+            db.ref('hotels').on('value', snap => {
+                const hotels = snap.val() || {};
+                displayHotels(hotels);
             });
         }
 
-        // Load menu items from Firebase
-        function loadMenu() {
-            database.ref('menuItems').on('value', (snapshot) => {
-                menuItems = [];
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(key => {
-                        menuItems.push({id: key, ...data[key]});
-                    });
-                    console.log(`Loaded ${menuItems.length} menu items`);
-                }
-                displayMenu();
-            });
-        }
-
-        // Display menu items on page
-        function displayMenu() {
-            const container = document.getElementById('menuContainer');
-            if (menuItems.length === 0) {
-                container.innerHTML = '<div class="empty-message">No items available</div>';
+        function displayHotels(hotels) {
+            const container = document.getElementById('hotels-container');
+            if (Object.keys(hotels).length === 0) {
+                container.innerHTML = '<p class="col-span-2 text-center text-gray-500 py-8">No hotels available</p>';
                 return;
             }
 
-            container.innerHTML = menuItems.map(item => `
-                <div class="menu-item">
-                    <div class="item-info">
-                        <h3>${item.name}</h3>
-                        <p>${item.description || ''}</p>
+            container.innerHTML = Object.entries(hotels).map(([id, h]) => `
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all cursor-pointer border-2 border-gray-200 hover:border-purple-600" onclick="selectHotel('${id}')">
+                    <div class="h-40 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center overflow-hidden">
+                        ${h.image ? `<img src="${h.image}" class="w-full h-full object-cover" onerror="this.style.display='none'">` : ''}
+                        <i class="fa-solid fa-store text-5xl text-white opacity-30"></i>
                     </div>
-                    <div class="item-price">₹${item.price}</div>
-                    <div class="item-controls">
-                        <button class="qty-btn" onclick="updateCart('${item.id}', -1)">−</button>
-                        <div class="qty-display">${cart[item.id] ? cart[item.id].qty : 0}</div>
-                        <button class="qty-btn" onclick="updateCart('${item.id}', 1)">+</button>
+                    <div class="p-4">
+                        <h3 class="text-lg font-black text-gray-800">${h.name}</h3>
+                        <p class="text-xs text-gray-500 mt-1">${h.cuisines || 'Multi-cuisine'}</p>
+                        <div class="flex items-center gap-2 mt-3">
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded">⭐ 4.5</span>
+                            <span class="text-xs text-gray-500">🚚 Free</span>
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Update cart when user clicks +/-
-        function updateCart(itemId, change) {
-            const item = menuItems.find(m => m.id === itemId);
-            if (!item) return;
+        function selectHotel(hotelId) {
+            db.ref(`hotels/${hotelId}`).once('value', snap => {
+                selectedHotel = {id: hotelId, ...snap.val()};
+                document.getElementById('hotel-name').textContent = selectedHotel.name;
+                document.getElementById('hotel-cuisines').textContent = selectedHotel.cuisines || 'Multi-cuisine';
+                document.getElementById('hotels-section').classList.add('hidden');
+                document.getElementById('menu-section').classList.remove('hidden');
+                cart = {};
+                loadMenu();
+            });
+        }
 
-            if (!cart[itemId]) {
-                cart[itemId] = {name: item.name, price: item.price, qty: 0};
-            }
-
-            cart[itemId].qty += change;
-            if (cart[itemId].qty <= 0) {
-                delete cart[itemId];
-            }
-
-            displayMenu();
+        function backToHotels() {
+            document.getElementById('hotels-section').classList.remove('hidden');
+            document.getElementById('menu-section').classList.add('hidden');
+            document.getElementById('cart-panel').classList.add('hidden');
+            selectedHotel = null;
+            cart = {};
             updateCartDisplay();
         }
 
-        // Update cart display
-        function updateCartDisplay() {
-            const cartItems = document.getElementById('cartItems');
-            const items = Object.entries(cart);
+        function loadMenu() {
+            db.ref(`menuItems/${selectedHotel.id}`).on('value', snap => {
+                const items = snap.val() || {};
+                displayMenu(items);
+            });
+        }
 
-            if (items.length === 0) {
-                cartItems.innerHTML = '<div class="empty-message">No items in cart</div>';
-                document.getElementById('subtotal').textContent = '₹0';
-                document.getElementById('total').textContent = '₹0';
+        function displayMenu(items) {
+            const container = document.getElementById('items-container');
+            if (Object.keys(items).length === 0) {
+                container.innerHTML = '<p class="col-span-2 text-center text-gray-500 py-8">No items available</p>';
                 return;
             }
 
-            let subtotal = 0;
-            cartItems.innerHTML = items.map(([id, item]) => {
-                const itemTotal = item.price * item.qty;
-                subtotal += itemTotal;
+            container.innerHTML = Object.entries(items).map(([id, item]) => {
+                const qty = cart[id] ? cart[id].qty : 0;
                 return `
-                    <div class="cart-item">
-                        <div class="cart-item-name">${item.name} x${item.qty}</div>
-                        <div class="cart-item-price">₹${itemTotal}</div>
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all">
+                        <div class="h-32 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center overflow-hidden">
+                            ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover" onerror="this.style.display='none'">` : ''}
+                            <i class="fa-solid fa-utensils text-3xl text-gray-400 opacity-50"></i>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-bold text-gray-800 line-clamp-1">${item.name}</h4>
+                            <p class="text-xs text-gray-500 mt-1 line-clamp-2">${item.description || 'Delicious food'}</p>
+                            <p class="text-lg font-black text-purple-600 mt-2">₹${item.price}</p>
+                            <div class="mt-3">
+                                ${qty === 0 ? `
+                                    <button onclick="updateCart('${id}', '${item.name}', ${item.price}, 1)" class="w-full bg-purple-600 text-white py-2 rounded-lg text-sm font-bold hover:bg-purple-700 active:scale-95">Add to Cart</button>
+                                ` : `
+                                    <div class="flex items-center justify-between gap-2 border-2 border-purple-600 rounded-lg p-1">
+                                        <button onclick="updateCart('${id}', '${item.name}', ${item.price}, -1)" class="text-purple-600 font-bold text-lg w-8 h-8 flex items-center justify-center">−</button>
+                                        <span class="font-black text-lg">${qty}</span>
+                                        <button onclick="updateCart('${id}', '${item.name}', ${item.price}, 1)" class="text-purple-600 font-bold text-lg w-8 h-8 flex items-center justify-center">+</button>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
                     </div>
                 `;
             }).join('');
-
-            document.getElementById('subtotal').textContent = '₹' + subtotal;
-            document.getElementById('total').textContent = '₹' + (subtotal + DELIVERY_FEE);
         }
 
-        // Place order
-        function placeOrder() {
-            const name = document.getElementById('customerName').value.trim();
-            const phone = document.getElementById('customerPhone').value.trim();
-            const address = document.getElementById('customerAddress').value.trim();
+        function updateCart(itemId, name, price, change) {
+            if (!cart[itemId]) cart[itemId] = {name, price: parseInt(price), qty: 0};
+            cart[itemId].qty += change;
+            if (cart[itemId].qty <= 0) delete cart[itemId];
+            updateCartDisplay();
+            loadMenu();
+        }
 
-            if (!name || !phone || !address) {
-                alert('❌ Please fill all details');
+        function updateCartDisplay() {
+            const items = Object.entries(cart);
+            if (items.length === 0) {
+                document.getElementById('cart-panel').classList.add('hidden');
                 return;
             }
 
-            if (Object.keys(cart).length === 0) {
-                alert('❌ Please add items to cart');
-                return;
-            }
+            document.getElementById('cart-panel').classList.remove('hidden');
 
-            const items = Object.entries(cart).map(([id, item]) => ({
-                id, 
-                name: item.name, 
-                price: item.price, 
-                qty: item.qty
-            }));
-
-            const subtotal = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const subtotal = items.reduce((s, [_, i]) => s + (i.price * i.qty), 0);
             const total = subtotal + DELIVERY_FEE;
+
+            document.getElementById('cart-items-list').innerHTML = items.map(([_, i]) => `
+                <div class="flex justify-between text-sm p-2 bg-white rounded border border-gray-200">
+                    <span class="font-bold">${i.name}</span>
+                    <span class="text-gray-600">×${i.qty}</span>
+                    <span class="text-purple-600 font-bold">₹${i.price * i.qty}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('subtotal-display').textContent = '₹' + subtotal;
+            document.getElementById('total-display').textContent = '₹' + total;
+        }
+
+        function closeCart() {
+            document.getElementById('cart-panel').classList.add('hidden');
+        }
+
+        function placeOrder() {
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+
+            if (!name || !phone || !address) return alert('❌ Please fill all details');
+            if (Object.keys(cart).length === 0) return alert('❌ Cart is empty');
+
+            const items = Object.entries(cart).map(([id, i]) => ({id, name: i.name, price: i.price, qty: i.qty}));
+            const subtotal = items.reduce((s, i) => s + (i.price * i.qty), 0);
 
             const order = {
                 id: Date.now().toString(),
+                hotelId: selectedHotel.id,
+                hotelName: selectedHotel.name,
                 customerName: name,
                 customerPhone: phone,
                 customerAddress: address,
                 items: items,
                 subtotal: subtotal,
                 deliveryFee: DELIVERY_FEE,
-                total: total,
+                total: subtotal + DELIVERY_FEE,
                 status: 'pending',
                 createdAt: new Date().toISOString()
             };
 
-            document.querySelector('.place-order-btn').disabled = true;
-
-            database.ref('orders').child(order.id).set(order).then(() => {
-                console.log('✅ Order placed successfully!');
-                document.getElementById('successMessage').style.display = 'block';
-                cart = {};
-                document.getElementById('customerName').value = '';
-                document.getElementById('customerPhone').value = '';
-                document.getElementById('customerAddress').value = '';
-                updateCartDisplay();
-                displayMenu();
-
-                setTimeout(() => {
-                    document.getElementById('successMessage').style.display = 'none';
-                    document.querySelector('.place-order-btn').disabled = false;
-                }, 3000);
-            }).catch(err => {
-                alert('❌ Error: ' + err.message);
-                document.querySelector('.place-order-btn').disabled = false;
-            });
+            db.ref('orders').child(order.id).set(order).then(() => {
+                alert('✅ Order placed! Track it in Delivery section');
+                backToHotels();
+            }).catch(e => alert('❌ Error: ' + e.message));
         }
 
-        // Start everything when page loads
-        window.addEventListener('load', () => {
-            console.log('🚀 FoodHub app loading...');
-            initializeDatabase();
-        });
+        window.addEventListener('load', loadHotels);
     </script>
 </body>
 </html>
