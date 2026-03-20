@@ -2,340 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>FoodHub - Kitchen</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 0;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 100%;
-            padding: 0;
-        }
-
-        header {
-            background: white;
-            padding: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            width: 100%;
-        }
-
-        header h1 {
-            color: #667eea;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            overflow-x: auto;
-        }
-
-        .nav-links a {
-            padding: 8px 12px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 12px;
-            white-space: nowrap;
-            transition: background 0.3s;
-        }
-
-        .nav-links a.active {
-            background: #764ba2;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 15px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 8px 0;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 11px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 8px;
-            padding: 10px;
-            background: rgba(255,255,255,0.1);
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            padding: 8px 12px;
-            background: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-            white-space: nowrap;
-            color: #667eea;
-            transition: all 0.3s;
-        }
-
-        .tab-btn.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .content {
-            padding: 10px;
-            min-height: calc(100vh - 300px);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .orders-list {
-            display: grid;
-            gap: 12px;
-        }
-
-        .order-card {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .order-card.preparing {
-            border-left-color: #ffc107;
-        }
-
-        .order-card.ready {
-            border-left-color: #28a745;
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .order-id {
-            font-weight: bold;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .order-status {
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .status-preparing {
-            background: #ffc107;
-            color: white;
-        }
-
-        .status-ready {
-            background: #28a745;
-            color: white;
-        }
-
-        .order-items {
-            margin-bottom: 10px;
-        }
-
-        .order-item {
-            padding: 6px 0;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 13px;
-        }
-
-        .order-item:last-child {
-            border-bottom: none;
-        }
-
-        .order-customer {
-            background: #f8f9ff;
-            padding: 8px;
-            border-radius: 5px;
-            font-size: 12px;
-            margin-bottom: 10px;
-        }
-
-        .customer-name {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .customer-phone {
-            color: #667eea;
-        }
-
-        .order-actions {
-            display: grid;
-            gap: 8px;
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .action-btn {
-            padding: 8px;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s;
-        }
-
-        .btn-prepare {
-            background: #ffc107;
-            color: white;
-        }
-
-        .btn-prepare:active {
-            background: #ffb300;
-        }
-
-        .btn-ready {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-ready:active {
-            background: #218838;
-        }
-
-        .btn-cancel {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-cancel:active {
-            background: #5a6268;
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 40px 20px;
-            color: white;
-            font-size: 14px;
-        }
-
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 20px;
-            }
-
-            .nav-links a {
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-
-            .stat-card {
-                padding: 10px;
-            }
-
-            .stat-number {
-                font-size: 20px;
-            }
-
-            .stat-label {
-                font-size: 10px;
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen - FoodHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>👨‍🍳 Kitchen</h1>
-            <div class="nav-links">
-                <a href="index.html">🛒 Order</a>
-                <a href="kitchen.html" class="active">👨‍🍳 Kitchen</a>
-                <a href="delivery.html">🚚 Delivery</a>
-                <a href="admin.html">⚙️ Admin</a>
-                <a href="reports.html">📊 Reports</a>
-            </div>
-        </header>
+<body class="bg-orange-50 pb-40">
 
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-label">Pending</div>
-                <div class="stat-number" id="pendingCount">0</div>
+    <header class="bg-white shadow-md sticky top-0 z-40 border-b-4 border-orange-600">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-black text-orange-600">👨‍🍳 Kitchen</h1>
+            <a href="control.html" class="bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-home mr-1"></i>Home</a>
+        </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto px-4 space-y-6 py-6">
+
+        <!-- STATS -->
+        <div class="grid grid-cols-3 gap-4">
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-red-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Pending</p>
+                <p id="stat-pending" class="text-3xl font-black text-red-600 mt-2">0</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Preparing</div>
-                <div class="stat-number" id="preparingCount">0</div>
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-orange-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Preparing</p>
+                <p id="stat-preparing" class="text-3xl font-black text-orange-600 mt-2">0</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Ready</div>
-                <div class="stat-number" id="readyCount">0</div>
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-green-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Ready</p>
+                <p id="stat-ready" class="text-3xl font-black text-green-600 mt-2">0</p>
             </div>
         </div>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('pending')">Pending</button>
-            <button class="tab-btn" onclick="switchTab('preparing')">Preparing</button>
-            <button class="tab-btn" onclick="switchTab('ready')">Ready</button>
+        <!-- TABS -->
+        <div class="flex gap-2 bg-white p-2 rounded-lg shadow-md flex-wrap sticky top-20 z-30">
+            <button onclick="switchTab('pending')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-red-600 text-white" id="tab-pending">🔔 Pending</button>
+            <button onclick="switchTab('preparing')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-gray-200 text-gray-700" id="tab-preparing">⏳ Preparing</button>
+            <button onclick="switchTab('ready')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-gray-200 text-gray-700" id="tab-ready">✅ Ready</button>
         </div>
 
-        <div class="content">
-            <div id="pending" class="tab-content active"></div>
-            <div id="preparing" class="tab-content"></div>
-            <div id="ready" class="tab-content"></div>
+        <!-- PENDING ORDERS -->
+        <div id="pending-tab" class="space-y-4">
+            <h2 class="text-xl font-black text-gray-800">🔔 New Orders (Pending)</h2>
+            <div id="pending-orders" class="space-y-3"></div>
+        </div>
+
+        <!-- PREPARING ORDERS -->
+        <div id="preparing-tab" class="hidden space-y-4">
+            <h2 class="text-xl font-black text-gray-800">⏳ Orders Being Prepared</h2>
+            <div id="preparing-orders" class="space-y-3"></div>
+        </div>
+
+        <!-- READY ORDERS -->
+        <div id="ready-tab" class="hidden space-y-4">
+            <h2 class="text-xl font-black text-gray-800">✅ Ready for Pickup</h2>
+            <div id="ready-orders" class="space-y-3"></div>
+        </div>
+
+        <!-- NAV -->
+        <div class="flex gap-2 mt-8">
+            <a href="index.html" class="flex-1 bg-yellow-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">🛒 Customer</a>
+            <a href="admin.html" class="flex-1 bg-red-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">⚙️ Admin</a>
+            <a href="delivery.html" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">🚚 Delivery</a>
         </div>
     </div>
 
@@ -350,95 +78,104 @@
             projectId: "train-parcel",
             storageBucket: "train-parcel.firebasestorage.app",
             messagingSenderId: "357680905494",
-            appId: "1:357680905494:web:072f547f8fc7c05a1ce437",
-            measurementId: "G-SQX8M0MKHT"
+            appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
         };
 
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
-        let allOrders = [];
+        function switchTab(tab) {
+            document.getElementById('pending-tab').classList.toggle('hidden', tab !== 'pending');
+            document.getElementById('preparing-tab').classList.toggle('hidden', tab !== 'preparing');
+            document.getElementById('ready-tab').classList.toggle('hidden', tab !== 'ready');
 
-        function loadOrders() {
-            database.ref('orders').on('value', (snapshot) => {
-                allOrders = [];
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(key => {
-                        allOrders.push({id: key, ...data[key]});
-                    });
+            const tabs = ['pending', 'preparing', 'ready'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    btn.classList.add('bg-orange-600', 'text-white');
+                    btn.classList.remove('bg-gray-200', 'text-gray-700');
+                } else {
+                    btn.classList.remove('bg-orange-600', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
                 }
-                allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                updateDisplay();
             });
         }
 
-        function updateDisplay() {
-            const pending = allOrders.filter(o => o.status === 'pending');
-            const preparing = allOrders.filter(o => o.status === 'preparing');
-            const ready = allOrders.filter(o => o.status === 'ready');
+        function loadOrders() {
+            db.ref('orders').on('value', snap => {
+                const orders = snap.val() || {};
+                const pending = Object.entries(orders).filter(([_, o]) => o.status === 'pending').reverse();
+                const preparing = Object.entries(orders).filter(([_, o]) => o.status === 'preparing').reverse();
+                const ready = Object.entries(orders).filter(([_, o]) => o.status === 'ready').reverse();
 
-            document.getElementById('pendingCount').textContent = pending.length;
-            document.getElementById('preparingCount').textContent = preparing.length;
-            document.getElementById('readyCount').textContent = ready.length;
+                document.getElementById('stat-pending').textContent = pending.length;
+                document.getElementById('stat-preparing').textContent = preparing.length;
+                document.getElementById('stat-ready').textContent = ready.length;
 
-            displayOrders('pending', pending);
-            displayOrders('preparing', preparing);
-            displayOrders('ready', ready);
+                displayOrders('pending-orders', pending);
+                displayOrders('preparing-orders', preparing);
+                displayOrders('ready-orders', ready);
+            });
         }
 
-        function displayOrders(status, orders) {
-            const container = document.getElementById(status);
+        function displayOrders(containerId, orders) {
+            const container = document.getElementById(containerId);
             if (orders.length === 0) {
-                container.innerHTML = '<div class="empty-message">No orders</div>';
+                container.innerHTML = '<p class="text-center text-gray-500 py-8">No orders</p>';
                 return;
             }
 
-            container.innerHTML = `<div class="orders-list">${orders.map(order => `
-                <div class="order-card ${order.status}">
-                    <div class="order-header">
-                        <div class="order-id">#${order.id.substring(0, 8)}</div>
-                        <div class="order-status status-${order.status}">${order.status.toUpperCase()}</div>
+            container.innerHTML = orders.map(([id, order]) => `
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-orange-600">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="text-lg font-black text-gray-800">#${id.substring(0, 8)}</h3>
+                            <p class="text-xs text-gray-500">Hotel: ${order.hotelName}</p>
+                        </div>
+                        <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-black uppercase">${order.status}</span>
                     </div>
-                    <div class="order-items">
-                        ${order.items.map(item => `
-                            <div class="order-item">• ${item.name} x${item.qty}</div>
-                        `).join('')}
+
+                    <div class="bg-gray-50 p-4 rounded-lg mb-3">
+                        <h4 class="font-bold text-gray-800 text-sm mb-2">📦 Items:</h4>
+                        <div class="space-y-1">
+                            ${order.items.map(item => `
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-700">${item.name}</span>
+                                    <span class="text-gray-600">x${item.qty} @ ₹${item.price}</span>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
-                    <div class="order-customer">
-                        <div class="customer-name">${order.customerName}</div>
-                        <div class="customer-phone">📱 ${order.customerPhone}</div>
+
+                    <div class="bg-blue-50 p-3 rounded-lg mb-3 border-l-2 border-blue-600">
+                        <p class="text-sm font-bold text-gray-800">${order.customerName}</p>
+                        <p class="text-xs text-gray-600">📱 ${order.customerPhone}</p>
+                        <p class="text-xs text-gray-600">📍 ${order.customerAddress}</p>
                     </div>
-                    <div class="order-actions">
+
+                    <div class="bg-green-50 p-3 rounded-lg mb-4 text-center border-t-2 border-green-600">
+                        <p class="text-xs text-gray-600">Total Bill</p>
+                        <p class="text-2xl font-black text-green-600">₹${order.total}</p>
+                    </div>
+
+                    <div class="flex gap-2">
                         ${order.status === 'pending' ? `
-                            <button class="action-btn btn-prepare" onclick="updateStatus('${order.id}', 'preparing')">Prepare</button>
-                            <button class="action-btn btn-cancel" onclick="cancelOrder('${order.id}')">Cancel</button>
+                            <button onclick="updateStatus('${id}', 'preparing')" class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">Start Cooking</button>
+                            <button onclick="updateStatus('${id}', 'cancelled')" class="bg-gray-300 text-gray-700 px-4 py-3 rounded-lg font-bold text-xs uppercase">Cancel</button>
                         ` : order.status === 'preparing' ? `
-                            <button class="action-btn btn-ready" onclick="updateStatus('${order.id}', 'ready')">Ready</button>
-                            <button class="action-btn btn-cancel" onclick="updateStatus('${order.id}', 'pending')">Back</button>
+                            <button onclick="updateStatus('${id}', 'ready')" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">Mark Ready</button>
+                            <button onclick="updateStatus('${id}', 'pending')" class="bg-gray-300 text-gray-700 px-4 py-3 rounded-lg font-bold text-xs uppercase">Back</button>
                         ` : `
-                            <button class="action-btn" style="grid-column: 1/-1; background: #28a745; color: white; cursor: default;">✓ Ready</button>
+                            <span class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase text-center">✅ Ready</span>
                         `}
                     </div>
                 </div>
-            `).join('')}</div>`;
+            `).join('');
         }
 
         function updateStatus(orderId, newStatus) {
-            database.ref('orders').child(orderId).update({status: newStatus});
-        }
-
-        function cancelOrder(orderId) {
-            if (confirm('Cancel order?')) {
-                database.ref('orders').child(orderId).remove();
-            }
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tab).classList.add('active');
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
+            db.ref('orders').child(orderId).update({status: newStatus});
         }
 
         window.addEventListener('load', loadOrders);
