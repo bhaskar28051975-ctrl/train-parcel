@@ -88,6 +88,116 @@
         let selectedHotel = null;
         const DELIVERY_FEE = 50;
 
+        // AUTO-INITIALIZE DATABASE WITH SAMPLE DATA
+        function initializeDatabase() {
+            console.log('🔄 Checking Firebase database...');
+            
+            db.ref('hotels').once('value', snap => {
+                if (!snap.exists()) {
+                    console.log('📝 Database empty! Adding sample data...');
+                    
+                    const sampleHotels = {
+                        hotel_001: {
+                            name: "The Grill on Duty",
+                            cuisines: "Indian, North Indian",
+                            image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500"
+                        },
+                        hotel_002: {
+                            name: "Spice Route",
+                            cuisines: "Indian, Chinese, Continental",
+                            image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500"
+                        },
+                        hotel_003: {
+                            name: "Royal Kitchen",
+                            cuisines: "Mughlai, Tandoori",
+                            image: "https://images.unsplash.com/photo-1504674900969-f2df05b3252d?w=500"
+                        }
+                    };
+
+                    const sampleMenu = {
+                        hotel_001: {
+                            item_001: {name: "Butter Chicken", description: "Creamy butter chicken with rice", price: 280, image: "https://images.unsplash.com/photo-1603549820556-a8a47baee46f?w=400"},
+                            item_002: {name: "Paneer Tikka", description: "Grilled paneer with spices", price: 220, image: "https://images.unsplash.com/photo-1567184109191-378eb2446c53?w=400"},
+                            item_003: {name: "Dal Makhani", description: "Creamy lentil curry", price: 180, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
+                            item_004: {name: "Biryani", description: "Fragrant rice with meat", price: 250, image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400"},
+                            item_005: {name: "Samosa", description: "Crispy fried pastry", price: 50, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
+                            item_006: {name: "Tandoori Chicken", description: "Spicy tandoori chicken", price: 320, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
+                            item_007: {name: "Naan", description: "Soft Indian bread", price: 40, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
+                            item_008: {name: "Gulab Jamun", description: "Sweet milk solids in syrup", price: 80, image: "https://images.unsplash.com/photo-1585238341710-57b0e4bee4b1?w=400"}
+                        },
+                        hotel_002: {
+                            item_009: {name: "Chicken Hakka Noodles", description: "Indo-Chinese noodles", price: 200, image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400"},
+                            item_010: {name: "Veg Fried Rice", description: "Fragrant fried rice", price: 150, image: "https://images.unsplash.com/photo-1512058560366-cd24270083cd?w=400"},
+                            item_011: {name: "Chilli Garlic Naan", description: "Naan with chilli and garlic", price: 50, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
+                            item_012: {name: "Manchow Soup", description: "Indo-Chinese soup", price: 120, image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400"},
+                            item_013: {name: "Spring Rolls", description: "Crispy spring rolls", price: 100, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
+                            item_014: {name: "Gobi Manchurian", description: "Indo-Chinese cauliflower", price: 180, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
+                            item_015: {name: "Hakka Balls", description: "Spiced vegetable balls", price: 160, image: "https://images.unsplash.com/photo-1606787620884-fdf8222cf81f?w=400"},
+                            item_016: {name: "Chilli Paneer", description: "Spicy paneer with peppers", price: 240, image: "https://images.unsplash.com/photo-1567184109191-378eb2446c53?w=400"}
+                        },
+                        hotel_003: {
+                            item_017: {name: "Nihari", description: "Traditional slow-cooked meat", price: 280, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
+                            item_018: {name: "Seekh Kebab", description: "Grilled minced meat kebab", price: 250, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
+                            item_019: {name: "Shahi Tukda", description: "Royal bread pudding", price: 120, image: "https://images.unsplash.com/photo-1585238341710-57b0e4bee4b1?w=400"},
+                            item_020: {name: "Haleem", description: "Meat and lentil stew", price: 260, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
+                            item_021: {name: "Galauti Kebab", description: "Soft minced meat kebab", price: 240, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
+                            item_022: {name: "Phirni", description: "Rice pudding dessert", price: 100, image: "https://images.unsplash.com/photo-1585238341710-57b0e4bee4b1?w=400"},
+                            item_023: {name: "Roghni Naan", description: "Buttered naan", price: 50, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
+                            item_024: {name: "Mughlai Paratha", description: "Egg-stuffed paratha", price: 80, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"}
+                        }
+                    };
+
+                    // Add hotels
+                    db.ref('hotels').set(sampleHotels).then(() => {
+                        console.log('✅ Hotels added!');
+                    });
+
+                    // Add menu items
+                    db.ref('menuItems').set(sampleMenu).then(() => {
+                        console.log('✅ Menu items added!');
+                    });
+
+                    // Add sample drivers
+                    const sampleDrivers = {
+                        driver_001: {
+                            name: "Raj Kumar",
+                            phone: "9876543210",
+                            email: "raj@foodhub.com",
+                            vehicle: "Bike",
+                            status: "active",
+                            createdAt: new Date().toISOString()
+                        },
+                        driver_002: {
+                            name: "Priya Singh",
+                            phone: "9876543211",
+                            email: "priya@foodhub.com",
+                            vehicle: "Bike",
+                            status: "active",
+                            createdAt: new Date().toISOString()
+                        },
+                        driver_003: {
+                            name: "Arjun Patel",
+                            phone: "9876543212",
+                            email: "arjun@foodhub.com",
+                            vehicle: "Cycle",
+                            status: "active",
+                            createdAt: new Date().toISOString()
+                        }
+                    };
+
+                    db.ref('drivers').set(sampleDrivers).then(() => {
+                        console.log('✅ Drivers added!');
+                        alert('✅ Database initialized with 3 hotels, 24 items, and 3 drivers!');
+                        loadHotels();
+                    });
+
+                } else {
+                    console.log('✓ Database has data - loading...');
+                    loadHotels();
+                }
+            });
+        }
+
         function loadHotels() {
             db.ref('hotels').on('value', snap => {
                 const hotels = snap.val() || {};
@@ -252,7 +362,10 @@
             }).catch(e => alert('❌ Error: ' + e.message));
         }
 
-        window.addEventListener('load', loadHotels);
+        window.addEventListener('load', () => {
+            console.log('🚀 FoodHub loading...');
+            initializeDatabase();
+        });
     </script>
 </body>
 </html>
