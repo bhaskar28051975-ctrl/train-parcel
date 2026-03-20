@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodHub - Order Food</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 pb-40">
+
+    <header class="bg-white shadow-md sticky top-0 z-40 border-b-4 border-purple-600">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-black text-purple-600">🍔 FoodHub</h1>
+        </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto px-4 space-y-6 py-6">
+        <div id="hotels-section">
+            <h2 class="text-2xl font-black text-gray-800 mb-4">🏢 Available Hotels</h2>
+            <div id="hotels-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="text-center py-8"><i class="fa-solid fa-spinner animate-spin text-3xl text-purple-600"></i></div>
+            </div>
+        </div>
+
+        <div id="menu-section" class="hidden">
+            <div class="bg-white p-4 rounded-xl shadow-md mb-4 flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-black text-gray-800" id="hotel-name"></h2>
+                </div>
+                <button onclick="backToHotels()" class="bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-xs font-bold">← Back</button>
+            </div>
+            <div id="items-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+    </div>
+
+    <div id="cart-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t-4 border-purple-600 shadow-2xl z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-black text-gray-800">🛒 Your Order</h3>
+            </div>
+            <div id="cart-items-list" class="space-y-2 mb-4 bg-gray-50 p-4 rounded-lg"></div>
+            <div class="bg-purple-50 p-4 rounded-lg mb-4 space-y-2">
+                <div class="flex justify-between"><span>Subtotal:</span><span id="subtotal-display">₹0</span></div>
+                <div class="flex justify-between"><span>Delivery:</span><span>₹50</span></div>
+                <div class="border-t pt-2 flex justify-between text-lg"><span class="font-black">Total:</span><span id="total-display" class="font-black text-purple-600">₹0</span></div>
+            </div>
+            <div class="space-y-2">
+                <input type="text" id="cust-name" placeholder="Your Name" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
+                <input type="tel" id="cust-phone" placeholder="Phone Number" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
+                <input type="text" id="cust-address" placeholder="Address" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
+                <button onclick="placeOrder()" class="w-full bg-purple-600 text-white py-3 rounded-lg font-black uppercase">Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
+            authDomain: "train-parcel.firebaseapp.com",
+            databaseURL: "https://train-parcel-default-rtdb.firebaseio.com",
+            projectId: "train-parcel",
+            storageBucket: "train-parcel.firebasestorage.app",
+            messagingSenderId: "357680905494",
+            appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let cart = {};
+        let selectedHotel = null;
+        const DELIVERY_FEE = 50;
+
+        function loadHotels() {
+            db.ref('hotels').on('value', snap => {
+                const hotels = snap.val() || {};
+                const container = document.getElementById('hotels-container');
+                if (Object.keys(hotels).length === 0) {
+                    container.innerHTML = '<p class="text-gray-500">No hotels available</p>';
+                    return;
+                }
+                container.innerHTML = Object.entries(hotels).map(([id, h]) => `
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer border-2 border-gray-200 hover:border-purple-600" onclick="selectHotel('${id}')">
+                        <div class="h-40 bg-purple-400 flex items-center justify-center overflow-hidden">
+                            ${h.image ? `<img src="${h.image}" class="w-full h-full object-cover" onerror="this.style.display='none'">` : ''}
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-black text-gray-800">${h.name}</h3>
+                            <p class="text-xs text-gray-500">${h.cuisines || 'Multi-cuisine'}</p>
+                        </div>
+                    </div>
+                `).join('');
+            });
+        }
+
+        function selectHotel(hotelId) {
+            db.ref(`hotels/${hotelId}`).once('value', snap => {
+                selectedHotel = {id: hotelId, ...snap.val()};
+                document.getElementById('hotel-name').textContent = selectedHotel.name;
+                document.getElementById('hotels-section').classList.add('hidden');
+                document.getElementById('menu-section').classList.remove('hidden');
+                cart = {};
+                loadMenu();
+            });
+        }
+
+        function backToHotels() {
+            document.getElementById('hotels-section').classList.remove('hidden');
+            document.getElementById('menu-section').classList.add('hidden');
+            document.getElementById('cart-panel').classList.add('hidden');
+            selectedHotel = null;
+            cart = {};
+            updateCartDisplay();
+        }
+
+        function loadMenu() {
+            db.ref(`menuItems/${selectedHotel.id}`).on('value', snap => {
+                const items = snap.val() || {};
+                displayMenu(items);
+            });
+        }
+
+        function displayMenu(items) {
+            const container = document.getElementById('items-container');
+            container.innerHTML = Object.entries(items).map(([id, item]) => {
+                const qty = cart[id] ? cart[id].qty : 0;
+                return `
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden border">
+                        <div class="h-32 bg-gray-300 flex items-center justify-center">
+                            <i class="fa-solid fa-utensils text-3xl text-gray-400"></i>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-bold text-gray-800">${item.name}</h4>
+                            <p class="text-xs text-gray-500 mt-1">${item.description}</p>
+                            <p class="text-lg font-black text-purple-600 mt-2">₹${item.price}</p>
+                            <div class="mt-3 flex gap-2">
+                                ${qty === 0 ? `
+                                    <button onclick="updateCart('${id}', '${item.name}', ${item.price}, 1)" class="flex-1 bg-purple-600 text-white py-2 rounded text-sm font-bold">Add</button>
+                                ` : `
+                                    <button onclick="updateCart('${id}', '${item.name}', ${item.price}, -1)" class="flex-1 bg-red-600 text-white py-2 rounded">−</button>
+                                    <span class="flex-1 text-center font-bold">${qty}</span>
+                                    <button onclick="updateCart('${id}', '${item.name}', ${item.price}, 1)" class="flex-1 bg-green-600 text-white py-2 rounded">+</button>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateCart(itemId, name, price, change) {
+            if (!cart[itemId]) cart[itemId] = {name, price: parseInt(price), qty: 0};
+            cart[itemId].qty += change;
+            if (cart[itemId].qty <= 0) delete cart[itemId];
+            updateCartDisplay();
+            loadMenu();
+        }
+
+        function updateCartDisplay() {
+            const items = Object.entries(cart);
+            if (items.length === 0) {
+                document.getElementById('cart-panel').classList.add('hidden');
+                return;
+            }
+            document.getElementById('cart-panel').classList.remove('hidden');
+            const subtotal = items.reduce((s, [_, i]) => s + (i.price * i.qty), 0);
+            document.getElementById('cart-items-list').innerHTML = items.map(([_, i]) => `
+                <div class="flex justify-between text-sm p-2 bg-white rounded border">
+                    <span>${i.name}</span>
+                    <span>×${i.qty}</span>
+                    <span class="font-bold">₹${i.price * i.qty}</span>
+                </div>
+            `).join('');
+            document.getElementById('subtotal-display').textContent = '₹' + subtotal;
+            document.getElementById('total-display').textContent = '₹' + (subtotal + DELIVERY_FEE);
+        }
+
+        function placeOrder() {
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+            if (!name || !phone || !address) return alert('Please fill all details');
+            if (Object.keys(cart).length === 0) return alert('Cart is empty');
+            const items = Object.entries(cart).map(([id, i]) => ({id, name: i.name, price: i.price, qty: i.qty}));
+            const subtotal = items.reduce((s, i) => s + (i.price * i.qty), 0);
+            const order = {
+                id: Date.now().toString(),
+                hotelId: selectedHotel.id,
+                hotelName: selectedHotel.name,
+                customerName: name,
+                customerPhone: phone,
+                customerAddress: address,
+                items: items,
+                subtotal: subtotal,
+                deliveryFee: DELIVERY_FEE,
+                total: subtotal + DELIVERY_FEE,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            db.ref('orders').child(order.id).set(order).then(() => {
+                alert('✅ Order placed!');
+                backToHotels();
+            }).catch(e => alert('Error: ' + e.message));
+        }
+
+        window.addEventListener('load', loadHotels);
+    </script>
+</body>
+</html>
