@@ -2,369 +2,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>FoodHub - Reports</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 0;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 100%;
-            padding: 0;
-        }
-
-        header {
-            background: white;
-            padding: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            width: 100%;
-        }
-
-        header h1 {
-            color: #667eea;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            overflow-x: auto;
-        }
-
-        .nav-links a {
-            padding: 8px 12px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 12px;
-            white-space: nowrap;
-            transition: background 0.3s;
-        }
-
-        .nav-links a.active {
-            background: #764ba2;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 15px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 8px 0;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 12px;
-        }
-
-        .content {
-            padding: 15px;
-            min-height: calc(100vh - 300px);
-        }
-
-        .chart-section {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        .chart-section h2 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-
-        .chart-bar {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            gap: 10px;
-        }
-
-        .chart-label {
-            min-width: 80px;
-            font-weight: bold;
-            color: #333;
-            font-size: 12px;
-        }
-
-        .chart-fill {
-            flex: 1;
-            height: 26px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 0 8px;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
-            background: rgba(255,255,255,0.1);
-            padding: 10px;
-            border-radius: 8px;
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            padding: 8px 12px;
-            background: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-            white-space: nowrap;
-            color: #667eea;
-            transition: all 0.3s;
-        }
-
-        .tab-btn.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .table-section {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-
-        .table-section h2 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-        }
-
-        table th {
-            background: #f8f9ff;
-            padding: 10px;
-            text-align: left;
-            font-weight: bold;
-            color: #667eea;
-            border-bottom: 2px solid #ddd;
-        }
-
-        table td {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        table tr:hover {
-            background: #f8f9ff;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .status-preparing {
-            background: #ffc107;
-            color: white;
-        }
-
-        .status-ready {
-            background: #28a745;
-            color: white;
-        }
-
-        .status-on-way {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .status-delivered {
-            background: #28a745;
-            color: white;
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 30px 10px;
-            color: #999;
-            font-size: 12px;
-        }
-
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 20px;
-            }
-
-            .nav-links a {
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            table {
-                font-size: 11px;
-            }
-
-            table th, table td {
-                padding: 8px;
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - FoodHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>📊 Reports</h1>
-            <div class="nav-links">
-                <a href="index.html">🛒 Order</a>
-                <a href="kitchen.html">👨‍🍳 Kitchen</a>
-                <a href="delivery.html">🚚 Delivery</a>
-                <a href="admin.html">⚙️ Admin</a>
-                <a href="reports.html" class="active">📊 Reports</a>
-            </div>
-        </header>
+<body class="bg-purple-50 pb-40">
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Total Orders</div>
-                <div class="stat-number" id="totalOrders">0</div>
+    <header class="bg-white shadow-md sticky top-0 z-40 border-b-4 border-purple-600">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-black text-purple-600">📊 Reports</h1>
+            <a href="control.html" class="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-home mr-1"></i>Home</a>
+        </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto px-4 space-y-6 py-6">
+
+        <!-- KEY METRICS -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-green-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Total Orders</p>
+                <p id="metric-orders" class="text-3xl font-black text-green-600 mt-2">0</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Total Revenue</div>
-                <div class="stat-number" id="totalRevenue">₹0</div>
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-blue-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Revenue</p>
+                <p id="metric-revenue" class="text-2xl font-black text-blue-600 mt-2">₹0</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Avg Order</div>
-                <div class="stat-number" id="avgOrder">₹0</div>
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-orange-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Avg Order</p>
+                <p id="metric-average" class="text-2xl font-black text-orange-600 mt-2">₹0</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Delivered</div>
-                <div class="stat-number" id="deliveredOrders">0</div>
+            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-red-600">
+                <p class="text-xs text-gray-500 font-bold uppercase">Delivered</p>
+                <p id="metric-delivered" class="text-3xl font-black text-red-600 mt-2">0</p>
             </div>
         </div>
 
-        <div class="content">
-            <div class="chart-section">
-                <h2>📈 Order Status</h2>
-                <div id="statusChart"></div>
+        <!-- CHARTS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- ORDER STATUS DISTRIBUTION -->
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-purple-600">
+                <h3 class="text-lg font-black text-gray-800 mb-4">📈 Order Status Distribution</h3>
+                <canvas id="statusChart"></canvas>
             </div>
 
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('all')">All Orders</button>
-                <button class="tab-btn" onclick="switchTab('today')">Today</button>
+            <!-- DAILY REVENUE -->
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-600">
+                <h3 class="text-lg font-black text-gray-800 mb-4">💰 Top Hotels by Revenue</h3>
+                <div id="top-hotels" class="space-y-2"></div>
             </div>
+        </div>
 
-            <div id="all" class="tab-content active">
-                <div class="table-section">
-                    <h2>All Orders</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Phone</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="allOrdersTable">
-                            <tr><td colspan="5" class="empty-message">Loading...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <!-- TABS -->
+        <div class="flex gap-2 bg-white p-2 rounded-lg shadow-md flex-wrap sticky top-20 z-30">
+            <button onclick="switchTab('orders')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-purple-600 text-white" id="tab-orders">📋 All Orders</button>
+            <button onclick="switchTab('drivers')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-gray-200 text-gray-700" id="tab-drivers">🚚 Driver Earnings</button>
+            <button onclick="switchTab('hotels')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-gray-200 text-gray-700" id="tab-hotels">🏢 Hotel Revenue</button>
+        </div>
 
-            <div id="today" class="tab-content">
-                <div class="table-section">
-                    <h2>Today's Orders</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Phone</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="todayOrdersTable">
-                            <tr><td colspan="5" class="empty-message">Loading...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+        <!-- ORDERS TABLE -->
+        <div id="orders-tab" class="bg-white p-6 rounded-xl shadow-md">
+            <h3 class="text-lg font-black text-gray-800 mb-4">📋 Order Details</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b-2 border-purple-600">
+                            <th class="text-left p-2 font-black text-gray-700">Order ID</th>
+                            <th class="text-left p-2 font-black text-gray-700">Customer</th>
+                            <th class="text-left p-2 font-black text-gray-700">Amount</th>
+                            <th class="text-left p-2 font-black text-gray-700">Status</th>
+                            <th class="text-left p-2 font-black text-gray-700">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        <tr><td colspan="5" class="text-center text-gray-500 py-4">Loading...</td></tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
+
+        <!-- DRIVERS EARNINGS -->
+        <div id="drivers-tab" class="hidden bg-white p-6 rounded-xl shadow-md">
+            <h3 class="text-lg font-black text-gray-800 mb-4">🚚 Driver Earnings Summary</h3>
+            <div id="drivers-earnings" class="space-y-3"></div>
+        </div>
+
+        <!-- HOTEL REVENUE -->
+        <div id="hotels-tab" class="hidden bg-white p-6 rounded-xl shadow-md">
+            <h3 class="text-lg font-black text-gray-800 mb-4">🏢 Hotel Revenue Breakdown</h3>
+            <div id="hotels-revenue" class="space-y-3"></div>
+        </div>
+
+        <!-- NAV -->
+        <div class="flex gap-2 mt-8">
+            <a href="index.html" class="flex-1 bg-yellow-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">🛒 Customer</a>
+            <a href="admin.html" class="flex-1 bg-red-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">⚙️ Admin</a>
+            <a href="kitchen.html" class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">👨‍🍳 Kitchen</a>
         </div>
     </div>
 
@@ -379,115 +113,196 @@
             projectId: "train-parcel",
             storageBucket: "train-parcel.firebasestorage.app",
             messagingSenderId: "357680905494",
-            appId: "1:357680905494:web:072f547f8fc7c05a1ce437",
-            measurementId: "G-SQX8M0MKHT"
+            appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
         };
 
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
-        let allOrders = [];
+        let statusChart = null;
 
-        function loadOrders() {
-            database.ref('orders').on('value', (snapshot) => {
-                allOrders = [];
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(key => {
-                        allOrders.push({id: key, ...data[key]});
-                    });
+        function switchTab(tab) {
+            document.getElementById('orders-tab').classList.toggle('hidden', tab !== 'orders');
+            document.getElementById('drivers-tab').classList.toggle('hidden', tab !== 'drivers');
+            document.getElementById('hotels-tab').classList.toggle('hidden', tab !== 'hotels');
+
+            const tabs = ['orders', 'drivers', 'hotels'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    btn.classList.add('bg-purple-600', 'text-white');
+                    btn.classList.remove('bg-gray-200', 'text-gray-700');
+                } else {
+                    btn.classList.remove('bg-purple-600', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
                 }
-                allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                updateStats();
-                displayOrders();
-                updateChart();
             });
         }
 
-        function updateStats() {
-            const total = allOrders.length;
-            const revenue = allOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-            const delivered = allOrders.filter(o => o.status === 'delivered').length;
-            const avg = total > 0 ? Math.round(revenue / total) : 0;
+        function loadReports() {
+            db.ref('orders').on('value', snap => {
+                const orders = snap.val() || {};
+                const ordersList = Object.entries(orders).map(([id, o]) => ({id, ...o}));
 
-            document.getElementById('totalOrders').textContent = total;
-            document.getElementById('totalRevenue').textContent = '₹' + revenue;
-            document.getElementById('avgOrder').textContent = '₹' + avg;
-            document.getElementById('deliveredOrders').textContent = delivered;
-        }
+                // Calculate metrics
+                const totalOrders = ordersList.length;
+                const delivered = ordersList.filter(o => o.status === 'delivered').length;
+                const totalRevenue = ordersList.reduce((sum, o) => sum + (o.total || 0), 0);
+                const avgOrder = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
 
-        function updateChart() {
-            const pending = allOrders.filter(o => o.status === 'pending').length;
-            const preparing = allOrders.filter(o => o.status === 'preparing').length;
-            const ready = allOrders.filter(o => o.status === 'ready').length;
-            const onWay = allOrders.filter(o => o.status === 'on-way').length;
-            const delivered = allOrders.filter(o => o.status === 'delivered').length;
+                document.getElementById('metric-orders').textContent = totalOrders;
+                document.getElementById('metric-revenue').textContent = '₹' + totalRevenue;
+                document.getElementById('metric-average').textContent = '₹' + avgOrder;
+                document.getElementById('metric-delivered').textContent = delivered;
 
-            const max = Math.max(pending, preparing, ready, onWay, delivered, 1);
+                // Status distribution chart
+                const statusCounts = {
+                    pending: ordersList.filter(o => o.status === 'pending').length,
+                    preparing: ordersList.filter(o => o.status === 'preparing').length,
+                    ready: ordersList.filter(o => o.status === 'ready').length,
+                    'on-way': ordersList.filter(o => o.status === 'on-way').length,
+                    delivered: delivered,
+                    cancelled: ordersList.filter(o => o.status === 'cancelled').length
+                };
+                updateStatusChart(statusCounts);
 
-            const chart = document.getElementById('statusChart');
-            chart.innerHTML = `
-                <div class="chart-bar">
-                    <div class="chart-label">Pending</div>
-                    <div class="chart-fill" style="width: ${(pending/max)*100}%">${pending}</div>
-                </div>
-                <div class="chart-bar">
-                    <div class="chart-label">Preparing</div>
-                    <div class="chart-fill" style="width: ${(preparing/max)*100}%">${preparing}</div>
-                </div>
-                <div class="chart-bar">
-                    <div class="chart-label">Ready</div>
-                    <div class="chart-fill" style="width: ${(ready/max)*100}%">${ready}</div>
-                </div>
-                <div class="chart-bar">
-                    <div class="chart-label">On Way</div>
-                    <div class="chart-fill" style="width: ${(onWay/max)*100}%">${onWay}</div>
-                </div>
-                <div class="chart-bar">
-                    <div class="chart-label">Delivered</div>
-                    <div class="chart-fill" style="width: ${(delivered/max)*100}%">${delivered}</div>
-                </div>
-            `;
-        }
+                // Orders table
+                displayOrdersTable(ordersList.reverse());
 
-        function displayOrders() {
-            displayTable('allOrdersTable', allOrders);
+                // Driver earnings
+                displayDriverEarnings(ordersList);
 
-            const today = new Date().toDateString();
-            const todayOrders = allOrders.filter(o => {
-                const orderDate = new Date(o.createdAt).toDateString();
-                return orderDate === today;
+                // Hotel revenue
+                displayHotelRevenue(ordersList);
+
+                // Top hotels
+                displayTopHotels(ordersList);
             });
-            displayTable('todayOrdersTable', todayOrders);
         }
 
-        function displayTable(tableId, orders) {
-            const tbody = document.getElementById(tableId);
-            if (orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="empty-message">No orders</td></tr>';
-                return;
-            }
+        function updateStatusChart(statusCounts) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            
+            if (statusChart) statusChart.destroy();
 
-            tbody.innerHTML = orders.map(order => `
-                <tr>
-                    <td>#${order.id.substring(0, 6)}</td>
-                    <td>${order.customerName}</td>
-                    <td>${order.customerPhone}</td>
-                    <td>₹${order.total}</td>
-                    <td><span class="status-badge status-${order.status}">${order.status.substring(0, 3).toUpperCase()}</span></td>
+            statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Preparing', 'Ready', 'On Way', 'Delivered', 'Cancelled'],
+                    datasets: [{
+                        data: [statusCounts.pending, statusCounts.preparing, statusCounts.ready, statusCounts['on-way'], statusCounts.delivered, statusCounts.cancelled],
+                        backgroundColor: ['#ef4444', '#f97316', '#fbbf24', '#3b82f6', '#22c55e', '#6b7280'],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function displayOrdersTable(orders) {
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = orders.slice(0, 10).map(order => `
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                    <td class="p-2 font-bold text-gray-800">#${order.id.substring(0, 6)}</td>
+                    <td class="p-2 text-gray-700">${order.customerName}</td>
+                    <td class="p-2 font-bold text-gray-800">₹${order.total}</td>
+                    <td class="p-2">
+                        <span class="px-2 py-1 rounded-full text-xs font-bold ${
+                            order.status === 'pending' ? 'bg-red-100 text-red-700' :
+                            order.status === 'preparing' ? 'bg-orange-100 text-orange-700' :
+                            order.status === 'ready' ? 'bg-yellow-100 text-yellow-700' :
+                            order.status === 'on-way' ? 'bg-blue-100 text-blue-700' :
+                            order.status === 'delivered' ? 'bg-green-100 text-green-700' :
+                            'bg-gray-100 text-gray-700'
+                        }">
+                            ${order.status.toUpperCase()}
+                        </span>
+                    </td>
+                    <td class="p-2 text-gray-600 text-xs">${new Date(order.createdAt).toLocaleDateString()}</td>
                 </tr>
             `).join('');
         }
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tab).classList.add('active');
+        function displayDriverEarnings(orders) {
+            const drivers = {};
+            const COMMISSION = 0.10;
 
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
+            orders.filter(o => o.status === 'delivered').forEach(order => {
+                const driver = order.deliveryName || 'Unknown';
+                const earnings = order.total * COMMISSION;
+                drivers[driver] = (drivers[driver] || 0) + earnings;
+            });
+
+            const container = document.getElementById('drivers-earnings');
+            if (Object.keys(drivers).length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-4">No completed deliveries</p>';
+                return;
+            }
+
+            container.innerHTML = Object.entries(drivers)
+                .sort((a, b) => b[1] - a[1])
+                .map(([driver, earnings]) => `
+                    <div class="flex justify-between items-center p-3 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border-l-4 border-green-600">
+                        <span class="font-bold text-gray-800">🚚 ${driver}</span>
+                        <span class="text-xl font-black text-green-600">₹${earnings.toFixed(0)}</span>
+                    </div>
+                `).join('');
         }
 
-        window.addEventListener('load', loadOrders);
+        function displayHotelRevenue(orders) {
+            const hotels = {};
+
+            orders.forEach(order => {
+                const hotel = order.hotelName || 'Unknown';
+                hotels[hotel] = (hotels[hotel] || 0) + (order.total || 0);
+            });
+
+            const container = document.getElementById('hotels-revenue');
+            if (Object.keys(hotels).length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-4">No orders</p>';
+                return;
+            }
+
+            container.innerHTML = Object.entries(hotels)
+                .sort((a, b) => b[1] - a[1])
+                .map(([hotel, revenue]) => `
+                    <div class="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border-l-4 border-blue-600">
+                        <span class="font-bold text-gray-800">🏢 ${hotel}</span>
+                        <span class="text-xl font-black text-blue-600">₹${revenue.toFixed(0)}</span>
+                    </div>
+                `).join('');
+        }
+
+        function displayTopHotels(orders) {
+            const hotels = {};
+
+            orders.forEach(order => {
+                const hotel = order.hotelName || 'Unknown';
+                hotels[hotel] = (hotels[hotel] || 0) + (order.total || 0);
+            });
+
+            const container = document.getElementById('top-hotels');
+            const sorted = Object.entries(hotels)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            container.innerHTML = sorted.map(([hotel, revenue]) => `
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded border-l-2 border-purple-600">
+                    <span class="text-sm font-bold text-gray-800">${hotel}</span>
+                    <span class="text-lg font-black text-purple-600">₹${revenue.toFixed(0)}</span>
+                </div>
+            `).join('');
+        }
+
+        window.addEventListener('load', loadReports);
     </script>
 </body>
 </html>
