@@ -16,13 +16,15 @@
     </header>
 
     <!-- LOGIN PANEL -->
-    <div id="login-panel" class="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 hidden">
+    <div id="login-panel" class="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
         <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl">
-            <h2 class="text-2xl font-black text-gray-800 mb-4">🚚 Driver Login</h2>
+            <h2 class="text-2xl font-black text-gray-800 mb-2">🚚 Driver Login</h2>
+            <p class="text-sm text-gray-500 mb-4">Select your name to start accepting orders</p>
             <div class="space-y-3">
-                <input type="text" id="driverSelect" placeholder="Select Your Name" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" list="drivers-list">
-                <datalist id="drivers-list"></datalist>
-                <button onclick="driverLogin()" class="w-full bg-green-600 text-white p-4 rounded-lg font-black uppercase shadow-lg">Login as Driver</button>
+                <select id="driverSelect" class="w-full p-4 border rounded-lg bg-gray-50 text-sm font-bold">
+                    <option value="">Loading drivers...</option>
+                </select>
+                <button onclick="driverLogin()" class="w-full bg-green-600 text-white p-4 rounded-lg font-black uppercase shadow-lg active:scale-95">Login as Driver</button>
             </div>
         </div>
     </div>
@@ -31,15 +33,15 @@
         <!-- DRIVER INFO -->
         <div id="driver-info" class="hidden bg-green-600 text-white p-6 rounded-2xl shadow-md mb-6">
             <p class="text-xs font-bold uppercase mb-2 opacity-90">Driver Logged In</p>
-            <h2 id="driver-name-display" class="text-2xl font-black">--</h2>
-            <p id="driver-earnings" class="text-3xl font-black text-green-100 mt-3">₹0</p>
+            <h2 id="driver-name-display" class="text-3xl font-black">--</h2>
+            <p id="driver-earnings" class="text-4xl font-black text-green-100 mt-3">₹0</p>
             <p class="text-xs text-green-100 mt-1">Today's Earnings (10% commission)</p>
         </div>
 
         <!-- TABS -->
         <div class="flex gap-2 bg-white p-2 rounded-xl shadow-md flex-wrap mb-6 sticky top-20 z-40">
-            <button onclick="switchTab('ready')" id="tab-ready" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-blue-600 text-white">🟦 Ready</button>
-            <button onclick="switchTab('onway')" id="tab-onway" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">🟧 On Way</button>
+            <button onclick="switchTab('ready')" id="tab-ready" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-blue-600 text-white">🔵 Ready</button>
+            <button onclick="switchTab('onway')" id="tab-onway" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">🟠 On Way</button>
             <button onclick="switchTab('delivered')" id="tab-delivered" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">✅ Delivered</button>
         </div>
 
@@ -61,13 +63,13 @@
 
         <!-- READY ORDERS -->
         <div id="section-ready" class="space-y-4">
-            <h2 class="text-xl font-black text-gray-800 mb-4">🟦 Ready for Pickup</h2>
+            <h2 class="text-xl font-black text-gray-800 mb-4">🔵 Ready for Pickup</h2>
             <div id="ready-orders" class="space-y-4"></div>
         </div>
 
         <!-- ON WAY ORDERS -->
         <div id="section-onway" class="hidden space-y-4">
-            <h2 class="text-xl font-black text-gray-800 mb-4">🟧 Orders On The Way</h2>
+            <h2 class="text-xl font-black text-gray-800 mb-4">🟠 Orders On The Way</h2>
             <div id="onway-orders" class="space-y-4"></div>
         </div>
 
@@ -77,7 +79,7 @@
             <div id="delivered-orders" class="space-y-4"></div>
         </div>
 
-        <button id="logout-btn" onclick="logout()" class="hidden fixed bottom-20 right-4 bg-red-600 text-white px-6 py-3 rounded-full font-black uppercase shadow-lg">Logout</button>
+        <button id="logout-btn" onclick="logout()" class="hidden fixed bottom-20 right-4 bg-red-600 text-white px-6 py-3 rounded-full font-black uppercase shadow-lg active:scale-95">Logout</button>
     </div>
 
     <script type="module">
@@ -98,6 +100,7 @@
 
     let driverId = localStorage.getItem('driver_id');
     let driverName = localStorage.getItem('driver_name');
+    let driversMap = {};
     const COMMISSION_RATE = 10;
 
     window.switchTab = (tab) => {
@@ -111,33 +114,36 @@
             document.getElementById(`tab-${t}`).classList.add('bg-gray-200', 'text-gray-700');
         });
         
-        if(tab === 'ready') document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700'), document.getElementById(`tab-${tab}`).classList.add('bg-blue-600', 'text-white');
-        else if(tab === 'onway') document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700'), document.getElementById(`tab-${tab}`).classList.add('bg-orange-600', 'text-white');
-        else if(tab === 'delivered') document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700'), document.getElementById(`tab-${tab}`).classList.add('bg-green-600', 'text-white');
+        if(tab === 'ready') {
+            document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700');
+            document.getElementById(`tab-${tab}`).classList.add('bg-blue-600', 'text-white');
+        } else if(tab === 'onway') {
+            document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700');
+            document.getElementById(`tab-${tab}`).classList.add('bg-orange-600', 'text-white');
+        } else if(tab === 'delivered') {
+            document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700');
+            document.getElementById(`tab-${tab}`).classList.add('bg-green-600', 'text-white');
+        }
     };
 
     window.driverLogin = () => {
-        const name = document.getElementById('driverSelect').value;
-        if(!name) return alert("Select a driver");
+        const selected = document.getElementById('driverSelect').value;
+        if(!selected) return alert("❌ Select a driver");
 
-        onValue(ref(db, 'drivers'), (snap) => {
-            let found = false;
-            snap.forEach(child => {
-                if(child.val().name === name) {
-                    driverId = child.key;
-                    driverName = name;
-                    localStorage.setItem('driver_id', driverId);
-                    localStorage.setItem('driver_name', driverName);
-                    document.getElementById('login-panel').classList.add('hidden');
-                    document.getElementById('driver-info').classList.remove('hidden');
-                    document.getElementById('logout-btn').classList.remove('hidden');
-                    document.getElementById('driver-name-display').textContent = driverName;
-                    loadOrders();
-                    found = true;
-                }
-            });
-            if(!found) alert("Driver not found");
-        }, { onlyOnce: true });
+        driverId = driversMap[selected];
+        driverName = selected;
+        
+        if(!driverId) return alert("❌ Driver not found");
+
+        localStorage.setItem('driver_id', driverId);
+        localStorage.setItem('driver_name', driverName);
+        
+        document.getElementById('login-panel').classList.add('hidden');
+        document.getElementById('driver-info').classList.remove('hidden');
+        document.getElementById('logout-btn').classList.remove('hidden');
+        document.getElementById('driver-name-display').textContent = driverName;
+        
+        loadOrders();
     };
 
     window.logout = () => {
@@ -147,17 +153,26 @@
     };
 
     window.updateStatus = (orderId, newStatus) => {
-        update(ref(db, `orders/${orderId}`), { status: newStatus, deliveryDriver: driverId, deliveryName: driverName });
+        update(ref(db, `orders/${orderId}`), { 
+            status: newStatus, 
+            deliveryDriver: driverId, 
+            deliveryName: driverName 
+        });
     };
 
     function loadDriversList() {
         onValue(ref(db, 'drivers'), (snap) => {
-            const list = document.getElementById('drivers-list');
-            list.innerHTML = '';
+            const select = document.getElementById('driverSelect');
+            select.innerHTML = '<option value="">Select Your Name</option>';
+            driversMap = {};
+            
             snap.forEach(child => {
+                const driver = child.val();
+                driversMap[driver.name] = child.key;
                 const option = document.createElement('option');
-                option.value = child.val().name;
-                list.appendChild(option);
+                option.value = driver.name;
+                option.textContent = driver.name;
+                select.appendChild(option);
             });
         });
     }
@@ -209,7 +224,7 @@
 
                 <div class="bg-yellow-50 p-4 rounded-lg mb-4 border-l-2 border-yellow-600">
                     <p class="font-bold text-gray-800">${order.customerName}</p>
-                    <p class="text-sm text-gray-600">📱 <a href="tel:${order.customerPhone}" class="text-blue-600 hover:underline">${order.customerPhone}</a></p>
+                    <p class="text-sm text-gray-600">📱 <a href="tel:${order.customerPhone}" class="text-blue-600 hover:underline font-bold">${order.customerPhone}</a></p>
                     <p class="text-sm text-gray-600">📍 ${order.customerAddress}</p>
                 </div>
 
@@ -219,21 +234,21 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-3 mb-4">
-                    <div class="bg-purple-50 p-3 rounded-lg text-center">
-                        <p class="text-xs text-gray-600">Total Amount</p>
+                    <div class="bg-purple-50 p-3 rounded-lg text-center border-l-2 border-purple-600">
+                        <p class="text-xs text-gray-600 font-bold">Total Amount</p>
                         <p class="text-2xl font-black text-purple-600">₹${order.totalAmount}</p>
                     </div>
-                    <div class="bg-green-50 p-3 rounded-lg text-center">
-                        <p class="text-xs text-gray-600">Your Commission</p>
+                    <div class="bg-green-50 p-3 rounded-lg text-center border-l-2 border-green-600">
+                        <p class="text-xs text-gray-600 font-bold">Your Commission</p>
                         <p class="text-2xl font-black text-green-600">₹${commission}</p>
                     </div>
                 </div>
 
                 <div class="flex gap-2">
                     ${order.status === 'ready' ? `
-                        <button onclick="updateStatus('${orderId}', 'on-way')" class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">Pickup Order</button>
+                        <button onclick="updateStatus('${orderId}', 'on-way')" class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">🚚 Pickup Order</button>
                     ` : order.status === 'on-way' ? `
-                        <button onclick="updateStatus('${orderId}', 'delivered')" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">Mark Delivered</button>
+                        <button onclick="updateStatus('${orderId}', 'delivered')" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">✅ Mark Delivered</button>
                     ` : `
                         <span class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase text-center">✅ DELIVERED</span>
                     `}
@@ -242,15 +257,15 @@
         }).join('');
     }
 
+    // Initialize
+    loadDriversList();
+    
     if(driverId) {
         document.getElementById('login-panel').classList.add('hidden');
         document.getElementById('driver-info').classList.remove('hidden');
         document.getElementById('logout-btn').classList.remove('hidden');
         document.getElementById('driver-name-display').textContent = driverName;
         loadOrders();
-    } else {
-        document.getElementById('login-panel').classList.remove('hidden');
-        loadDriversList();
     }
 </script>
 </body>
