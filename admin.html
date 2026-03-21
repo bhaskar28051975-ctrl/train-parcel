@@ -7,108 +7,83 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-red-50 pb-40">
-
-    <header class="bg-white shadow-md sticky top-0 z-40 border-b-4 border-red-600">
-        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-black text-red-600">⚙️ Admin Panel</h1>
-            <a href="control.html" class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-home mr-1"></i>Home</a>
-        </div>
+<body class="bg-purple-50 pb-24">
+    <header class="bg-white p-5 shadow-md sticky top-0 z-50 border-b-4 border-purple-600">
+        <h1 class="text-2xl font-black text-purple-600">⚙️ Admin Panel</h1>
     </header>
 
-    <div class="max-w-4xl mx-auto px-4 space-y-6 py-6">
-
+    <div class="max-w-4xl mx-auto p-4 space-y-6">
+        
         <!-- TABS -->
-        <div class="flex gap-2 bg-white p-2 rounded-lg shadow-md flex-wrap sticky top-20 z-30">
-            <button onclick="switchTab('hotels')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-red-600 text-white" id="tab-hotels">🏢 Hotels</button>
-            <button onclick="switchTab('menu')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-gray-200 text-gray-700" id="tab-menu">📋 Menu Items</button>
-            <button onclick="switchTab('drivers')" class="py-2 px-4 rounded-lg text-xs font-black uppercase transition-all bg-gray-200 text-gray-700" id="tab-drivers">🚚 Drivers</button>
+        <div class="flex gap-2 bg-white p-2 rounded-xl shadow-md flex-wrap">
+            <button onclick="switchTab('hotels')" id="tab-hotels" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-purple-600 text-white">🏢 Hotels</button>
+            <button onclick="switchTab('items')" id="tab-items" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">📋 Menu Items</button>
+            <button onclick="switchTab('drivers')" id="tab-drivers" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">🚚 Drivers</button>
         </div>
 
         <!-- HOTELS TAB -->
-        <div id="hotels-tab" class="space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-red-600">
-                <h2 class="text-xl font-black text-gray-800 mb-4">➕ Add New Hotel</h2>
-                <div class="space-y-3">
-                    <input type="text" id="hotel-name" placeholder="Hotel Name *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
-                    <input type="text" id="hotel-cuisines" placeholder="Cuisines (e.g., Indian, Chinese)" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
-                    <input type="text" id="hotel-image" placeholder="Hotel Image URL" class="w-full p-3 border rounded-lg bg-gray-50 text-sm" placeholder="https://example.com/image.jpg">
-                    <button onclick="addHotel()" class="w-full bg-green-600 text-white py-3 rounded-lg font-black uppercase shadow-md active:scale-95">Add Hotel</button>
-                </div>
+        <div id="section-hotels" class="space-y-6">
+            <div class="bg-white p-6 rounded-[2rem] shadow-xl border space-y-3">
+                <h2 class="font-black text-gray-800 uppercase text-xs tracking-widest">➕ Add New Hotel</h2>
+                <input id="hotelName" type="text" placeholder="Hotel Name" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="hotelImg" type="text" placeholder="Hotel Image URL" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <button onclick="addHotel()" class="w-full bg-green-600 text-white py-4 rounded-xl font-black uppercase shadow-lg active:scale-95">Save Hotel</button>
             </div>
 
-            <div>
-                <h2 class="text-xl font-black text-gray-800 mb-4">🏢 All Hotels</h2>
-                <div id="hotels-list" class="space-y-3"></div>
-            </div>
+            <h2 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">🏢 Managed Hotels</h2>
+            <div id="admin-hotel-list" class="space-y-4"></div>
         </div>
 
-        <!-- MENU TAB -->
-        <div id="menu-tab" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-purple-600">
-                <h2 class="text-xl font-black text-gray-800 mb-4">➕ Add Menu Item</h2>
-                <div class="space-y-3">
-                    <select id="menu-hotel" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
-                        <option value="">Select Hotel *</option>
-                    </select>
-                    <input type="text" id="item-name" placeholder="Item Name *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
-                    <input type="text" id="item-description" placeholder="Description" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
-                    <input type="number" id="item-price" placeholder="Price *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" step="10" required>
-                    <input type="text" id="item-image" placeholder="Item Image URL" class="w-full p-3 border rounded-lg bg-gray-50 text-sm" placeholder="https://example.com/food.jpg">
-                    <button onclick="addMenuItem()" class="w-full bg-green-600 text-white py-3 rounded-lg font-black uppercase shadow-md active:scale-95">Add Item</button>
-                </div>
+        <!-- ITEMS TAB -->
+        <div id="section-items" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-[2rem] shadow-xl border space-y-3">
+                <h2 class="font-black text-gray-800 uppercase text-xs tracking-widest">➕ Add Menu Item</h2>
+                <select id="itemHotelSelect" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold">
+                    <option value="">Select Hotel *</option>
+                </select>
+                <input id="itemName" type="text" placeholder="Item Name" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="itemPrice" type="number" placeholder="Price" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="itemImg" type="text" placeholder="Item Image URL" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <button onclick="addMenuItem()" class="w-full bg-green-600 text-white py-4 rounded-xl font-black uppercase shadow-lg active:scale-95">Add Item</button>
             </div>
 
-            <div>
-                <h2 class="text-xl font-black text-gray-800 mb-4">📋 Menu Items</h2>
-                <div id="menu-list" class="space-y-3"></div>
-            </div>
+            <h2 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">📋 All Menu Items</h2>
+            <div id="admin-items-list" class="space-y-4"></div>
         </div>
 
         <!-- DRIVERS TAB -->
-        <div id="drivers-tab" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-blue-600">
-                <h2 class="text-xl font-black text-gray-800 mb-4">➕ Register Delivery Boy</h2>
-                <div class="space-y-3">
-                    <input type="text" id="driver-name" placeholder="Full Name *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
-                    <input type="tel" id="driver-phone" placeholder="Phone Number *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" required>
-                    <input type="email" id="driver-email" placeholder="Email (optional)" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
-                    <input type="text" id="driver-vehicle" placeholder="Vehicle Type (Bike/Cycle) *" class="w-full p-3 border rounded-lg bg-gray-50 text-sm" required>
-                    <button onclick="addDriver()" class="w-full bg-green-600 text-white py-3 rounded-lg font-black uppercase shadow-md active:scale-95">Register Driver</button>
-                </div>
+        <div id="section-drivers" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-[2rem] shadow-xl border space-y-3">
+                <h2 class="font-black text-gray-800 uppercase text-xs tracking-widest">➕ Register Delivery Boy</h2>
+                <input id="driverName" type="text" placeholder="Full Name" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="driverPhone" type="tel" placeholder="Phone Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="driverEmail" type="email" placeholder="Email (optional)" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="driverVehicle" type="text" placeholder="Vehicle Type (Bike/Cycle)" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <button onclick="addDriver()" class="w-full bg-green-600 text-white py-4 rounded-xl font-black uppercase shadow-lg active:scale-95">Register Driver</button>
             </div>
 
-            <div>
-                <h2 class="text-xl font-black text-gray-800 mb-4">🚚 Registered Drivers</h2>
-                <div id="drivers-list" class="space-y-3"></div>
-            </div>
+            <h2 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">🚚 Registered Drivers</h2>
+            <div id="admin-drivers-list" class="space-y-4"></div>
         </div>
 
         <!-- STATS -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-red-600">
-                <p class="text-xs text-gray-500 font-bold uppercase">Hotels</p>
-                <p id="stat-hotels" class="text-3xl font-black text-red-600 mt-2">0</p>
+        <div class="grid grid-cols-4 gap-3 bg-white p-4 rounded-xl shadow-md">
+            <div class="text-center">
+                <p id="stat-hotels" class="text-2xl font-black text-purple-600">0</p>
+                <p class="text-xs text-gray-500">Hotels</p>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-purple-600">
-                <p class="text-xs text-gray-500 font-bold uppercase">Items</p>
-                <p id="stat-items" class="text-3xl font-black text-purple-600 mt-2">0</p>
+            <div class="text-center">
+                <p id="stat-items" class="text-2xl font-black text-purple-600">0</p>
+                <p class="text-xs text-gray-500">Items</p>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-blue-600">
-                <p class="text-xs text-gray-500 font-bold uppercase">Drivers</p>
-                <p id="stat-drivers" class="text-3xl font-black text-blue-600 mt-2">0</p>
+            <div class="text-center">
+                <p id="stat-drivers" class="text-2xl font-black text-purple-600">0</p>
+                <p class="text-xs text-gray-500">Drivers</p>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-md text-center border-t-4 border-green-600">
-                <p class="text-xs text-gray-500 font-bold uppercase">Orders</p>
-                <p id="stat-orders" class="text-3xl font-black text-green-600 mt-2">0</p>
+            <div class="text-center">
+                <p id="stat-orders" class="text-2xl font-black text-purple-600">0</p>
+                <p class="text-xs text-gray-500">Orders</p>
             </div>
-        </div>
-
-        <!-- NAV -->
-        <div class="flex gap-2 mt-8">
-            <a href="index.html" class="flex-1 bg-yellow-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">🛒 Customer</a>
-            <a href="kitchen.html" class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">👨‍🍳 Kitchen</a>
-            <a href="delivery.html" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-black uppercase text-center shadow-md active:scale-95">🚚 Delivery</a>
         </div>
     </div>
 
@@ -117,341 +92,238 @@
         <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl">
             <h3 class="text-lg font-black text-gray-800 mb-4">✏️ Edit Item</h3>
             <div class="space-y-3">
-                <input type="text" id="edit-name" placeholder="Name" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold">
-                <input type="text" id="edit-desc" placeholder="Description" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
-                <input type="number" id="edit-price" placeholder="Price" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" step="10">
-                <input type="text" id="edit-image" placeholder="Image URL" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
+                <input type="text" id="editItemName" placeholder="Item Name" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold">
+                <input type="number" id="editItemPrice" placeholder="Price" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
+                <input type="text" id="editItemImg" placeholder="Image URL" class="w-full p-3 border rounded-lg bg-gray-50 text-sm">
                 <div class="flex gap-2">
-                    <button onclick="saveEdit()" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-black uppercase">Save</button>
-                    <button onclick="closeEditModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-black uppercase">Cancel</button>
+                    <button onclick="saveEdit()" class="flex-1 bg-blue-600 text-white p-3 rounded-lg font-black uppercase">Save</button>
+                    <button onclick="closeEditModal()" class="flex-1 bg-gray-300 text-gray-700 p-3 rounded-lg font-black uppercase">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
-            authDomain: "train-parcel.firebaseapp.com",
-            databaseURL: "https://train-parcel-default-rtdb.firebaseio.com",
-            projectId: "train-parcel",
-            storageBucket: "train-parcel.firebasestorage.app",
-            messagingSenderId: "357680905494",
-            appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
-        };
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
+        authDomain: "train-parcel.firebaseapp.com",
+        databaseURL: "https://train-parcel-default-rtdb.firebaseio.com",
+        projectId: "train-parcel",
+        storageBucket: "train-parcel.firebasestorage.app",
+        messagingSenderId: "357680905494",
+        appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+    let hotels = {};
+    let editingItemId = null;
+    let editingHotelId = null;
 
-        let hotels = {};
-        let editingId = null, editingHotelId = null;
+    // SWITCH TABS
+    window.switchTab = (tab) => {
+        document.getElementById('section-hotels').classList.add('hidden');
+        document.getElementById('section-items').classList.add('hidden');
+        document.getElementById('section-drivers').classList.add('hidden');
+        document.getElementById(`section-${tab}`).classList.remove('hidden');
 
-        // AUTO-INITIALIZE DATABASE (Same as index.html)
-        function initializeDatabase() {
-            console.log('🔄 Admin: Checking Firebase database...');
-            
-            db.ref('hotels').once('value', snap => {
-                if (!snap.exists()) {
-                    console.log('📝 Admin: Database empty! Adding sample data...');
-                    
-                    const sampleHotels = {
-                        hotel_001: {name: "The Grill on Duty", cuisines: "Indian, North Indian", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500"},
-                        hotel_002: {name: "Spice Route", cuisines: "Indian, Chinese, Continental", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500"},
-                        hotel_003: {name: "Royal Kitchen", cuisines: "Mughlai, Tandoori", image: "https://images.unsplash.com/photo-1504674900969-f2df05b3252d?w=500"}
-                    };
+        ['hotels', 'items', 'drivers'].forEach(t => {
+            document.getElementById(`tab-${t}`).classList.remove('bg-purple-600', 'text-white');
+            document.getElementById(`tab-${t}`).classList.add('bg-gray-200', 'text-gray-700');
+        });
+        document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700');
+        document.getElementById(`tab-${tab}`).classList.add('bg-purple-600', 'text-white');
+    };
 
-                    const sampleMenu = {
-                        hotel_001: {
-                            item_001: {name: "Butter Chicken", description: "Creamy butter chicken with rice", price: 280, image: "https://images.unsplash.com/photo-1603549820556-a8a47baee46f?w=400"},
-                            item_002: {name: "Paneer Tikka", description: "Grilled paneer with spices", price: 220, image: "https://images.unsplash.com/photo-1567184109191-378eb2446c53?w=400"},
-                            item_003: {name: "Dal Makhani", description: "Creamy lentil curry", price: 180, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
-                            item_004: {name: "Biryani", description: "Fragrant rice with meat", price: 250, image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400"},
-                            item_005: {name: "Samosa", description: "Crispy fried pastry", price: 50, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
-                            item_006: {name: "Tandoori Chicken", description: "Spicy tandoori chicken", price: 320, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
-                            item_007: {name: "Naan", description: "Soft Indian bread", price: 40, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
-                            item_008: {name: "Gulab Jamun", description: "Sweet milk solids in syrup", price: 80, image: "https://images.unsplash.com/photo-1585238341710-57b0e4bee4b1?w=400"}
-                        },
-                        hotel_002: {
-                            item_009: {name: "Chicken Hakka Noodles", description: "Indo-Chinese noodles", price: 200, image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400"},
-                            item_010: {name: "Veg Fried Rice", description: "Fragrant fried rice", price: 150, image: "https://images.unsplash.com/photo-1512058560366-cd24270083cd?w=400"},
-                            item_011: {name: "Chilli Garlic Naan", description: "Naan with chilli and garlic", price: 50, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
-                            item_012: {name: "Manchow Soup", description: "Indo-Chinese soup", price: 120, image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400"},
-                            item_013: {name: "Spring Rolls", description: "Crispy spring rolls", price: 100, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
-                            item_014: {name: "Gobi Manchurian", description: "Indo-Chinese cauliflower", price: 180, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
-                            item_015: {name: "Hakka Balls", description: "Spiced vegetable balls", price: 160, image: "https://images.unsplash.com/photo-1606787620884-fdf8222cf81f?w=400"},
-                            item_016: {name: "Chilli Paneer", description: "Spicy paneer with peppers", price: 240, image: "https://images.unsplash.com/photo-1567184109191-378eb2446c53?w=400"}
-                        },
-                        hotel_003: {
-                            item_017: {name: "Nihari", description: "Traditional slow-cooked meat", price: 280, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
-                            item_018: {name: "Seekh Kebab", description: "Grilled minced meat kebab", price: 250, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
-                            item_019: {name: "Shahi Tukda", description: "Royal bread pudding", price: 120, image: "https://images.unsplash.com/photo-1585238341710-57b0e4bee4b1?w=400"},
-                            item_020: {name: "Haleem", description: "Meat and lentil stew", price: 260, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400"},
-                            item_021: {name: "Galauti Kebab", description: "Soft minced meat kebab", price: 240, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
-                            item_022: {name: "Phirni", description: "Rice pudding dessert", price: 100, image: "https://images.unsplash.com/photo-1585238341710-57b0e4bee4b1?w=400"},
-                            item_023: {name: "Roghni Naan", description: "Buttered naan", price: 50, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"},
-                            item_024: {name: "Mughlai Paratha", description: "Egg-stuffed paratha", price: 80, image: "https://images.unsplash.com/photo-1601050690597-df056fb1d99a?w=400"}
-                        }
-                    };
-
-                    const sampleDrivers = {
-                        driver_001: {name: "Raj Kumar", phone: "9876543210", email: "raj@foodhub.com", vehicle: "Bike", status: "active", createdAt: new Date().toISOString()},
-                        driver_002: {name: "Priya Singh", phone: "9876543211", email: "priya@foodhub.com", vehicle: "Bike", status: "active", createdAt: new Date().toISOString()},
-                        driver_003: {name: "Arjun Patel", phone: "9876543212", email: "arjun@foodhub.com", vehicle: "Cycle", status: "active", createdAt: new Date().toISOString()}
-                    };
-
-                    db.ref('hotels').set(sampleHotels);
-                    db.ref('menuItems').set(sampleMenu);
-                    db.ref('drivers').set(sampleDrivers);
-                    alert('✅ Database initialized! 3 hotels, 24 items, 3 drivers added.');
-                    setTimeout(() => location.reload(), 1000);
-                } else {
-                    console.log('✓ Admin: Data exists');
-                    loadHotels();
-                    loadMenu();
-                    loadDrivers();
-                }
+    // HOTELS
+    window.addHotel = () => {
+        const name = document.getElementById('hotelName').value;
+        const image = document.getElementById('hotelImg').value;
+        if(name) {
+            push(ref(db, 'hotels'), { 
+                name, 
+                image: image || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400"
             });
+            document.getElementById('hotelName').value = "";
+            document.getElementById('hotelImg').value = "";
         }
+    };
 
-        // SWITCH TABS
-        function switchTab(tab) {
-            document.getElementById('hotels-tab').classList.toggle('hidden', tab !== 'hotels');
-            document.getElementById('menu-tab').classList.toggle('hidden', tab !== 'menu');
-            document.getElementById('drivers-tab').classList.toggle('hidden', tab !== 'drivers');
+    window.deleteHotel = (id) => {
+        if(confirm("Delete hotel and all items?")) remove(ref(db, `hotels/${id}`));
+    };
 
-            ['hotels', 'menu', 'drivers'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.toggle('bg-red-600', tab === 'hotels' && t === 'hotels');
-                document.getElementById(`tab-${t}`).classList.toggle('bg-purple-600', tab === 'menu' && t === 'menu');
-                document.getElementById(`tab-${t}`).classList.toggle('bg-blue-600', tab === 'drivers' && t === 'drivers');
-                document.getElementById(`tab-${t}`).classList.toggle('text-white', ['hotels', 'menu', 'drivers'].includes(tab));
-            });
+    onValue(ref(db, 'hotels'), (snap) => {
+        hotels = snap.val() || {};
+        displayHotels();
+        updateHotelSelect();
+        updateStats();
+        document.getElementById('stat-hotels').textContent = Object.keys(hotels).length;
+    });
 
-            if (tab === 'menu') loadHotelsDropdown();
-        }
+    function displayHotels() {
+        const list = document.getElementById('admin-hotel-list');
+        list.innerHTML = "";
+        Object.keys(hotels).forEach(id => {
+            const h = hotels[id];
+            list.innerHTML += `
+            <div class="p-4 bg-white rounded-2xl shadow-sm border">
+                <p class="font-bold text-sm uppercase mb-3 text-purple-600">${h.name}</p>
+                <button onclick="deleteHotel('${id}')" class="w-full bg-red-600 text-white py-2 rounded-lg text-xs font-bold uppercase">Delete</button>
+            </div>`;
+        });
+    }
 
-        // ===== HOTELS =====
-        function addHotel() {
-            const name = document.getElementById('hotel-name').value.trim();
-            const cuisines = document.getElementById('hotel-cuisines').value.trim();
-            const image = document.getElementById('hotel-image').value.trim();
+    function updateHotelSelect() {
+        const select = document.getElementById('itemHotelSelect');
+        select.innerHTML = '<option value="">Select Hotel *</option>';
+        Object.keys(hotels).forEach(id => {
+            select.innerHTML += `<option value="${id}">${hotels[id].name}</option>`;
+        });
+    }
 
-            if (!name) return alert('❌ Please fill hotel name');
+    // MENU ITEMS
+    window.addMenuItem = () => {
+        const hotelId = document.getElementById('itemHotelSelect').value;
+        const name = document.getElementById('itemName').value;
+        const price = document.getElementById('itemPrice').value;
+        const img = document.getElementById('itemImg').value;
 
-            db.ref('hotels').push({name, cuisines, image, createdAt: new Date().toISOString()}).then(() => {
-                document.getElementById('hotel-name').value = '';
-                document.getElementById('hotel-cuisines').value = '';
-                document.getElementById('hotel-image').value = '';
-                alert('✅ Hotel added!');
-            });
-        }
+        if(!hotelId || !name || !price) return alert("Fill required fields");
 
-        function deleteHotel(id) {
-            if (confirm('❌ Delete hotel and ALL items?')) {
-                db.ref('hotels').child(id).remove();
-                db.ref('menuItems').child(id).remove();
-            }
-        }
+        push(ref(db, `hotels/${hotelId}/menu`), {
+            dish: name,
+            price: parseInt(price),
+            dishImg: img || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200"
+        });
 
-        function loadHotels() {
-            db.ref('hotels').on('value', snap => {
-                hotels = snap.val() || {};
-                displayHotels();
-                document.getElementById('stat-hotels').textContent = Object.keys(hotels).length;
-            });
-        }
+        document.getElementById('itemName').value = "";
+        document.getElementById('itemPrice').value = "";
+        document.getElementById('itemImg').value = "";
+        document.getElementById('itemHotelSelect').value = "";
+    };
 
-        function displayHotels() {
-            const container = document.getElementById('hotels-list');
-            if (Object.keys(hotels).length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-500 py-8">No hotels</p>';
-                return;
-            }
+    window.deleteItem = (hotelId, itemId) => {
+        if(confirm("Delete item?")) remove(ref(db, `hotels/${hotelId}/menu/${itemId}`));
+    };
 
-            container.innerHTML = Object.entries(hotels).map(([id, h]) => `
-                <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-red-600">
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <h4 class="font-black text-lg text-gray-800">${h.name}</h4>
-                            <p class="text-xs text-gray-500">${h.cuisines || 'Multi-cuisine'}</p>
-                            ${h.image ? `<p class="text-xs text-gray-400 mt-1">🖼️ Image: ${h.image.substring(0, 40)}...</p>` : ''}
-                        </div>
-                    </div>
-                    <button onclick="deleteHotel('${id}')" class="w-full bg-red-600 text-white py-2 rounded-lg text-xs font-bold uppercase mt-2">Delete</button>
-                </div>
-            `).join('');
-        }
+    window.openEditModal = (hotelId, itemId, name, price, img) => {
+        editingItemId = itemId;
+        editingHotelId = hotelId;
+        document.getElementById('editItemName').value = name;
+        document.getElementById('editItemPrice').value = price;
+        document.getElementById('editItemImg').value = img;
+        document.getElementById('editModal').classList.remove('hidden');
+    };
 
-        // ===== MENU =====
-        function loadHotelsDropdown() {
-            const select = document.getElementById('menu-hotel');
-            select.innerHTML = '<option value="">Select Hotel</option>';
-            Object.entries(hotels).forEach(([id, h]) => {
-                select.innerHTML += `<option value="${id}">${h.name}</option>`;
-            });
-        }
+    window.closeEditModal = () => {
+        document.getElementById('editModal').classList.add('hidden');
+    };
 
-        function addMenuItem() {
-            const hotelId = document.getElementById('menu-hotel').value;
-            const name = document.getElementById('item-name').value.trim();
-            const desc = document.getElementById('item-description').value.trim();
-            const price = parseInt(document.getElementById('item-price').value);
-            const image = document.getElementById('item-image').value.trim();
+    window.saveEdit = () => {
+        const name = document.getElementById('editItemName').value;
+        const price = document.getElementById('editItemPrice').value;
+        const img = document.getElementById('editItemImg').value;
 
-            if (!hotelId || !name || !price) return alert('❌ Fill required fields');
+        if(!name || !price) return alert("Fill all fields");
 
-            db.ref(`menuItems/${hotelId}`).push({name, description: desc, price, image, createdAt: new Date().toISOString()}).then(() => {
-                document.getElementById('item-name').value = '';
-                document.getElementById('item-description').value = '';
-                document.getElementById('item-price').value = '';
-                document.getElementById('item-image').value = '';
-                alert('✅ Item added!');
-            });
-        }
+        update(ref(db, `hotels/${editingHotelId}/menu/${editingItemId}`), {
+            dish: name,
+            price: parseInt(price),
+            dishImg: img
+        });
 
-        function deleteMenuItem(hotelId, itemId) {
-            if (confirm('❌ Delete item?')) {
-                db.ref(`menuItems/${hotelId}/${itemId}`).remove();
-            }
-        }
+        closeEditModal();
+    };
 
-        function openEditModal(hotelId, itemId, name, desc, price, image) {
-            editingId = itemId;
-            editingHotelId = hotelId;
-            document.getElementById('edit-name').value = name;
-            document.getElementById('edit-desc').value = desc;
-            document.getElementById('edit-price').value = price;
-            document.getElementById('edit-image').value = image;
-            document.getElementById('editModal').classList.remove('hidden');
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').classList.add('hidden');
-        }
-
-        function saveEdit() {
-            const name = document.getElementById('edit-name').value.trim();
-            const desc = document.getElementById('edit-desc').value.trim();
-            const price = parseInt(document.getElementById('edit-price').value);
-            const image = document.getElementById('edit-image').value.trim();
-
-            if (!name || !price) return alert('❌ Fill required fields');
-
-            db.ref(`menuItems/${editingHotelId}/${editingId}`).update({name, description: desc, price, image}).then(() => {
-                closeEditModal();
-                alert('✅ Item updated!');
-            });
-        }
-
-        function loadMenu() {
-            db.ref('menuItems').on('value', snap => {
-                const allItems = snap.val() || {};
-                displayMenu(allItems);
-
-                let totalItems = 0;
-                Object.keys(allItems).forEach(hid => {
-                    totalItems += Object.keys(allItems[hid] || {}).length;
-                });
-                document.getElementById('stat-items').textContent = totalItems;
-            });
-        }
-
-        function displayMenu(allItems) {
-            const container = document.getElementById('menu-list');
-            let html = '';
-
-            Object.entries(allItems).forEach(([hotelId, items]) => {
-                const hotelName = hotels[hotelId]?.name || 'Unknown';
-                html += `<div class="bg-gray-100 p-4 rounded-lg mb-4"><h3 class="font-black text-gray-800 mb-2">${hotelName}</h3>`;
-                
-                Object.entries(items || {}).forEach(([itemId, item]) => {
-                    html += `
-                    <div class="bg-white p-3 rounded-lg mb-2 border-l-4 border-purple-600">
+    onValue(ref(db, 'hotels'), (snap) => {
+        const list = document.getElementById('admin-items-list');
+        list.innerHTML = "";
+        snap.forEach(hotelSnap => {
+            const hotelId = hotelSnap.key;
+            const hotel = hotelSnap.val();
+            if(hotel.menu) {
+                Object.keys(hotel.menu).forEach(itemId => {
+                    const item = hotel.menu[itemId];
+                    list.innerHTML += `
+                    <div class="p-4 bg-white rounded-2xl shadow-sm border border-l-4 border-purple-600">
                         <div class="flex justify-between items-start mb-2">
-                            <div class="flex-1">
-                                <p class="font-bold text-gray-800">${item.name}</p>
-                                <p class="text-xs text-gray-500">${item.description || ''}</p>
-                                <p class="text-lg font-black text-purple-600 mt-1">₹${item.price}</p>
-                                ${item.image ? `<p class="text-xs text-gray-400 mt-1">🖼️ ${item.image.substring(0, 35)}...</p>` : ''}
+                            <div>
+                                <p class="font-bold text-gray-800">${item.dish}</p>
+                                <p class="text-sm text-purple-600 font-black">₹${item.price}</p>
                             </div>
+                            <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">${hotel.name}</span>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="openEditModal('${hotelId}', '${itemId}', '${item.name}', '${item.description || ''}', ${item.price}, '${item.image || ''}')" class="flex-1 bg-blue-600 text-white py-1 rounded text-xs font-bold uppercase">✏️ Edit</button>
-                            <button onclick="deleteMenuItem('${hotelId}', '${itemId}')" class="flex-1 bg-red-600 text-white py-1 rounded text-xs font-bold uppercase">🗑️ Delete</button>
+                            <button onclick="openEditModal('${hotelId}', '${itemId}', '${item.dish}', ${item.price}, '${item.dishImg}')" class="flex-1 bg-blue-600 text-white py-2 rounded text-xs font-bold uppercase">✏️ Edit</button>
+                            <button onclick="deleteItem('${hotelId}', '${itemId}')" class="flex-1 bg-red-600 text-white py-2 rounded text-xs font-bold uppercase">🗑️ Delete</button>
                         </div>
                     </div>`;
                 });
-                html += '</div>';
-            });
-
-            container.innerHTML = html || '<p class="text-center text-gray-500 py-8">No items</p>';
-        }
-
-        // ===== DRIVERS =====
-        function addDriver() {
-            const name = document.getElementById('driver-name').value.trim();
-            const phone = document.getElementById('driver-phone').value.trim();
-            const email = document.getElementById('driver-email').value.trim();
-            const vehicle = document.getElementById('driver-vehicle').value.trim();
-
-            if (!name || !phone || !vehicle) return alert('❌ Fill required fields');
-
-            db.ref('drivers').push({name, phone, email, vehicle, status: 'active', createdAt: new Date().toISOString()}).then(() => {
-                document.getElementById('driver-name').value = '';
-                document.getElementById('driver-phone').value = '';
-                document.getElementById('driver-email').value = '';
-                document.getElementById('driver-vehicle').value = '';
-                alert('✅ Driver registered!');
-            });
-        }
-
-        function deleteDriver(id) {
-            if (confirm('❌ Remove driver?')) {
-                db.ref('drivers').child(id).remove();
             }
-        }
-
-        function loadDrivers() {
-            db.ref('drivers').on('value', snap => {
-                const drivers = snap.val() || {};
-                displayDrivers(drivers);
-                document.getElementById('stat-drivers').textContent = Object.keys(drivers).length;
-            });
-        }
-
-        function displayDrivers(drivers) {
-            const container = document.getElementById('drivers-list');
-            if (Object.keys(drivers).length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-500 py-8">No drivers</p>';
-                return;
-            }
-
-            container.innerHTML = Object.entries(drivers).map(([id, d]) => `
-                <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-blue-600">
-                    <p class="font-black text-lg text-gray-800">${d.name}</p>
-                    <p class="text-xs text-gray-500">📱 ${d.phone}</p>
-                    <p class="text-xs text-gray-500">🏍️ ${d.vehicle}</p>
-                    ${d.email ? `<p class="text-xs text-gray-500">✉️ ${d.email}</p>` : ''}
-                    <p class="text-xs text-green-600 font-bold mt-1">Status: ${d.status}</p>
-                    <button onclick="deleteDriver('${id}')" class="w-full bg-red-600 text-white py-2 rounded-lg text-xs font-bold uppercase mt-2">Remove</button>
-                </div>
-            `).join('');
-        }
-
-        // LOAD ORDERS
-        function loadOrders() {
-            db.ref('orders').on('value', snap => {
-                document.getElementById('stat-orders').textContent = snap.val() ? Object.keys(snap.val()).length : 0;
-            });
-        }
-
-        // INITIALIZE
-        window.addEventListener('load', () => {
-            console.log('🚀 Admin loading...');
-            initializeDatabase();
         });
-    </script>
+
+        let itemCount = 0;
+        snap.forEach(h => {
+            if(h.val().menu) itemCount += Object.keys(h.val().menu).length;
+        });
+        document.getElementById('stat-items').textContent = itemCount;
+    });
+
+    // DRIVERS
+    window.addDriver = () => {
+        const name = document.getElementById('driverName').value;
+        const phone = document.getElementById('driverPhone').value;
+        const email = document.getElementById('driverEmail').value;
+        const vehicle = document.getElementById('driverVehicle').value;
+
+        if(!name || !phone || !vehicle) return alert("Fill required fields");
+
+        push(ref(db, 'drivers'), {
+            name, phone, email, vehicle,
+            status: "active",
+            createdAt: new Date().toISOString()
+        });
+
+        document.getElementById('driverName').value = "";
+        document.getElementById('driverPhone').value = "";
+        document.getElementById('driverEmail').value = "";
+        document.getElementById('driverVehicle').value = "";
+    };
+
+    window.deleteDriver = (id) => {
+        if(confirm("Remove driver?")) remove(ref(db, `drivers/${id}`));
+    };
+
+    onValue(ref(db, 'drivers'), (snap) => {
+        const list = document.getElementById('admin-drivers-list');
+        list.innerHTML = "";
+        snap.forEach(child => {
+            const driver = child.val();
+            const driverId = child.key;
+            list.innerHTML += `
+            <div class="p-4 bg-white rounded-2xl shadow-sm border">
+                <p class="font-bold text-gray-800">${driver.name}</p>
+                <p class="text-xs text-gray-500">📱 ${driver.phone}</p>
+                <p class="text-xs text-gray-500">🏍️ ${driver.vehicle}</p>
+                ${driver.email ? `<p class="text-xs text-gray-500">✉️ ${driver.email}</p>` : ''}
+                <p class="text-xs text-green-600 font-bold mt-2">Status: ${driver.status}</p>
+                <button onclick="deleteDriver('${driverId}')" class="w-full mt-3 bg-red-600 text-white py-2 rounded-lg text-xs font-bold uppercase">Remove</button>
+            </div>`;
+        });
+        document.getElementById('stat-drivers').textContent = snap.size;
+    });
+
+    function updateStats() {
+        onValue(ref(db, 'orders'), (snap) => {
+            document.getElementById('stat-orders').textContent = snap.size;
+        });
+    }
+
+    updateStats();
+</script>
 </body>
 </html>
