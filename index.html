@@ -87,43 +87,39 @@
                         const m = hotel.menu[mId];
                         const currentQty = cart[mId] ? cart[mId].qty : 0;
                         menuHtml += `
-                        <div class="dish-card bg-white rounded-2xl p-4 border shadow-sm hover:shadow-md flex gap-4">
-                            <!-- IMAGE LEFT -->
-                            <div class="w-28 h-28 flex-shrink-0">
-                                <img src="${m.dishImg}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300'" class="w-full h-full rounded-xl object-cover">
+                        <div class="dish-card bg-white rounded-2xl border shadow-sm hover:shadow-md overflow-hidden">
+                            <!-- FULL WIDTH IMAGE TOP -->
+                            <div class="w-full h-48">
+                                <img src="${m.dishImg}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'" class="w-full h-full object-cover">
                             </div>
 
-                            <!-- DETAILS RIGHT -->
-                            <div class="flex-1 flex flex-col">
-                                <!-- TOP: NAME + QUANTITY SELECTOR (SAME LINE) -->
-                                <div class="flex justify-between items-center gap-2 mb-2">
-                                    <h4 class="font-black text-gray-800 text-sm flex-1">${m.dish}</h4>
-                                    
-                                    <!-- QUANTITY CONTROLS (RIGHT SIDE) -->
-                                    <div class="flex items-center gap-1 flex-shrink-0">
-                                        ${currentQty === 0 ? `
-                                            <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="bg-red-600 text-white px-3 py-1 rounded-lg text-xs font-bold">+</button>
-                                        ` : `
-                                            <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -1)" class="bg-red-600 text-white px-2 py-1 rounded-lg font-bold text-sm">−</button>
-                                            <span class="w-8 text-center font-black text-red-600">${currentQty}</span>
-                                            <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="bg-red-600 text-white px-2 py-1 rounded-lg font-bold text-sm">+</button>
-                                        `}
-                                    </div>
+                            <!-- ALL CONTROLS IN ONE ROW -->
+                            <div class="p-4 flex items-center gap-3">
+                                <!-- NAME & PRICE -->
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="font-black text-gray-800 text-sm truncate">${m.dish}</h4>
+                                    <p class="text-red-600 font-black text-lg">₹${m.price}</p>
+                                    <p class="text-xs text-gray-500 truncate">Delicious homemade food</p>
                                 </div>
 
-                                <!-- PRICE -->
-                                <p class="text-red-600 font-black text-lg mb-1">₹${m.price}</p>
+                                <!-- QUANTITY BUTTONS -->
+                                <div class="flex items-center gap-1 flex-shrink-0">
+                                    ${currentQty === 0 ? `
+                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="px-3 py-2 bg-red-600 text-white rounded-lg font-bold text-sm">+</button>
+                                    ` : `
+                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -1)" class="px-2 py-1 bg-red-600 text-white rounded-lg font-bold text-sm">−</button>
+                                        <span class="w-8 text-center font-black text-red-600 text-sm">${currentQty}</span>
+                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="px-2 py-1 bg-red-600 text-white rounded-lg font-bold text-sm">+</button>
+                                    `}
+                                </div>
 
-                                <!-- DESCRIPTION -->
-                                <p class="text-xs text-gray-500 mb-3 flex-1">Delicious homemade food</p>
-
-                                <!-- ADD TO CART BUTTON (BOTTOM) -->
+                                <!-- ADD TO CART / REMOVE BUTTON -->
                                 ${currentQty === 0 ? `
-                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="w-full bg-red-600 text-white py-3 rounded-xl text-sm font-black uppercase">
-                                        Add to Cart
+                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-black uppercase flex-shrink-0 whitespace-nowrap">
+                                        Add
                                     </button>
                                 ` : `
-                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 0)" class="w-full bg-gray-300 text-gray-700 py-3 rounded-xl text-sm font-black uppercase">
+                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 0)" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg text-xs font-black uppercase flex-shrink-0 whitespace-nowrap">
                                         Remove
                                     </button>
                                 `}
