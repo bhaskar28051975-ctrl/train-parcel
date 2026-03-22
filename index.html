@@ -101,7 +101,7 @@
         };
 
         window.addToCart = (id, dish, price) => {
-            // Add first item to cart
+            // Add first item and show popup
             if(!cart[id]) cart[id] = { dish, price: parseInt(price), qty: 0 };
             cart[id].qty = 1;
             updateUI();
@@ -158,9 +158,10 @@
                                     <p class="text-xs text-gray-500 truncate">Delicious homemade food</p>
                                 </div>
 
+                                <!-- QUANTITY BUTTONS ALWAYS VISIBLE -->
                                 <div class="flex items-center gap-1 flex-shrink-0">
                                     ${currentQty === 0 ? `
-                                        <button onclick="addToCart('${mId}', '${m.dish}', '${m.price}')" class="px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-black uppercase">Add</button>
+                                        <button onclick="addToCart('${mId}', '${m.dish}', '${m.price}')" class="px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-black uppercase">+</button>
                                     ` : `
                                         <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -1)" class="px-2 py-1 bg-red-600 text-white rounded-lg font-bold text-sm">−</button>
                                         <span class="w-8 text-center font-black text-red-600 text-sm">${currentQty}</span>
@@ -168,11 +169,12 @@
                                     `}
                                 </div>
 
-                                ${currentQty > 0 ? `
-                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -${currentQty})" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg text-xs font-black uppercase flex-shrink-0 whitespace-nowrap">
-                                        Remove
-                                    </button>
-                                ` : ''}
+                                <!-- ADD / REMOVE BUTTON -->
+                                ${currentQty === 0 ? `
+                                    <button onclick="addToCart('${mId}', '${m.dish}', '${m.price}')" class="px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-black uppercase flex-shrink-0 whitespace-nowrap">Add</button>
+                                ` : `
+                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -${currentQty})" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg text-xs font-black uppercase flex-shrink-0 whitespace-nowrap">Remove</button>
+                                `}
                             </div>
                         </div>`;
                     });
@@ -239,12 +241,6 @@
                 cart = {};
                 document.getElementById('custName').value = "";
                 document.getElementById('custPhone').value = "";
-                document.getElementById('trainName').value = "";
-                document.getElementById('trainNumber').value = "";
-                document.getElementById('coachNumber').value = "";
-                document.getElementById('seatNumber').value = "";
-                document.getElementById('departureTime').value = "";
-                document.getElementById('departureDate').value = "";
                 updateUI();
                 renderMenu();
             }).catch(err => {
