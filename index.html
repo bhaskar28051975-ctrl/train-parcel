@@ -9,7 +9,7 @@
     <style>
         html { scroll-behavior: smooth; }
         .dish-card { transition: transform 0.2s; }
-        .dish-card:active { transform: scale(0.95); }
+        .dish-card:active { transform: scale(0.98); }
     </style>
 </head>
 <body class="bg-gray-100 pb-80 text-gray-800">
@@ -19,7 +19,7 @@
         <button onclick="location.reload()" class="text-[10px] font-bold bg-gray-100 px-3 py-1 rounded-full uppercase">Refresh</button>
     </header>
 
-    <div id="customer-list" class="p-4 space-y-8"></div>
+    <div id="customer-list" class="p-4 space-y-6"></div>
 
     <div id="checkout-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[3rem] shadow-2xl p-6 border-t z-[100]">
         <div class="flex justify-between items-center mb-4 px-2">
@@ -87,34 +87,45 @@
                         const m = hotel.menu[mId];
                         const currentQty = cart[mId] ? cart[mId].qty : 0;
                         menuHtml += `
-                        <div class="dish-card bg-white rounded-2xl p-4 border shadow-sm hover:shadow-md">
-                            <!-- IMAGE TOP -->
-                            <div class="mb-3">
-                                <img src="${m.dishImg}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300'" class="w-full h-40 rounded-xl object-cover">
+                        <div class="dish-card bg-white rounded-2xl p-4 border shadow-sm hover:shadow-md flex gap-4">
+                            <!-- IMAGE LEFT -->
+                            <div class="w-28 h-28 flex-shrink-0">
+                                <img src="${m.dishImg}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300'" class="w-full h-full rounded-xl object-cover">
                             </div>
 
-                            <!-- ITEM NAME -->
-                            <h4 class="font-black text-gray-800 text-sm mb-2 line-clamp-1">${m.dish}</h4>
+                            <!-- DETAILS RIGHT -->
+                            <div class="flex-1 flex flex-col justify-between">
+                                <!-- NAME & QUANTITY (TOP ROW) -->
+                                <div class="flex justify-between items-start gap-2">
+                                    <h4 class="font-black text-gray-800 text-sm flex-1">${m.dish}</h4>
+                                    
+                                    <!-- QUANTITY DROPDOWN ON RIGHT -->
+                                    ${currentQty === 0 ? `
+                                        <span class="text-xs text-gray-400"></span>
+                                    ` : `
+                                        <select onchange="updateQty('${mId}', '${m.dish}', '${m.price}', parseInt(this.value) - ${currentQty})" class="px-2 py-1 border border-red-600 rounded-lg font-black text-red-600 bg-white text-xs w-12 flex-shrink-0">
+                                            ${Array.from({length: 10}, (_, i) => `<option value="${i+1}" ${i+1 === currentQty ? 'selected' : ''}>${i+1}</option>`).join('')}
+                                        </select>
+                                    `}
+                                </div>
 
-                            <!-- PRICE -->
-                            <p class="text-red-600 font-black text-lg mb-2">₹${m.price}</p>
+                                <!-- PRICE -->
+                                <p class="text-red-600 font-black text-lg">₹${m.price}</p>
 
-                            <!-- DESCRIPTION -->
-                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">Delicious homemade food</p>
+                                <!-- DESCRIPTION -->
+                                <p class="text-xs text-gray-500">Delicious homemade food</p>
 
-                            <!-- QUANTITY SELECTOR -->
-                            <div class="flex items-center gap-2">
-                                ${currentQty === 0 ? `
-                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="flex-1 bg-red-600 text-white py-2 rounded-lg text-xs font-bold uppercase">
-                                        Add to Cart
-                                    </button>
-                                ` : `
-                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -1)" class="w-10 bg-red-600 text-white rounded-lg font-bold text-lg">−</button>
-                                    <select onchange="updateQty('${mId}', '${m.dish}', '${m.price}', parseInt(this.value) - ${currentQty})" class="flex-1 p-2 border border-red-600 rounded-lg text-center font-black text-red-600 bg-white text-sm">
-                                        ${Array.from({length: 10}, (_, i) => `<option value="${i+1}" ${i+1 === currentQty ? 'selected' : ''}>${i+1}</option>`).join('')}
-                                    </select>
-                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="w-10 bg-red-600 text-white rounded-lg font-bold text-lg">+</button>
-                                `}
+                                <!-- ADD/REMOVE BUTTONS (BOTTOM) -->
+                                <div class="flex items-center gap-2">
+                                    ${currentQty === 0 ? `
+                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="flex-1 bg-red-600 text-white py-2 rounded-lg text-xs font-bold uppercase">
+                                            Add to Cart
+                                        </button>
+                                    ` : `
+                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -1)" class="px-3 py-2 bg-red-600 text-white rounded-lg font-bold text-sm">−</button>
+                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="px-3 py-2 bg-red-600 text-white rounded-lg font-bold text-sm">+</button>
+                                    `}
+                                </div>
                             </div>
                         </div>`;
                     });
@@ -124,7 +135,7 @@
                     <img src="${hotel.image}" onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400'" class="w-full h-44 object-cover">
                     <div class="p-6">
                         <h2 class="text-xl font-black text-gray-800 uppercase italic mb-6 border-l-4 border-red-600 pl-3">${hotel.name}</h2>
-                        <div class="grid grid-cols-2 gap-4">${menuHtml}</div>
+                        <div class="space-y-4">${menuHtml}</div>
                     </div>
                 </div>`;
             });
