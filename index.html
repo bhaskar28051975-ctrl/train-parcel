@@ -21,7 +21,8 @@
 
     <div id="customer-list" class="p-4 space-y-6"></div>
 
-    <div id="checkout-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[3rem] shadow-2xl p-6 border-t z-[100]">
+    <!-- CHECKOUT PANEL -->
+    <div id="checkout-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[3rem] shadow-2xl p-6 border-t z-[100] max-h-[85vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-4 px-2">
             <div>
                 <p class="text-[10px] font-black text-gray-400 uppercase">Total Bill</p>
@@ -30,9 +31,43 @@
             <button onclick="cancelOrder()" class="text-red-500 font-bold text-xs uppercase bg-red-50 px-4 py-2 rounded-full">Cancel</button>
         </div>
         <div class="space-y-3">
+            <!-- CUSTOMER NAME & PHONE (TOP) -->
             <input id="custName" type="text" placeholder="Enter Your Name *" class="w-full p-4 border rounded-2xl bg-gray-50 font-bold text-sm">
             <input id="custPhone" type="tel" placeholder="Enter Your Phone *" class="w-full p-4 border rounded-2xl bg-gray-50 font-bold text-sm">
-            <input id="custAddress" type="text" placeholder="Enter Your Address *" class="w-full p-4 border rounded-2xl bg-gray-50 text-sm">
+
+            <!-- TRAVEL & HOTEL SELECTION TABS -->
+            <div class="flex gap-2 bg-gray-100 p-2 rounded-xl sticky top-0 z-10">
+                <button onclick="switchTab('train')" id="tab-train" class="flex-1 py-2 px-3 rounded-lg text-xs font-black uppercase bg-red-600 text-white">🚆 Train</button>
+                <button onclick="switchTab('bus')" id="tab-bus" class="flex-1 py-2 px-3 rounded-lg text-xs font-black uppercase bg-gray-300 text-gray-700">🚌 Bus</button>
+                <button onclick="switchTab('hotel')" id="tab-hotel" class="flex-1 py-2 px-3 rounded-lg text-xs font-black uppercase bg-gray-300 text-gray-700">🏨 Hotel</button>
+            </div>
+
+            <!-- TRAIN TAB -->
+            <div id="section-train" class="space-y-2">
+                <input id="trainName" type="text" placeholder="Train Name" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="trainNumber" type="text" placeholder="Train Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="coachNumber" type="text" placeholder="Coach Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="seatNumber" type="text" placeholder="Seat Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="departureTime" type="time" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="departureDate" type="date" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+            </div>
+
+            <!-- BUS TAB -->
+            <div id="section-bus" class="hidden space-y-2">
+                <input id="busName" type="text" placeholder="Travel Name" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="busSeatNumber" type="text" placeholder="Seat Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="busLocation" type="text" placeholder="Bus Location" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="busDate" type="date" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="busTime" type="time" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+            </div>
+
+            <!-- HOTEL TAB -->
+            <div id="section-hotel" class="hidden space-y-2">
+                <input id="hotelName" type="text" placeholder="Hotel Name" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="roomNumber" type="text" placeholder="Room Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+                <input id="hotelLocation" type="text" placeholder="Hotel Location" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+            </div>
+
             <button onclick="placeOrder()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase shadow-lg">Confirm Order</button>
         </div>
     </div>
@@ -55,6 +90,7 @@
 
         let cart = {};
         let hotelData = {};
+        let selectedTab = 'train';
 
         window.updateQty = (id, dish, price, change) => {
             if(!cart[id]) cart[id] = { dish, price: parseInt(price), qty: 0 };
@@ -68,6 +104,21 @@
             cart = {};
             updateUI();
             renderMenu();
+        };
+
+        window.switchTab = (tab) => {
+            selectedTab = tab;
+            document.getElementById('section-train').classList.add('hidden');
+            document.getElementById('section-bus').classList.add('hidden');
+            document.getElementById('section-hotel').classList.add('hidden');
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+
+            ['train', 'bus', 'hotel'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.remove('bg-red-600', 'text-white');
+                document.getElementById(`tab-${t}`).classList.add('bg-gray-300', 'text-gray-700');
+            });
+            document.getElementById(`tab-${tab}`).classList.remove('bg-gray-300', 'text-gray-700');
+            document.getElementById(`tab-${tab}`).classList.add('bg-red-600', 'text-white');
         };
 
         function updateUI() {
@@ -88,21 +139,17 @@
                         const currentQty = cart[mId] ? cart[mId].qty : 0;
                         menuHtml += `
                         <div class="dish-card bg-white rounded-2xl border shadow-sm hover:shadow-md overflow-hidden">
-                            <!-- FULL WIDTH IMAGE TOP - MATCHING HOTEL IMAGE WIDTH & HEIGHT -->
                             <div class="w-full h-32">
                                 <img src="${m.dishImg}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'" class="w-full h-full object-cover">
                             </div>
 
-                            <!-- ALL CONTROLS IN ONE ROW -->
                             <div class="p-3 flex items-center gap-3">
-                                <!-- NAME & PRICE -->
                                 <div class="flex-1 min-w-0">
                                     <h4 class="font-black text-gray-800 text-sm truncate">${m.dish}</h4>
                                     <p class="text-red-600 font-black text-lg">₹${m.price}</p>
                                     <p class="text-xs text-gray-500 truncate">Delicious homemade food</p>
                                 </div>
 
-                                <!-- QUANTITY BUTTONS -->
                                 <div class="flex items-center gap-1 flex-shrink-0">
                                     ${currentQty === 0 ? `
                                         <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="px-3 py-2 bg-red-600 text-white rounded-lg font-bold text-sm">+</button>
@@ -113,7 +160,6 @@
                                     `}
                                 </div>
 
-                                <!-- ADD TO CART / REMOVE BUTTON -->
                                 ${currentQty === 0 ? `
                                     <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-black uppercase flex-shrink-0 whitespace-nowrap">
                                         Add
@@ -146,18 +192,40 @@
         window.placeOrder = () => {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            const address = document.getElementById('custAddress').value;
             
-            if(!name || !phone || !address) return alert("❌ Please fill all details!");
+            if(!name || !phone) return alert("❌ Please enter name and phone!");
             if(Object.keys(cart).length === 0) return alert("❌ Cart is empty!");
             
+            let travelInfo = "";
+            if(selectedTab === 'train') {
+                const trainName = document.getElementById('trainName').value;
+                const trainNum = document.getElementById('trainNumber').value;
+                const coach = document.getElementById('coachNumber').value;
+                const seat = document.getElementById('seatNumber').value;
+                const time = document.getElementById('departureTime').value;
+                const date = document.getElementById('departureDate').value;
+                travelInfo = `Train: ${trainName} (${trainNum}) | Coach: ${coach} | Seat: ${seat} | Departure: ${date} ${time}`;
+            } else if(selectedTab === 'bus') {
+                const busName = document.getElementById('busName').value;
+                const seat = document.getElementById('busSeatNumber').value;
+                const loc = document.getElementById('busLocation').value;
+                const date = document.getElementById('busDate').value;
+                const time = document.getElementById('busTime').value;
+                travelInfo = `Bus: ${busName} | Seat: ${seat} | Location: ${loc} | Date: ${date} Time: ${time}`;
+            } else if(selectedTab === 'hotel') {
+                const hotelN = document.getElementById('hotelName').value;
+                const room = document.getElementById('roomNumber').value;
+                const loc = document.getElementById('hotelLocation').value;
+                travelInfo = `Hotel: ${hotelN} | Room: ${room} | Location: ${loc}`;
+            }
+
             const totalAmount = Object.values(cart).reduce((s, i) => s + (i.price * i.qty), 0);
             const itemsList = Object.values(cart).map(i => `${i.dish} x${i.qty}`).join(", ");
             
             push(ref(db, 'orders'), {
                 customerName: name,
                 customerPhone: phone,
-                customerAddress: address,
+                travelInfo: travelInfo,
                 items: itemsList,
                 totalAmount: totalAmount,
                 status: "pending",
@@ -167,7 +235,12 @@
                 cart = {};
                 document.getElementById('custName').value = "";
                 document.getElementById('custPhone').value = "";
-                document.getElementById('custAddress').value = "";
+                document.getElementById('trainName').value = "";
+                document.getElementById('trainNumber').value = "";
+                document.getElementById('coachNumber').value = "";
+                document.getElementById('seatNumber').value = "";
+                document.getElementById('departureTime').value = "";
+                document.getElementById('departureDate').value = "";
                 updateUI();
                 renderMenu();
             }).catch(err => {
