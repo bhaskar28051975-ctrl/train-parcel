@@ -88,14 +88,14 @@
                         const currentQty = cart[mId] ? cart[mId].qty : 0;
                         menuHtml += `
                         <div class="dish-card bg-white rounded-2xl border shadow-sm hover:shadow-md overflow-hidden">
-                            <!-- FULL WIDTH IMAGE TOP -->
-                            <div class="w-full h-48">
+                            <!-- FULL WIDTH IMAGE - REDUCED HEIGHT -->
+                            <div class="w-full h-32">
                                 <img src="${m.dishImg}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'" class="w-full h-full object-cover">
                             </div>
 
                             <!-- ALL CONTROLS IN ONE ROW -->
                             <div class="p-4 flex items-center gap-3">
-                                <!-- NAME & PRICE -->
+                                <!-- NAME & PRICE & DESCRIPTION -->
                                 <div class="flex-1 min-w-0">
                                     <h4 class="font-black text-gray-800 text-sm truncate">${m.dish}</h4>
                                     <p class="text-red-600 font-black text-lg">₹${m.price}</p>
