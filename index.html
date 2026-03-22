@@ -94,38 +94,39 @@
                             </div>
 
                             <!-- DETAILS RIGHT -->
-                            <div class="flex-1 flex flex-col justify-between">
-                                <!-- NAME & QUANTITY (TOP ROW) -->
-                                <div class="flex justify-between items-start gap-2">
+                            <div class="flex-1 flex flex-col">
+                                <!-- TOP: NAME + QUANTITY SELECTOR (SAME LINE) -->
+                                <div class="flex justify-between items-center gap-2 mb-2">
                                     <h4 class="font-black text-gray-800 text-sm flex-1">${m.dish}</h4>
                                     
-                                    <!-- QUANTITY DROPDOWN ON RIGHT -->
-                                    ${currentQty === 0 ? `
-                                        <span class="text-xs text-gray-400"></span>
-                                    ` : `
-                                        <select onchange="updateQty('${mId}', '${m.dish}', '${m.price}', parseInt(this.value) - ${currentQty})" class="px-2 py-1 border border-red-600 rounded-lg font-black text-red-600 bg-white text-xs w-12 flex-shrink-0">
-                                            ${Array.from({length: 10}, (_, i) => `<option value="${i+1}" ${i+1 === currentQty ? 'selected' : ''}>${i+1}</option>`).join('')}
-                                        </select>
-                                    `}
+                                    <!-- QUANTITY CONTROLS (RIGHT SIDE) -->
+                                    <div class="flex items-center gap-1 flex-shrink-0">
+                                        ${currentQty === 0 ? `
+                                            <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="bg-red-600 text-white px-3 py-1 rounded-lg text-xs font-bold">+</button>
+                                        ` : `
+                                            <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -1)" class="bg-red-600 text-white px-2 py-1 rounded-lg font-bold text-sm">−</button>
+                                            <span class="w-8 text-center font-black text-red-600">${currentQty}</span>
+                                            <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="bg-red-600 text-white px-2 py-1 rounded-lg font-bold text-sm">+</button>
+                                        `}
+                                    </div>
                                 </div>
 
                                 <!-- PRICE -->
-                                <p class="text-red-600 font-black text-lg">₹${m.price}</p>
+                                <p class="text-red-600 font-black text-lg mb-1">₹${m.price}</p>
 
                                 <!-- DESCRIPTION -->
-                                <p class="text-xs text-gray-500">Delicious homemade food</p>
+                                <p class="text-xs text-gray-500 mb-3 flex-1">Delicious homemade food</p>
 
-                                <!-- ADD/REMOVE BUTTONS (BOTTOM) -->
-                                <div class="flex items-center gap-2">
-                                    ${currentQty === 0 ? `
-                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="flex-1 bg-red-600 text-white py-2 rounded-lg text-xs font-bold uppercase">
-                                            Add to Cart
-                                        </button>
-                                    ` : `
-                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -1)" class="px-3 py-2 bg-red-600 text-white rounded-lg font-bold text-sm">−</button>
-                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="px-3 py-2 bg-red-600 text-white rounded-lg font-bold text-sm">+</button>
-                                    `}
-                                </div>
+                                <!-- ADD TO CART BUTTON (BOTTOM) -->
+                                ${currentQty === 0 ? `
+                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="w-full bg-red-600 text-white py-3 rounded-xl text-sm font-black uppercase">
+                                        Add to Cart
+                                    </button>
+                                ` : `
+                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 0)" class="w-full bg-gray-300 text-gray-700 py-3 rounded-xl text-sm font-black uppercase">
+                                        Remove
+                                    </button>
+                                `}
                             </div>
                         </div>`;
                     });
