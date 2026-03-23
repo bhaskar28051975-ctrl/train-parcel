@@ -3,308 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports - FoodHub</title>
+    <title>FoodHub Reports & Analytics</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
-<body class="bg-purple-50 pb-24">
-    <header class="bg-white p-5 shadow-md sticky top-0 z-50 border-b-4 border-purple-600">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-black text-purple-600">📊 Reports & Analytics</h1>
-            <button onclick="location.reload()" class="text-[10px] font-bold bg-gray-100 px-3 py-1 rounded-full uppercase">Refresh</button>
-        </div>
+<body class="bg-gray-100 text-gray-800 pb-10">
+
+    <header class="bg-red-600 text-white p-5 shadow-lg sticky top-0 z-40">
+        <h1 class="text-2xl font-black">📊 Reports & Analytics</h1>
     </header>
 
-    <div class="max-w-6xl mx-auto p-4 space-y-6">
+    <!-- TABS -->
+    <div class="bg-white border-b flex gap-0">
+        <button onclick="switchTab('summary')" id="tab-summary" class="flex-1 py-3 font-black text-red-600 border-b-4 border-red-600 text-sm">📈 Summary</button>
+        <button onclick="switchTab('orders')" id="tab-orders" class="flex-1 py-3 font-black text-gray-600 text-sm">📦 Orders</button>
+        <button onclick="switchTab('drivers')" id="tab-drivers" class="flex-1 py-3 font-black text-gray-600 text-sm">💰 Driver Earnings</button>
+        <button onclick="switchTab('hotels')" id="tab-hotels" class="flex-1 py-3 font-black text-gray-600 text-sm">🏪 Hotel Revenue</button>
+    </div>
 
-        <!-- KEY METRICS -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white p-6 rounded-2xl shadow-md text-center border-t-4 border-green-600">
-                <p class="text-xs text-gray-500 font-bold uppercase">Total Orders</p>
-                <p id="metric-orders" class="text-3xl font-black text-green-600 mt-2">0</p>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-md text-center border-t-4 border-blue-600">
-                <p class="text-xs text-gray-500 font-bold uppercase">Total Revenue</p>
-                <p id="metric-revenue" class="text-2xl font-black text-blue-600 mt-2">₹0</p>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-md text-center border-t-4 border-orange-600">
-                <p class="text-xs text-gray-500 font-bold uppercase">Avg Order Value</p>
-                <p id="metric-average" class="text-2xl font-black text-orange-600 mt-2">₹0</p>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-md text-center border-t-4 border-red-600">
-                <p class="text-xs text-gray-500 font-bold uppercase">Delivered</p>
-                <p id="metric-delivered" class="text-3xl font-black text-red-600 mt-2">0</p>
-            </div>
-        </div>
+    <div class="p-4">
 
-        <!-- TABS -->
-        <div class="flex gap-2 bg-white p-2 rounded-xl shadow-md flex-wrap sticky top-20 z-40">
-            <button onclick="switchTab('summary')" id="tab-summary" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-purple-600 text-white">📈 Summary</button>
-            <button onclick="switchTab('orders')" id="tab-orders" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">📋 All Orders</button>
-            <button onclick="switchTab('drivers')" id="tab-drivers" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">🚚 Driver Earnings</button>
-            <button onclick="switchTab('hotels')" id="tab-hotels" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">🏢 Hotel Revenue</button>
-        </div>
-
-        <!-- SUMMARY TAB -->
-        <div id="section-summary" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- ORDER STATUS CHART -->
-                <div class="bg-white p-6 rounded-2xl shadow-md">
-                    <h3 class="text-lg font-black text-gray-800 mb-4">📊 Order Status Distribution</h3>
-                    <canvas id="statusChart" class="max-h-64"></canvas>
+        <!-- ========== SUMMARY TAB ========== -->
+        <div id="section-summary">
+            <h2 class="text-lg font-black mb-4">📈 Business Summary</h2>
+            
+            <!-- KPIs -->
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <p class="text-xs text-gray-600 font-black">Total Orders</p>
+                    <p id="kpi-total-orders" class="text-2xl font-black text-blue-600">0</p>
                 </div>
-
-                <!-- TOP HOTELS -->
-                <div class="bg-white p-6 rounded-2xl shadow-md">
-                    <h3 class="text-lg font-black text-gray-800 mb-4">🏆 Top Hotels by Revenue</h3>
-                    <div id="top-hotels" class="space-y-3"></div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <p class="text-xs text-gray-600 font-black">Total Revenue</p>
+                    <p id="kpi-total-revenue" class="text-2xl font-black text-green-600">₹0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <p class="text-xs text-gray-600 font-black">Delivered Orders</p>
+                    <p id="kpi-delivered" class="text-2xl font-black text-emerald-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <p class="text-xs text-gray-600 font-black">Avg Order Value</p>
+                    <p id="kpi-avg-order" class="text-2xl font-black text-purple-600">₹0</p>
                 </div>
             </div>
-        </div>
 
-        <!-- ORDERS TAB -->
-        <div id="section-orders" class="hidden bg-white p-6 rounded-2xl shadow-md">
-            <h3 class="text-lg font-black text-gray-800 mb-4">📋 All Orders</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b-2 border-purple-600">
-                            <th class="text-left p-2 font-black text-gray-700">Order ID</th>
-                            <th class="text-left p-2 font-black text-gray-700">Customer</th>
-                            <th class="text-left p-2 font-black text-gray-700">Amount</th>
-                            <th class="text-left p-2 font-black text-gray-700">Status</th>
-                            <th class="text-left p-2 font-black text-gray-700">Hotel</th>
-                            <th class="text-left p-2 font-black text-gray-700">Time</th>
-                        </tr>
-                    </thead>
-                    <tbody id="orders-table-body">
-                        <tr><td colspan="6" class="text-center text-gray-500 py-4">Loading...</td></tr>
-                    </tbody>
-                </table>
+            <!-- ORDER STATUS CHART -->
+            <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                <p class="font-black mb-3">Order Status Distribution</p>
+                <canvas id="statusChart"></canvas>
+            </div>
+
+            <!-- SUCCESS METRICS -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <p class="font-black mb-3">Success Metrics</p>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span>✅ Delivery Success Rate:</span>
+                        <span id="metric-success" class="font-black text-green-600">0%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>⏳ Pending/Preparing:</span>
+                        <span id="metric-pending" class="font-black text-orange-600">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>💰 Total Commission Paid:</span>
+                        <span id="metric-commission" class="font-black text-blue-600">₹0</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- DRIVERS TAB -->
-        <div id="section-drivers" class="hidden bg-white p-6 rounded-2xl shadow-md">
-            <h3 class="text-lg font-black text-gray-800 mb-4">🚚 Driver Earnings Summary</h3>
-            <div id="drivers-earnings" class="space-y-3"></div>
+        <!-- ========== ALL ORDERS TAB ========== -->
+        <div id="section-orders" class="hidden">
+            <h2 class="text-lg font-black mb-4">📦 All Orders</h2>
+            <div id="orders-table" class="space-y-3"></div>
         </div>
 
-        <!-- HOTELS TAB -->
-        <div id="section-hotels" class="hidden bg-white p-6 rounded-2xl shadow-md">
-            <h3 class="text-lg font-black text-gray-800 mb-4">🏢 Hotel Revenue Breakdown</h3>
-            <div id="hotels-revenue" class="space-y-3"></div>
+        <!-- ========== DRIVER EARNINGS TAB ========== -->
+        <div id="section-drivers" class="hidden">
+            <h2 class="text-lg font-black mb-4">💰 Driver Earnings</h2>
+            <div id="drivers-table" class="space-y-3"></div>
+        </div>
+
+        <!-- ========== HOTEL REVENUE TAB ========== -->
+        <div id="section-hotels" class="hidden">
+            <h2 class="text-lg font-black mb-4">🏪 Hotel Revenue</h2>
+            <div id="hotels-table" class="space-y-3"></div>
         </div>
 
     </div>
 
     <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = { 
-        apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
-        authDomain: "train-parcel.firebaseapp.com",
-        databaseURL: "https://train-parcel-default-rtdb.firebaseio.com",
-        projectId: "train-parcel",
-        storageBucket: "train-parcel.firebasestorage.app",
-        messagingSenderId: "357680905494",
-        appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
+            authDomain: "train-parcel.firebaseapp.com",
+            databaseURL: "https://train-parcel-default-rtdb.firebaseio.com",
+            projectId: "train-parcel",
+            storageBucket: "train-parcel.firebasestorage.app",
+            messagingSenderId: "357680905494",
+            appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-    let statusChart = null;
-    const COMMISSION_RATE = 10;
+        let ordersData = {};
+        let driversData = {};
+        let hotelsData = {};
+        let commission = 10;
+        let statusChart = null;
 
-    window.switchTab = (tab) => {
-        document.getElementById('section-summary').classList.add('hidden');
-        document.getElementById('section-orders').classList.add('hidden');
-        document.getElementById('section-drivers').classList.add('hidden');
-        document.getElementById('section-hotels').classList.add('hidden');
-        document.getElementById(`section-${tab}`).classList.remove('hidden');
+        window.switchTab = (tab) => {
+            ['summary', 'orders', 'drivers', 'hotels'].forEach(t => {
+                document.getElementById(`section-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('border-b-4', 'border-red-600', 'text-red-600');
+                document.getElementById(`tab-${t}`).classList.add('text-gray-600');
+            });
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('border-b-4', 'border-red-600', 'text-red-600');
+        };
 
-        ['summary', 'orders', 'drivers', 'hotels'].forEach(t => {
-            document.getElementById(`tab-${t}`).classList.remove('bg-purple-600', 'text-white');
-            document.getElementById(`tab-${t}`).classList.add('bg-gray-200', 'text-gray-700');
-        });
-        document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700');
-        document.getElementById(`tab-${tab}`).classList.add('bg-purple-600', 'text-white');
-    };
+        function generateReports() {
+            // CALCULATE METRICS
+            let totalOrders = Object.keys(ordersData).length;
+            let totalRevenue = 0;
+            let deliveredOrders = 0;
+            let pendingOrders = 0;
+            let preparingOrders = 0;
+            let onWayOrders = 0;
+            let totalCommission = 0;
 
-    function loadReports() {
-        onValue(ref(db, 'orders'), (snap) => {
-            const orders = snap.val() || {};
-            const ordersList = Object.entries(orders).map(([id, o]) => ({id, ...o})).reverse();
+            const statusCounts = { pending: 0, preparing: 0, ready: 0, 'on-way': 0, delivered: 0 };
+            const driverEarnings = {};
+            const hotelRevenue = {};
 
-            // Calculate metrics
-            const totalOrders = ordersList.length;
-            const delivered = ordersList.filter(o => o.status === 'delivered').length;
-            const totalRevenue = ordersList.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
-            const avgOrder = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
+            Object.keys(ordersData).forEach(orderId => {
+                const order = ordersData[orderId];
+                totalRevenue += order.totalAmount || 0;
 
-            document.getElementById('metric-orders').textContent = totalOrders;
-            document.getElementById('metric-revenue').textContent = '₹' + totalRevenue;
-            document.getElementById('metric-average').textContent = '₹' + avgOrder;
-            document.getElementById('metric-delivered').textContent = delivered;
+                // Count statuses
+                statusCounts[order.status] = (statusCounts[order.status] || 0) + 1;
+                if(order.status === "delivered") deliveredOrders++;
+                if(order.status === "pending") pendingOrders++;
+                if(order.status === "preparing") preparingOrders++;
+                if(order.status === "on-way") onWayOrders++;
 
-            // Status distribution
-            const statusCounts = {
-                pending: ordersList.filter(o => o.status === 'pending').length,
-                preparing: ordersList.filter(o => o.status === 'preparing').length,
-                ready: ordersList.filter(o => o.status === 'ready').length,
-                'on-way': ordersList.filter(o => o.status === 'on-way').length,
-                delivered: delivered,
-                cancelled: ordersList.filter(o => o.status === 'cancelled').length
-            };
-            updateStatusChart(statusCounts);
-
-            // Orders table
-            displayOrdersTable(ordersList);
-
-            // Driver earnings
-            displayDriverEarnings(ordersList);
-
-            // Hotel revenue
-            displayHotelRevenue(ordersList);
-
-            // Top hotels
-            displayTopHotels(ordersList);
-        });
-    }
-
-    function updateStatusChart(statusCounts) {
-        const ctx = document.getElementById('statusChart').getContext('2d');
-        
-        if(statusChart) statusChart.destroy();
-
-        statusChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Pending', 'Preparing', 'Ready', 'On Way', 'Delivered', 'Cancelled'],
-                datasets: [{
-                    data: [statusCounts.pending, statusCounts.preparing, statusCounts.ready, statusCounts['on-way'], statusCounts.delivered, statusCounts.cancelled],
-                    backgroundColor: ['#ef4444', '#f97316', '#fbbf24', '#3b82f6', '#22c55e', '#6b7280'],
-                    borderColor: '#fff',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+                // Driver earnings
+                if(order.deliveryDriver) {
+                    const driver = Object.values(driversData).find(d => d.name === order.deliveryName);
+                    const driverComm = driver?.commission || commission;
+                    if(!driverEarnings[order.deliveryName]) {
+                        driverEarnings[order.deliveryName] = 0;
+                    }
+                    if(order.status === "delivered") {
+                        const earnings = Math.round(order.totalAmount * driverComm / 100);
+                        driverEarnings[order.deliveryName] += earnings;
+                        totalCommission += earnings;
                     }
                 }
-            }
-        });
-    }
+            });
 
-    function displayOrdersTable(orders) {
-        const tbody = document.getElementById('orders-table-body');
-        tbody.innerHTML = orders.slice(0, 20).map(order => `
-            <tr class="border-b border-gray-200 hover:bg-gray-50">
-                <td class="p-2 font-bold text-gray-800">#${order.id.substring(0, 6)}</td>
-                <td class="p-2 text-gray-700">${order.customerName}</td>
-                <td class="p-2 font-bold text-gray-800">₹${order.totalAmount}</td>
-                <td class="p-2">
-                    <span class="px-2 py-1 rounded-full text-xs font-bold ${
-                        order.status === 'pending' ? 'bg-red-100 text-red-700' :
-                        order.status === 'preparing' ? 'bg-orange-100 text-orange-700' :
-                        order.status === 'ready' ? 'bg-yellow-100 text-yellow-700' :
-                        order.status === 'on-way' ? 'bg-blue-100 text-blue-700' :
-                        order.status === 'delivered' ? 'bg-green-100 text-green-700' :
-                        'bg-gray-100 text-gray-700'
-                    }">
-                        ${order.status.toUpperCase()}
-                    </span>
-                </td>
-                <td class="p-2 text-gray-600">${order.items || 'N/A'}</td>
-                <td class="p-2 text-gray-600 text-xs">${new Date(order.timestamp || new Date()).toLocaleDateString()}</td>
-            </tr>
-        `).join('');
-    }
+            // Update KPIs
+            document.getElementById('kpi-total-orders').innerText = totalOrders;
+            document.getElementById('kpi-total-revenue').innerText = "₹" + Math.round(totalRevenue);
+            document.getElementById('kpi-delivered').innerText = deliveredOrders;
+            document.getElementById('kpi-avg-order').innerText = totalOrders > 0 ? "₹" + Math.round(totalRevenue / totalOrders) : "₹0";
 
-    function displayDriverEarnings(orders) {
-        const drivers = {};
-        
-        orders.filter(o => o.status === 'delivered' && o.deliveryName).forEach(order => {
-            const driver = order.deliveryName;
-            const commission = order.totalAmount * COMMISSION_RATE / 100;
-            drivers[driver] = (drivers[driver] || 0) + commission;
-        });
+            // Success rate
+            const successRate = totalOrders > 0 ? Math.round((deliveredOrders / totalOrders) * 100) : 0;
+            document.getElementById('metric-success').innerText = successRate + "%";
+            document.getElementById('metric-pending').innerText = (pendingOrders + preparingOrders);
+            document.getElementById('metric-commission').innerText = "₹" + Math.round(totalCommission);
 
-        const container = document.getElementById('drivers-earnings');
-        if(Object.keys(drivers).length === 0) {
-            container.innerHTML = '<p class="text-center text-gray-500 py-4">No completed deliveries</p>';
-            return;
+            // Update Chart
+            updateStatusChart(statusCounts);
+
+            // Render tables
+            renderOrdersTable();
+            renderDriversTable(driverEarnings);
+            renderHotelsTable();
         }
 
-        container.innerHTML = Object.entries(drivers)
-            .sort((a, b) => b[1] - a[1])
-            .map(([driver, earnings]) => `
-                <div class="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border-l-4 border-green-600">
-                    <div>
-                        <p class="font-bold text-gray-800">🚚 ${driver}</p>
-                        <p class="text-xs text-gray-500">Total Earnings</p>
+        function updateStatusChart(statusCounts) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            if(statusChart) statusChart.destroy();
+            
+            statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['⏳ Pending', '👨‍🍳 Preparing', '📦 Ready', '🚗 On Way', '✅ Delivered'],
+                    datasets: [{
+                        data: [
+                            statusCounts.pending,
+                            statusCounts.preparing,
+                            statusCounts.ready,
+                            statusCounts['on-way'],
+                            statusCounts.delivered
+                        ],
+                        backgroundColor: ['#ef4444', '#f97316', '#fbbf24', '#3b82f6', '#10b981']
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function renderOrdersTable() {
+            const container = document.getElementById('orders-table');
+            container.innerHTML = "";
+            
+            const sortedOrders = Object.entries(ordersData).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
+            
+            sortedOrders.slice(0, 50).forEach(([orderId, order]) => {
+                container.innerHTML += `
+                <div class="bg-white p-3 rounded-lg shadow-md">
+                    <div class="flex justify-between text-sm font-black">
+                        <span>👤 ${order.customerName}</span>
+                        <span class="text-xs px-2 py-1 bg-gray-200 rounded-full">${order.status}</span>
                     </div>
-                    <p class="text-2xl font-black text-green-600">₹${earnings.toFixed(0)}</p>
-                </div>
-            `).join('');
-    }
-
-    function displayHotelRevenue(orders) {
-        const hotels = {};
-        
-        orders.forEach(order => {
-            const hotel = order.customerName ? 'Order' : 'Unknown';
-            const revenue = order.totalAmount || 0;
-            hotels[hotel] = (hotels[hotel] || 0) + revenue;
-        });
-
-        const container = document.getElementById('hotels-revenue');
-        const hotelEntries = Object.entries(hotels).sort((a, b) => b[1] - a[1]);
-        
-        if(hotelEntries.length === 0) {
-            container.innerHTML = '<p class="text-center text-gray-500 py-4">No data</p>';
-            return;
+                    <p class="text-xs text-gray-600 mt-1">📍 ${order.travelInfo || 'N/A'}</p>
+                    <p class="text-xs text-gray-600">📦 ${order.items}</p>
+                    <p class="text-sm font-black text-red-600 mt-1">₹${order.totalAmount}</p>
+                </div>`;
+            });
         }
 
-        container.innerHTML = hotelEntries.map(([hotel, revenue]) => `
-            <div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border-l-4 border-blue-600">
-                <div>
-                    <p class="font-bold text-gray-800">🏢 ${hotel}</p>
-                    <p class="text-xs text-gray-500">Total Revenue</p>
-                </div>
-                <p class="text-2xl font-black text-blue-600">₹${revenue.toFixed(0)}</p>
-            </div>
-        `).join('');
-    }
+        function renderDriversTable(driverEarnings) {
+            const container = document.getElementById('drivers-table');
+            container.innerHTML = "";
+            
+            Object.entries(driverEarnings).forEach(([name, earnings]) => {
+                container.innerHTML += `
+                <div class="bg-white p-3 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center">
+                        <span class="font-black">🚗 ${name}</span>
+                        <span class="text-lg font-black text-green-600">₹${earnings}</span>
+                    </div>
+                </div>`;
+            });
+        }
 
-    function displayTopHotels(orders) {
-        const hotels = {};
-        
-        orders.forEach(order => {
-            // Count by items (since we don't have explicit hotel field in orders)
-            hotels['All Orders'] = (hotels['All Orders'] || 0) + (order.totalAmount || 0);
+        function renderHotelsTable() {
+            const container = document.getElementById('hotels-table');
+            container.innerHTML = "";
+            
+            const hotelRevenue = {};
+            Object.values(ordersData).forEach(order => {
+                // Note: Orders don't have hotel ID, so we can't calculate per-hotel revenue
+                // This would need to be added to order data in future
+            });
+
+            Object.keys(hotelsData).forEach(hId => {
+                const h = hotelsData[hId];
+                container.innerHTML += `
+                <div class="bg-white p-3 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center">
+                        <span class="font-black">🏪 ${h.name}</span>
+                        <span class="text-lg font-black text-blue-600">Items: ${h.menu ? Object.keys(h.menu).length : 0}</span>
+                    </div>
+                </div>`;
+            });
+        }
+
+        // LOAD DATA
+        onValue(ref(db, 'orders'), (snap) => {
+            ordersData = snap.val() || {};
+            generateReports();
         });
 
-        const container = document.getElementById('top-hotels');
-        const sorted = Object.entries(hotels)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 5);
+        onValue(ref(db, 'drivers'), (snap) => {
+            driversData = snap.val() || {};
+        });
 
-        container.innerHTML = sorted.map(([hotel, revenue]) => `
-            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-2 border-purple-600">
-                <span class="text-sm font-bold text-gray-800">🏢 ${hotel}</span>
-                <span class="text-lg font-black text-purple-600">₹${revenue.toFixed(0)}</span>
-            </div>
-        `).join('');
-    }
+        onValue(ref(db, 'hotels'), (snap) => {
+            hotelsData = snap.val() || {};
+        });
 
-    loadReports();
-</script>
+        onValue(ref(db, 'settings/commission'), (snap) => {
+            commission = snap.val() || 10;
+        });
+    </script>
 </body>
 </html>
