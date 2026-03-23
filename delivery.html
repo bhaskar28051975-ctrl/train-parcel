@@ -9,43 +9,59 @@
 </head>
 <body class="bg-gray-100 text-gray-800 pb-20">
 
-    <header class="bg-red-600 text-white p-5 shadow-lg sticky top-0 z-40">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-black">🚗 Delivery Dashboard</h1>
-            <select id="driverSelect" onchange="loginDriver()" class="px-4 py-2 rounded-lg border-2 font-black">
-                <option value="">Select Driver</option>
-            </select>
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="fixed inset-0 bg-red-600 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl">
+            <h1 class="text-2xl font-black text-center mb-2">🚗 Delivery Login</h1>
+            <p class="text-xs text-center text-gray-600 mb-6">Enter your credentials</p>
+            
+            <div class="space-y-4">
+                <input id="loginUsername" type="text" placeholder="Username" class="w-full p-4 border-2 rounded-xl font-bold text-sm">
+                <input id="loginPassword" type="password" placeholder="Password" class="w-full p-4 border-2 rounded-xl font-bold text-sm">
+                <button onclick="driverLogin()" class="w-full bg-red-600 text-white py-4 rounded-xl font-black uppercase text-lg">LOGIN</button>
+            </div>
+            <p id="loginError" class="text-xs text-red-600 text-center mt-4 font-black"></p>
         </div>
-        <p id="driverInfo" class="text-xs mt-2"></p>
-    </header>
-
-    <!-- TABS -->
-    <div class="bg-white border-b flex gap-0">
-        <button onclick="switchTab('ready')" id="tab-ready" class="flex-1 py-3 font-black text-red-600 border-b-4 border-red-600 text-sm">📦 READY</button>
-        <button onclick="switchTab('onway')" id="tab-onway" class="flex-1 py-3 font-black text-gray-600 text-sm">🚗 ON WAY</button>
-        <button onclick="switchTab('delivered')" id="tab-delivered" class="flex-1 py-3 font-black text-gray-600 text-sm">✅ DELIVERED</button>
     </div>
 
-    <div class="p-4 space-y-4">
+    <!-- MAIN DASHBOARD (Hidden until logged in) -->
+    <div id="mainDashboard" class="hidden">
+        <header class="bg-red-600 text-white p-5 shadow-lg sticky top-0 z-40">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-black">🚗 Delivery Dashboard</h1>
+                <button onclick="driverLogout()" class="px-4 py-2 rounded-lg border-2 border-white font-black text-sm">LOGOUT</button>
+            </div>
+            <p id="driverInfo" class="text-xs mt-2"></p>
+        </header>
 
-        <!-- ========== READY ORDERS ========== -->
-        <div id="section-ready">
-            <h2 class="text-lg font-black mb-3">📦 Ready for Pickup</h2>
-            <div id="ready-list" class="space-y-3"></div>
+        <!-- TABS -->
+        <div class="bg-white border-b flex gap-0">
+            <button onclick="switchTab('ready')" id="tab-ready" class="flex-1 py-3 font-black text-red-600 border-b-4 border-red-600 text-sm">📦 READY</button>
+            <button onclick="switchTab('onway')" id="tab-onway" class="flex-1 py-3 font-black text-gray-600 text-sm">🚗 ON WAY</button>
+            <button onclick="switchTab('delivered')" id="tab-delivered" class="flex-1 py-3 font-black text-gray-600 text-sm">✅ DELIVERED</button>
         </div>
 
-        <!-- ========== ON THE WAY ========== -->
-        <div id="section-onway" class="hidden">
-            <h2 class="text-lg font-black mb-3">🚗 On The Way</h2>
-            <div id="onway-list" class="space-y-3"></div>
-        </div>
+        <div class="p-4 space-y-4">
 
-        <!-- ========== DELIVERED ========== -->
-        <div id="section-delivered" class="hidden">
-            <h2 class="text-lg font-black mb-3">✅ Delivered Today</h2>
-            <div id="delivered-list" class="space-y-3"></div>
-        </div>
+            <!-- ========== READY ORDERS ========== -->
+            <div id="section-ready">
+                <h2 class="text-lg font-black mb-3">📦 Ready for Pickup</h2>
+                <div id="ready-list" class="space-y-3"></div>
+            </div>
 
+            <!-- ========== ON THE WAY ========== -->
+            <div id="section-onway" class="hidden">
+                <h2 class="text-lg font-black mb-3">🚗 On The Way</h2>
+                <div id="onway-list" class="space-y-3"></div>
+            </div>
+
+            <!-- ========== DELIVERED ========== -->
+            <div id="section-delivered" class="hidden">
+                <h2 class="text-lg font-black mb-3">✅ Delivered Today</h2>
+                <div id="delivered-list" class="space-y-3"></div>
+            </div>
+
+        </div>
     </div>
 
     <!-- STATS FOOTER -->
@@ -87,7 +103,7 @@
         const db = getDatabase(app);
 
         let currentDriver = null;
-        let driversMap = {};
+        let driversData = {};
         let ordersData = {};
         let hotelsData = {};
         let commission = 10;
@@ -96,13 +112,11 @@
         function getHotelAddress(travelInfo) {
             if(!travelInfo || !travelInfo.includes('Hotel:')) return travelInfo;
             
-            // Extract hotel name from travelInfo like "Hotel: Restaurant Name | Room: 101 | Location: City"
             const hotelMatch = travelInfo.match(/Hotel:\s*([^|]+)/);
             if(!hotelMatch) return travelInfo;
             
             const hotelName = hotelMatch[1].trim();
             
-            // Find hotel in database
             for(let hId in hotelsData) {
                 if(hotelsData[hId].name === hotelName) {
                     const address = hotelsData[hId].address || 'No address';
@@ -112,6 +126,50 @@
             
             return travelInfo;
         }
+
+        window.driverLogin = () => {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if(!username || !password) {
+                document.getElementById('loginError').innerText = "❌ Enter username and password";
+                return;
+            }
+
+            // Find driver with matching username and password
+            let foundDriver = null;
+            Object.keys(driversData).forEach(dId => {
+                const driver = driversData[dId];
+                if(driver.username === username && driver.password === password) {
+                    foundDriver = { id: dId, ...driver };
+                }
+            });
+
+            if(!foundDriver) {
+                document.getElementById('loginError').innerText = "❌ Invalid username or password";
+                return;
+            }
+
+            // Successful login
+            currentDriver = foundDriver;
+            localStorage.setItem('deliveryDriver', JSON.stringify(currentDriver));
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+            document.getElementById('driverInfo').innerText = `👤 ${foundDriver.name} (${foundDriver.vehicle}) - Logged In`;
+            renderOrders();
+        };
+
+        window.driverLogout = () => {
+            if(confirm("Logout?")) {
+                currentDriver = null;
+                localStorage.removeItem('deliveryDriver');
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('mainDashboard').classList.add('hidden');
+                document.getElementById('loginUsername').value = "";
+                document.getElementById('loginPassword').value = "";
+                document.getElementById('loginError').innerText = "";
+            }
+        };
 
         window.switchTab = (tab) => {
             ['ready', 'onway', 'delivered'].forEach(t => {
@@ -123,28 +181,9 @@
             document.getElementById(`tab-${tab}`).classList.add('border-b-4', 'border-red-600', 'text-red-600');
         };
 
-        window.loginDriver = () => {
-            const driverId = document.getElementById('driverSelect').value;
-            if(!driverId) {
-                alert("❌ Please select a driver first");
-                return;
-            }
-            
-            const driverName = Object.keys(driversMap).find(name => driversMap[name] === driverId);
-            if(!driverName) {
-                alert("❌ Driver not found");
-                return;
-            }
-            
-            currentDriver = { id: driverId, name: driverName };
-            localStorage.setItem('deliveryDriver', JSON.stringify(currentDriver));
-            document.getElementById('driverInfo').innerText = `👤 ${driverName} logged in`;
-            renderOrders();
-        };
-
         window.pickOrder = (orderId) => {
             if(!currentDriver) {
-                alert("❌ Please select a driver first from the dropdown");
+                alert("❌ Please login first");
                 return;
             }
             update(ref(db, `orders/${orderId}`), {
@@ -236,34 +275,25 @@
 
         // LOAD DATA
         onValue(ref(db, 'drivers'), (snap) => {
-            const data = snap.val() || {};
-            driversMap = {};
-            const select = document.getElementById('driverSelect');
-            select.innerHTML = "<option value=''>Select Driver</option>";
+            driversData = snap.val() || {};
             
-            if(data && Object.keys(data).length > 0) {
-                Object.keys(data).forEach(dId => {
-                    const driver = data[dId];
-                    if(driver && driver.name) {
-                        driversMap[driver.name] = dId;
-                        select.innerHTML += `<option value="${dId}">${driver.name} (${driver.vehicle || 'Vehicle'})</option>`;
+            // Auto-login if saved
+            const saved = localStorage.getItem('deliveryDriver');
+            if(saved) {
+                try {
+                    const driver = JSON.parse(saved);
+                    // Verify driver still exists
+                    if(driversData[driver.id]) {
+                        currentDriver = driver;
+                        document.getElementById('loginScreen').classList.add('hidden');
+                        document.getElementById('mainDashboard').classList.remove('hidden');
+                        document.getElementById('driverInfo').innerText = `👤 ${driver.name} (${driver.vehicle}) - Logged In`;
+                        renderOrders();
+                    } else {
+                        localStorage.removeItem('deliveryDriver');
                     }
-                });
-
-                // Auto-login if saved
-                const saved = localStorage.getItem('deliveryDriver');
-                if(saved) {
-                    try {
-                        const driver = JSON.parse(saved);
-                        if(driver.id && select.querySelector(`option[value="${driver.id}"]`)) {
-                            select.value = driver.id;
-                            currentDriver = driver;
-                            document.getElementById('driverInfo').innerText = `👤 ${driver.name} logged in`;
-                            renderOrders();
-                        }
-                    } catch(e) {
-                        console.log("Error loading saved driver");
-                    }
+                } catch(e) {
+                    console.log("Error loading saved driver");
                 }
             }
         });
