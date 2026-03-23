@@ -3,164 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kitchen - FoodHub</title>
+    <title>FoodHub Kitchen Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-orange-50 pb-24">
-    <header class="bg-white p-5 shadow-md sticky top-0 z-50 border-b-4 border-orange-600">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-black text-orange-600">👨‍🍳 Kitchen Dashboard</h1>
-            <button onclick="location.reload()" class="text-[10px] font-bold bg-gray-100 px-3 py-1 rounded-full uppercase">Refresh</button>
-        </div>
+<body class="bg-gray-100 text-gray-800 pb-20">
+
+    <header class="bg-red-600 text-white p-5 shadow-lg sticky top-0 z-40">
+        <h1 class="text-2xl font-black">👨‍🍳 Kitchen Dashboard</h1>
     </header>
 
-    <div class="max-w-6xl mx-auto p-4">
-        <!-- TABS -->
-        <div class="flex gap-2 bg-white p-2 rounded-xl shadow-md flex-wrap mb-6 sticky top-20 z-40">
-            <button onclick="switchTab('pending')" id="tab-pending" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-red-600 text-white">🔴 Pending</button>
-            <button onclick="switchTab('preparing')" id="tab-preparing" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">⏳ Preparing</button>
-            <button onclick="switchTab('ready')" id="tab-ready" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">✅ Ready</button>
+    <!-- TABS -->
+    <div class="bg-white border-b flex gap-0">
+        <button onclick="switchTab('pending')" id="tab-pending" class="flex-1 py-3 font-black text-red-600 border-b-4 border-red-600 text-sm">⏳ PENDING</button>
+        <button onclick="switchTab('preparing')" id="tab-preparing" class="flex-1 py-3 font-black text-gray-600 text-sm">👨‍🍳 PREPARING</button>
+        <button onclick="switchTab('ready')" id="tab-ready" class="flex-1 py-3 font-black text-gray-600 text-sm">✅ READY</button>
+    </div>
+
+    <div class="p-4 space-y-4">
+
+        <!-- ========== PENDING ORDERS ========== -->
+        <div id="section-pending">
+            <h2 class="text-lg font-black mb-3">⏳ New Orders</h2>
+            <div id="pending-list" class="space-y-3"></div>
         </div>
 
-        <!-- STATS -->
-        <div class="grid grid-cols-3 gap-3 mb-6 bg-white p-4 rounded-xl shadow-md">
+        <!-- ========== PREPARING ORDERS ========== -->
+        <div id="section-preparing" class="hidden">
+            <h2 class="text-lg font-black mb-3">👨‍🍳 Being Prepared</h2>
+            <div id="preparing-list" class="space-y-3"></div>
+        </div>
+
+        <!-- ========== READY ORDERS ========== -->
+        <div id="section-ready" class="hidden">
+            <h2 class="text-lg font-black mb-3">✅ Ready for Pickup</h2>
+            <div id="ready-list" class="space-y-3"></div>
+        </div>
+
+    </div>
+
+    <!-- STATS FOOTER -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t-4 border-red-600 p-4">
+        <div class="flex gap-4 justify-center">
             <div class="text-center">
-                <p id="stat-pending" class="text-3xl font-black text-red-600">0</p>
-                <p class="text-xs text-gray-500">Pending</p>
+                <p class="text-xs font-black text-gray-600">Pending</p>
+                <p id="stat-pending" class="text-xl font-black text-red-600">0</p>
             </div>
             <div class="text-center">
-                <p id="stat-preparing" class="text-3xl font-black text-orange-600">0</p>
-                <p class="text-xs text-gray-500">Preparing</p>
+                <p class="text-xs font-black text-gray-600">Preparing</p>
+                <p id="stat-preparing" class="text-xl font-black text-orange-600">0</p>
             </div>
             <div class="text-center">
-                <p id="stat-ready" class="text-3xl font-black text-green-600">0</p>
-                <p class="text-xs text-gray-500">Ready</p>
+                <p class="text-xs font-black text-gray-600">Ready</p>
+                <p id="stat-ready" class="text-xl font-black text-green-600">0</p>
             </div>
-        </div>
-
-        <!-- PENDING ORDERS -->
-        <div id="section-pending" class="space-y-4">
-            <h2 class="text-xl font-black text-gray-800 mb-4">🔴 New Orders (Pending)</h2>
-            <div id="pending-orders" class="space-y-4"></div>
-        </div>
-
-        <!-- PREPARING ORDERS -->
-        <div id="section-preparing" class="hidden space-y-4">
-            <h2 class="text-xl font-black text-gray-800 mb-4">⏳ Orders Being Prepared</h2>
-            <div id="preparing-orders" class="space-y-4"></div>
-        </div>
-
-        <!-- READY ORDERS -->
-        <div id="section-ready" class="hidden space-y-4">
-            <h2 class="text-xl font-black text-gray-800 mb-4">✅ Ready for Pickup</h2>
-            <div id="ready-orders" class="space-y-4"></div>
+            <div class="text-center">
+                <p class="text-xs font-black text-gray-600">Total</p>
+                <p id="stat-total" class="text-xl font-black text-blue-600">0</p>
+            </div>
         </div>
     </div>
 
     <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = { 
-        apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
-        authDomain: "train-parcel.firebaseapp.com",
-        databaseURL: "https://train-parcel-default-rtdb.firebaseio.com",
-        projectId: "train-parcel",
-        storageBucket: "train-parcel.firebasestorage.app",
-        messagingSenderId: "357680905494",
-        appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
+            authDomain: "train-parcel.firebaseapp.com",
+            databaseURL: "https://train-parcel-default-rtdb.firebaseio.com",
+            projectId: "train-parcel",
+            storageBucket: "train-parcel.firebasestorage.app",
+            messagingSenderId: "357680905494",
+            appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-    let allOrders = {};
+        let ordersData = {};
 
-    window.switchTab = (tab) => {
-        document.getElementById('section-pending').classList.add('hidden');
-        document.getElementById('section-preparing').classList.add('hidden');
-        document.getElementById('section-ready').classList.add('hidden');
-        document.getElementById(`section-${tab}`).classList.remove('hidden');
+        window.switchTab = (tab) => {
+            ['pending', 'preparing', 'ready'].forEach(t => {
+                document.getElementById(`section-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('border-b-4', 'border-red-600', 'text-red-600');
+                document.getElementById(`tab-${t}`).classList.add('text-gray-600');
+            });
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('border-b-4', 'border-red-600', 'text-red-600');
+        };
 
-        ['pending', 'preparing', 'ready'].forEach(t => {
-            document.getElementById(`tab-${t}`).classList.remove('bg-red-600', 'bg-orange-600', 'bg-green-600', 'text-white');
-            document.getElementById(`tab-${t}`).classList.add('bg-gray-200', 'text-gray-700');
-        });
-        
-        if(tab === 'pending') document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700'), document.getElementById(`tab-${tab}`).classList.add('bg-red-600', 'text-white');
-        else if(tab === 'preparing') document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700'), document.getElementById(`tab-${tab}`).classList.add('bg-orange-600', 'text-white');
-        else if(tab === 'ready') document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700'), document.getElementById(`tab-${tab}`).classList.add('bg-green-600', 'text-white');
-    };
+        // STATUS FLOW: pending → preparing → ready → (delivery picks up) → on-way → delivered
 
-    window.updateStatus = (orderId, newStatus) => {
-        update(ref(db, `orders/${orderId}`), { status: newStatus });
-    };
+        window.startCooking = (orderId) => {
+            // pending → preparing
+            update(ref(db, `orders/${orderId}`), {
+                status: "preparing",
+                cookingStartedAt: Date.now()
+            });
+        };
 
-    function loadOrders() {
-        onValue(ref(db, 'orders'), (snap) => {
-            allOrders = snap.val() || {};
+        window.markReady = (orderId) => {
+            // preparing → ready
+            update(ref(db, `orders/${orderId}`), {
+                status: "ready",
+                readyAt: Date.now()
+            });
+        };
+
+        window.cancelOrder = (orderId) => {
+            // Delete order
+            if(confirm("❌ Cancel this order?")) {
+                remove(ref(db, `orders/${orderId}`));
+            }
+        };
+
+        function renderOrders() {
+            const pendingList = document.getElementById('pending-list');
+            const preparingList = document.getElementById('preparing-list');
+            const readyList = document.getElementById('ready-list');
             
-            const pending = Object.entries(allOrders).filter(([_, o]) => o.status === "pending").reverse();
-            const preparing = Object.entries(allOrders).filter(([_, o]) => o.status === "preparing").reverse();
-            const ready = Object.entries(allOrders).filter(([_, o]) => o.status === "ready").reverse();
+            pendingList.innerHTML = "";
+            preparingList.innerHTML = "";
+            readyList.innerHTML = "";
 
-            document.getElementById('stat-pending').textContent = pending.length;
-            document.getElementById('stat-preparing').textContent = preparing.length;
-            document.getElementById('stat-ready').textContent = ready.length;
+            let pendingCount = 0, preparingCount = 0, readyCount = 0;
 
-            displayOrders('pending-orders', pending);
-            displayOrders('preparing-orders', preparing);
-            displayOrders('ready-orders', ready);
-        });
-    }
+            Object.keys(ordersData).forEach(orderId => {
+                const order = ordersData[orderId];
 
-    function displayOrders(containerId, orders) {
-        const container = document.getElementById(containerId);
-        if(orders.length === 0) {
-            container.innerHTML = '<p class="text-center text-gray-500 py-8">No orders</p>';
-            return;
+                // PENDING ORDERS (New orders that need to be cooked)
+                if(order.status === "pending") {
+                    pendingCount++;
+                    pendingList.innerHTML += `
+                    <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-red-600">
+                        <div class="mb-3">
+                            <h3 class="font-black text-sm">👤 ${order.customerName}</h3>
+                            <p class="text-xs text-gray-600 mt-1">📞 ${order.customerPhone}</p>
+                            <p class="text-xs text-gray-600 mt-1">📍 ${order.customerAddress}</p>
+                            <p class="text-xs text-red-600 font-black mt-2">🍽️ ${order.items}</p>
+                            <p class="text-xs text-gray-600 mt-1">💰 ₹${order.totalAmount}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="startCooking('${orderId}')" class="flex-1 bg-orange-600 text-white py-2 rounded-lg font-black text-xs">START COOKING 👨‍🍳</button>
+                            <button onclick="cancelOrder('${orderId}')" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-black text-xs">Cancel</button>
+                        </div>
+                    </div>`;
+                }
+
+                // PREPARING ORDERS (Currently being cooked)
+                if(order.status === "preparing") {
+                    preparingCount++;
+                    preparingList.innerHTML += `
+                    <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-orange-600">
+                        <div class="mb-3">
+                            <h3 class="font-black text-sm">👤 ${order.customerName}</h3>
+                            <p class="text-xs text-gray-600 mt-1">📞 ${order.customerPhone}</p>
+                            <p class="text-xs text-gray-600 mt-1">📍 ${order.customerAddress}</p>
+                            <p class="text-xs text-orange-600 font-black mt-2">🍳 Cooking... | 🍽️ ${order.items}</p>
+                            <p class="text-xs text-gray-600 mt-1">💰 ₹${order.totalAmount}</p>
+                        </div>
+                        <button onclick="markReady('${orderId}')" class="w-full bg-green-600 text-white py-2 rounded-lg font-black text-xs">MARK READY ✅</button>
+                    </div>`;
+                }
+
+                // READY ORDERS (Cooked, waiting for delivery pickup)
+                if(order.status === "ready") {
+                    readyCount++;
+                    readyList.innerHTML += `
+                    <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-green-600">
+                        <div>
+                            <h3 class="font-black text-sm">✅ ${order.customerName}</h3>
+                            <p class="text-xs text-gray-600 mt-1">📞 ${order.customerPhone}</p>
+                            <p class="text-xs text-gray-600 mt-1">📍 ${order.customerAddress}</p>
+                            <p class="text-xs text-green-600 font-black mt-2">✨ Ready! | 🍽️ ${order.items}</p>
+                            <p class="text-xs text-gray-600 mt-1">💰 ₹${order.totalAmount}</p>
+                            <p class="text-xs text-gray-600 mt-1">⏰ Waiting for driver pickup...</p>
+                        </div>
+                    </div>`;
+                }
+            });
+
+            const totalOrders = pendingCount + preparingCount + readyCount;
+            document.getElementById('stat-pending').innerText = pendingCount;
+            document.getElementById('stat-preparing').innerText = preparingCount;
+            document.getElementById('stat-ready').innerText = readyCount;
+            document.getElementById('stat-total').innerText = totalOrders;
         }
 
-        container.innerHTML = orders.map(([orderId, order]) => {
-            const itemsList = typeof order.items === 'string' ? order.items : (Array.isArray(order.items) ? order.items.join(", ") : "");
-            return `
-            <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-orange-600">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <p class="text-sm font-black text-gray-400 uppercase">Order ID</p>
-                        <p class="text-lg font-black text-gray-800">#${orderId.substring(0, 8)}</p>
-                    </div>
-                    <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-black uppercase">${order.status}</span>
-                </div>
-
-                <div class="bg-blue-50 p-4 rounded-lg mb-4 border-l-2 border-blue-600">
-                    <p class="font-bold text-gray-800">${order.customerName}</p>
-                    <p class="text-sm text-gray-600">📱 ${order.customerPhone}</p>
-                    <p class="text-sm text-gray-600">📍 ${order.customerAddress}</p>
-                </div>
-
-                <div class="bg-gray-50 p-4 rounded-lg mb-4">
-                    <h4 class="font-bold text-gray-800 text-sm mb-2">📦 Items:</h4>
-                    <p class="text-sm text-gray-700">${itemsList}</p>
-                    <p class="text-lg font-black text-orange-600 mt-2">Total: ₹${order.totalAmount || 0}</p>
-                </div>
-
-                <div class="flex gap-2">
-                    ${order.status === 'pending' ? `
-                        <button onclick="updateStatus('${orderId}', 'preparing')" class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">Start Cooking</button>
-                        <button onclick="updateStatus('${orderId}', 'cancelled')" class="w-24 bg-gray-300 text-gray-700 py-3 rounded-lg font-black text-xs uppercase">Cancel</button>
-                    ` : order.status === 'preparing' ? `
-                        <button onclick="updateStatus('${orderId}', 'ready')" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">Mark Ready</button>
-                        <button onclick="updateStatus('${orderId}', 'pending')" class="w-24 bg-gray-300 text-gray-700 py-3 rounded-lg font-black text-xs uppercase">Back</button>
-                    ` : `
-                        <span class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase text-center">✅ READY</span>
-                    `}
-                </div>
-            </div>`;
-        }).join('');
-    }
-
-    loadOrders();
-</script>
+        // LOAD DATA
+        onValue(ref(db, 'orders'), (snap) => {
+            ordersData = snap.val() || {};
+            renderOrders();
+        });
+    </script>
 </body>
 </html>
