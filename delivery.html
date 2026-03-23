@@ -89,7 +89,29 @@
         let currentDriver = null;
         let driversMap = {};
         let ordersData = {};
+        let hotelsData = {};
         let commission = 10;
+
+        // Helper function to get hotel address from travelInfo
+        function getHotelAddress(travelInfo) {
+            if(!travelInfo || !travelInfo.includes('Hotel:')) return travelInfo;
+            
+            // Extract hotel name from travelInfo like "Hotel: Restaurant Name | Room: 101 | Location: City"
+            const hotelMatch = travelInfo.match(/Hotel:\s*([^|]+)/);
+            if(!hotelMatch) return travelInfo;
+            
+            const hotelName = hotelMatch[1].trim();
+            
+            // Find hotel in database
+            for(let hId in hotelsData) {
+                if(hotelsData[hId].name === hotelName) {
+                    const address = hotelsData[hId].address || 'No address';
+                    return `🏨 ${travelInfo.replace(/Location:[^|]*/, `Location: ${address}`)}`;
+                }
+            }
+            
+            return travelInfo;
+        }
 
         window.switchTab = (tab) => {
             ['ready', 'onway', 'delivered'].forEach(t => {
@@ -163,7 +185,7 @@
                             <h3 class="font-black text-sm">👤 ${order.customerName}</h3>
                             <p class="text-xs text-gray-600 mt-1">📞 <a href="tel:${order.customerPhone}" class="text-blue-600 underline">${order.customerPhone}</a></p>
                             <p class="text-xs text-gray-600 mt-1">📍 <strong>Pickup:</strong> ${order.customerAddress || 'N/A'}</p>
-                            <p class="text-xs text-green-600 font-semibold mt-1">🎯 <strong>Deliver to:</strong> ${order.travelInfo || 'N/A'}</p>
+                            <p class="text-xs text-green-600 font-semibold mt-1">🎯 <strong>Deliver to:</strong> ${getHotelAddress(order.travelInfo) || 'N/A'}</p>
                             <p class="text-xs text-gray-600 mt-1">📦 <strong>Items:</strong> ${order.items}</p>
                             <p class="font-black text-red-600 mt-2">₹${order.totalAmount}</p>
                         </div>
@@ -181,7 +203,7 @@
                             <h3 class="font-black text-sm">👤 ${order.customerName}</h3>
                             <p class="text-xs text-gray-600 mt-1">📞 <a href="tel:${order.customerPhone}" class="text-blue-600 underline">${order.customerPhone}</a></p>
                             <p class="text-xs text-gray-600 mt-1">📍 <strong>Pickup:</strong> ${order.customerAddress || 'N/A'}</p>
-                            <p class="text-xs text-green-600 font-black mt-1">🎯 <strong>Delivery:</strong> ${order.travelInfo || 'N/A'}</p>
+                            <p class="text-xs text-green-600 font-black mt-1">🎯 <strong>Delivery:</strong> ${getHotelAddress(order.travelInfo) || 'N/A'}</p>
                             <p class="text-xs text-gray-600 mt-1">📦 <strong>Items:</strong> ${order.items}</p>
                             <p class="font-black text-red-600 mt-2">₹${order.totalAmount} | 💰 Your: ₹${Math.round(order.totalAmount * commission / 100)}</p>
                         </div>
@@ -198,7 +220,7 @@
                         <div>
                             <h3 class="font-black text-sm">✅ ${order.customerName}</h3>
                             <p class="text-xs text-gray-600 mt-1">📞 ${order.customerPhone}</p>
-                            <p class="text-xs text-gray-600 mt-1">📍 <strong>Delivered to:</strong> ${order.travelInfo || 'N/A'}</p>
+                            <p class="text-xs text-gray-600 mt-1">📍 <strong>Delivered to:</strong> ${getHotelAddress(order.travelInfo) || 'N/A'}</p>
                             <p class="text-xs text-gray-600 mt-1">📦 ${order.items}</p>
                             <p class="font-black text-green-600 mt-2">₹${order.totalAmount} | 💰 You earned: ₹${Math.round(order.totalAmount * commission / 100)}</p>
                         </div>
@@ -253,6 +275,11 @@
 
         onValue(ref(db, 'settings/commission'), (snap) => {
             commission = snap.val() || 10;
+            renderOrders();
+        });
+
+        onValue(ref(db, 'hotels'), (snap) => {
+            hotelsData = snap.val() || {};
             renderOrders();
         });
     </script>
