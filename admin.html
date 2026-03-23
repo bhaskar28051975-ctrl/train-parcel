@@ -30,6 +30,7 @@
                 <div class="space-y-3">
                     <input id="hotelName" type="text" placeholder="Hotel Name" class="w-full p-3 border-2 rounded-lg text-sm">
                     <input id="hotelImage" type="text" placeholder="Hotel Image URL" class="w-full p-3 border-2 rounded-lg text-sm">
+                    <input id="hotelAddress" type="text" placeholder="Hotel Address (Full Address)" class="w-full p-3 border-2 rounded-lg text-sm">
                     <button onclick="addHotel()" class="w-full bg-red-600 text-white py-3 rounded-lg font-black uppercase">Add Hotel</button>
                 </div>
             </div>
@@ -147,15 +148,18 @@
         window.addHotel = () => {
             const name = document.getElementById('hotelName').value;
             const image = document.getElementById('hotelImage').value;
-            if(!name || !image) return alert("❌ Please fill all fields");
+            const address = document.getElementById('hotelAddress').value;
+            if(!name || !image || !address) return alert("❌ Please fill all fields");
             
             push(ref(db, 'hotels'), {
                 name: name,
                 image: image,
+                address: address,
                 createdAt: Date.now()
             }).then(() => {
                 document.getElementById('hotelName').value = "";
                 document.getElementById('hotelImage').value = "";
+                document.getElementById('hotelAddress').value = "";
                 alert("✅ Hotel added!");
             });
         };
@@ -237,7 +241,8 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <h3 class="font-black text-lg">${h.name}</h3>
-                            <p class="text-xs text-gray-600">${itemCount} menu items</p>
+                            <p class="text-xs text-gray-600">📍 ${h.address || 'No address'}</p>
+                            <p class="text-xs text-gray-600 mt-1">${itemCount} menu items</p>
                         </div>
                         <button onclick="deleteHotel('${hId}')" class="bg-red-600 text-white px-4 py-2 rounded-lg font-black text-xs">Delete</button>
                     </div>
