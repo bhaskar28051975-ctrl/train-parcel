@@ -162,7 +162,8 @@
                         <div class="mb-3">
                             <h3 class="font-black text-sm">👤 ${order.customerName}</h3>
                             <p class="text-xs text-gray-600 mt-1">📞 <a href="tel:${order.customerPhone}" class="text-blue-600 underline">${order.customerPhone}</a></p>
-                            <p class="text-xs text-gray-600 mt-1">📍 <strong>Pickup Address:</strong> ${order.customerAddress || 'N/A'}</p>
+                            <p class="text-xs text-gray-600 mt-1">📍 <strong>Pickup:</strong> ${order.customerAddress || 'N/A'}</p>
+                            <p class="text-xs text-green-600 font-semibold mt-1">🎯 <strong>Deliver to:</strong> ${order.travelInfo || 'N/A'}</p>
                             <p class="text-xs text-gray-600 mt-1">📦 <strong>Items:</strong> ${order.items}</p>
                             <p class="font-black text-red-600 mt-2">₹${order.totalAmount}</p>
                         </div>
