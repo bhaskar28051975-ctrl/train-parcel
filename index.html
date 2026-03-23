@@ -21,7 +21,7 @@
 
     <div id="customer-list" class="p-4 space-y-6"></div>
 
-    <!-- CHECKOUT PANEL - BOTTOM SHEET (ONLY SHOWS WHEN CUSTOMER CLICKS "ADD TO CART") -->
+    <!-- CHECKOUT PANEL - ONLY SHOWS WHEN ITEM HAS QUANTITY -->
     <div id="checkout-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[3rem] shadow-2xl p-6 border-t z-30 max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-4 px-2">
             <div>
@@ -35,7 +35,7 @@
             <input id="custName" type="text" placeholder="Enter Your Name *" class="w-full p-4 border rounded-2xl bg-gray-50 font-bold text-sm">
             <input id="custPhone" type="tel" placeholder="Enter Your Phone *" class="w-full p-4 border rounded-2xl bg-gray-50 font-bold text-sm">
 
-            <!-- TRAVEL & HOTEL SELECTION -->
+            <!-- TRAVEL & HOTEL SELECTION TABS -->
             <div class="flex gap-2 bg-gray-100 p-2 rounded-xl">
                 <button onclick="switchTab('train')" id="tab-train" class="flex-1 py-2 px-3 rounded-lg text-xs font-black uppercase bg-red-600 text-white">🚆 Train</button>
                 <button onclick="switchTab('bus')" id="tab-bus" class="flex-1 py-2 px-3 rounded-lg text-xs font-black uppercase bg-gray-300 text-gray-700">🚌 Bus</button>
@@ -92,19 +92,15 @@
         let hotelData = {};
         let selectedTab = 'train';
 
-        // QUANTITY ADJUSTMENT - NO POPUP
-        window.updateQty = (id, dish, price, change) => {
-            if(!cart[id]) cart[id] = { dish, price: parseInt(price), qty: 0 };
-            cart[id].qty += change;
-            if(cart[id].qty <= 0) delete cart[id];
-            updateUI();
-            renderMenu();
-        };
-
-        // ADD TO CART - SHOWS CHECKOUT PANEL
-        window.addToCart = (id, dish, price) => {
-            if(!cart[id]) cart[id] = { dish, price: parseInt(price), qty: 0 };
-            cart[id].qty = 1;
+        // UPDATE QUANTITY FROM DROPDOWN
+        window.changeQty = (id, dish, price, newQty) => {
+            newQty = parseInt(newQty);
+            if(newQty <= 0) {
+                delete cart[id];
+            } else {
+                if(!cart[id]) cart[id] = { dish, price: parseInt(price), qty: 0 };
+                cart[id].qty = newQty;
+            }
             updateUI();
             renderMenu();
         };
@@ -159,23 +155,20 @@
                                     <p class="text-xs text-gray-500 truncate">Delicious homemade food</p>
                                 </div>
 
-                                <!-- QUANTITY BUTTONS - ONLY [+] AT START, THEN [−][QTY][+] -->
-                                <div class="flex items-center gap-1 flex-shrink-0">
-                                    ${currentQty === 0 ? `
-                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-black uppercase">+</button>
-                                    ` : `
-                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -1)" class="px-2 py-1 bg-red-600 text-white rounded-lg font-bold text-sm">−</button>
-                                        <span class="w-8 text-center font-black text-red-600 text-sm">${currentQty}</span>
-                                        <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', 1)" class="px-2 py-1 bg-red-600 text-white rounded-lg font-bold text-sm">+</button>
-                                    `}
-                                </div>
-
-                                <!-- ADD TO CART BUTTON - SHOWS CHECKOUT PANEL -->
-                                ${currentQty === 0 ? `
-                                    <button onclick="addToCart('${mId}', '${m.dish}', '${m.price}')" class="px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-black uppercase flex-shrink-0 whitespace-nowrap">Add</button>
-                                ` : `
-                                    <button onclick="updateQty('${mId}', '${m.dish}', '${m.price}', -${currentQty})" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg text-xs font-black uppercase flex-shrink-0 whitespace-nowrap">Remove</button>
-                                `}
+                                <!-- QUANTITY DROPDOWN - SELECT 0-10 -->
+                                <select onchange="changeQty('${mId}', '${m.dish}', '${m.price}', this.value)" class="px-3 py-2 border-2 border-red-600 rounded-lg font-black text-red-600 bg-white text-sm w-16 flex-shrink-0">
+                                    <option value="0">0</option>
+                                    <option value="1" ${currentQty === 1 ? 'selected' : ''}>1</option>
+                                    <option value="2" ${currentQty === 2 ? 'selected' : ''}>2</option>
+                                    <option value="3" ${currentQty === 3 ? 'selected' : ''}>3</option>
+                                    <option value="4" ${currentQty === 4 ? 'selected' : ''}>4</option>
+                                    <option value="5" ${currentQty === 5 ? 'selected' : ''}>5</option>
+                                    <option value="6" ${currentQty === 6 ? 'selected' : ''}>6</option>
+                                    <option value="7" ${currentQty === 7 ? 'selected' : ''}>7</option>
+                                    <option value="8" ${currentQty === 8 ? 'selected' : ''}>8</option>
+                                    <option value="9" ${currentQty === 9 ? 'selected' : ''}>9</option>
+                                    <option value="10" ${currentQty === 10 ? 'selected' : ''}>10</option>
+                                </select>
                             </div>
                         </div>`;
                     });
