@@ -22,53 +22,53 @@
     <div id="customer-list" class="p-4 space-y-6"></div>
 
     <!-- CHECKOUT PANEL - ONLY SHOWS WHEN ITEM HAS QUANTITY -->
-    <div id="checkout-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[3rem] shadow-2xl p-6 border-t z-30 max-h-[90vh] overflow-y-auto">
-        <div class="flex justify-between items-center mb-4 px-2">
+    <div id="checkout-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[3rem] shadow-2xl p-4 border-t z-30 max-h-[50vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-2 px-2">
             <div>
-                <p class="text-[10px] font-black text-gray-400 uppercase">Total Bill</p>
-                <p id="panel-total" class="text-3xl font-black text-red-600">₹0</p>
+                <p class="text-[8px] font-black text-gray-400 uppercase">Total</p>
+                <p id="panel-total" class="text-2xl font-black text-red-600">₹0</p>
             </div>
-            <button onclick="cancelOrder()" class="text-red-500 font-bold text-xs uppercase bg-red-50 px-4 py-2 rounded-full">Cancel</button>
+            <button onclick="cancelOrder()" class="text-red-500 font-bold text-xs uppercase bg-red-50 px-3 py-1 rounded-full text-[10px]">Cancel</button>
         </div>
-        <div class="space-y-3">
+        <div class="space-y-2">
             <!-- CUSTOMER NAME & PHONE -->
-            <input id="custName" type="text" placeholder="Enter Your Name *" class="w-full p-4 border rounded-2xl bg-gray-50 font-bold text-sm">
-            <input id="custPhone" type="tel" placeholder="Enter Your Phone *" class="w-full p-4 border rounded-2xl bg-gray-50 font-bold text-sm">
+            <input id="custName" type="text" placeholder="Enter Your Name *" class="w-full p-2 border rounded-lg bg-gray-50 font-bold text-xs">
+            <input id="custPhone" type="tel" placeholder="Enter Your Phone *" class="w-full p-2 border rounded-lg bg-gray-50 font-bold text-xs">
 
             <!-- TRAVEL & HOTEL SELECTION TABS -->
-            <div class="flex gap-2 bg-gray-100 p-2 rounded-xl">
-                <button onclick="switchTab('train')" id="tab-train" class="flex-1 py-2 px-3 rounded-lg text-xs font-black uppercase bg-red-600 text-white">🚆 Train</button>
-                <button onclick="switchTab('bus')" id="tab-bus" class="flex-1 py-2 px-3 rounded-lg text-xs font-black uppercase bg-gray-300 text-gray-700">🚌 Bus</button>
-                <button onclick="switchTab('hotel')" id="tab-hotel" class="flex-1 py-2 px-3 rounded-lg text-xs font-black uppercase bg-gray-300 text-gray-700">🏨 Hotel</button>
+            <div class="flex gap-1 bg-gray-100 p-1 rounded-lg">
+                <button onclick="switchTab('train')" id="tab-train" class="flex-1 py-1 px-2 rounded-lg text-[10px] font-black uppercase bg-red-600 text-white">🚆 Train</button>
+                <button onclick="switchTab('bus')" id="tab-bus" class="flex-1 py-1 px-2 rounded-lg text-[10px] font-black uppercase bg-gray-300 text-gray-700">🚌 Bus</button>
+                <button onclick="switchTab('hotel')" id="tab-hotel" class="flex-1 py-1 px-2 rounded-lg text-[10px] font-black uppercase bg-gray-300 text-gray-700">🏨 Hotel</button>
             </div>
 
             <!-- TRAIN TAB -->
-            <div id="section-train" class="space-y-2">
-                <input id="trainName" type="text" placeholder="Train Name" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="trainNumber" type="text" placeholder="Train Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="coachNumber" type="text" placeholder="Coach Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="seatNumber" type="text" placeholder="Seat Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="departureTime" type="time" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="departureDate" type="date" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+            <div id="section-train" class="space-y-1">
+                <input id="trainName" type="text" placeholder="Train Name" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="trainNumber" type="text" placeholder="Train Number" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="coachNumber" type="text" placeholder="Coach Number" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="seatNumber" type="text" placeholder="Seat Number" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="departureTime" type="time" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="departureDate" type="date" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
             </div>
 
             <!-- BUS TAB -->
-            <div id="section-bus" class="hidden space-y-2">
-                <input id="busName" type="text" placeholder="Travel Name" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="busSeatNumber" type="text" placeholder="Seat Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="busLocation" type="text" placeholder="Bus Location" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="busDate" type="date" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="busTime" type="time" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+            <div id="section-bus" class="hidden space-y-1">
+                <input id="busName" type="text" placeholder="Travel Name" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="busSeatNumber" type="text" placeholder="Seat Number" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="busLocation" type="text" placeholder="Bus Location" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="busDate" type="date" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="busTime" type="time" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
             </div>
 
             <!-- HOTEL TAB -->
-            <div id="section-hotel" class="hidden space-y-2">
-                <input id="hotelName" type="text" placeholder="Hotel Name" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="roomNumber" type="text" placeholder="Room Number" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
-                <input id="hotelLocation" type="text" placeholder="Hotel Location" class="w-full p-3 border rounded-xl bg-gray-50 text-sm">
+            <div id="section-hotel" class="hidden space-y-1">
+                <input id="hotelName" type="text" placeholder="Hotel Name" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="roomNumber" type="text" placeholder="Room Number" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
+                <input id="hotelLocation" type="text" placeholder="Hotel Location" class="w-full p-2 border rounded-lg bg-gray-50 text-xs">
             </div>
 
-            <button onclick="placeOrder()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase shadow-lg">Confirm Order</button>
+            <button onclick="placeOrder()" class="w-full bg-red-600 text-white py-2 rounded-xl font-black uppercase shadow-lg text-sm">Confirm Order</button>
         </div>
     </div>
 
