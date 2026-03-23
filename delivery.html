@@ -103,9 +103,17 @@
 
         window.loginDriver = () => {
             const driverId = document.getElementById('driverSelect').value;
-            if(!driverId) return;
+            if(!driverId) {
+                alert("❌ Please select a driver first");
+                return;
+            }
             
             const driverName = Object.keys(driversMap).find(name => driversMap[name] === driverId);
+            if(!driverName) {
+                alert("❌ Driver not found");
+                return;
+            }
+            
             currentDriver = { id: driverId, name: driverName };
             localStorage.setItem('deliveryDriver', JSON.stringify(currentDriver));
             document.getElementById('driverInfo').innerText = `👤 ${driverName} logged in`;
@@ -113,7 +121,10 @@
         };
 
         window.pickOrder = (orderId) => {
-            if(!currentDriver) return alert("❌ Please select driver first");
+            if(!currentDriver) {
+                alert("❌ Please select a driver first from the dropdown");
+                return;
+            }
             update(ref(db, `orders/${orderId}`), {
                 status: "on-way",
                 deliveryDriver: currentDriver.id,
@@ -207,17 +218,30 @@
             const select = document.getElementById('driverSelect');
             select.innerHTML = "<option value=''>Select Driver</option>";
             
-            Object.keys(data).forEach(dId => {
-                driversMap[data[dId].name] = dId;
-                select.innerHTML += `<option value="${dId}">${data[dId].name} (${data[dId].vehicle})</option>`;
-            });
+            if(data && Object.keys(data).length > 0) {
+                Object.keys(data).forEach(dId => {
+                    const driver = data[dId];
+                    if(driver && driver.name) {
+                        driversMap[driver.name] = dId;
+                        select.innerHTML += `<option value="${dId}">${driver.name} (${driver.vehicle || 'Vehicle'})</option>`;
+                    }
+                });
 
-            // Auto-login if saved
-            const saved = localStorage.getItem('deliveryDriver');
-            if(saved) {
-                const driver = JSON.parse(saved);
-                document.getElementById('driverSelect').value = driver.id;
-                loginDriver();
+                // Auto-login if saved
+                const saved = localStorage.getItem('deliveryDriver');
+                if(saved) {
+                    try {
+                        const driver = JSON.parse(saved);
+                        if(driver.id && select.querySelector(`option[value="${driver.id}"]`)) {
+                            select.value = driver.id;
+                            currentDriver = driver;
+                            document.getElementById('driverInfo').innerText = `👤 ${driver.name} logged in`;
+                            renderOrders();
+                        }
+                    } catch(e) {
+                        console.log("Error loading saved driver");
+                    }
+                }
             }
         });
 
