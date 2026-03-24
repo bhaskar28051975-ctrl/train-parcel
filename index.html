@@ -59,7 +59,6 @@
             <!-- CUSTOMER NAME & PHONE -->
             <input id="custName" type="text" placeholder="Enter Your Name *" class="w-full p-2 border rounded-lg bg-gray-50 font-bold text-xs">
             <input id="custPhone" type="tel" placeholder="Enter Your Phone *" class="w-full p-2 border rounded-lg bg-gray-50 font-bold text-xs">
-            <input id="custAddress" type="text" placeholder="📍 Your Pickup Location (e.g. Home/Office) *" class="w-full p-2 border rounded-lg bg-gray-50 font-bold text-xs text-green-700">
 
             <!-- TRAVEL & HOTEL SELECTION TABS -->
             <div class="flex gap-1 bg-gray-100 p-1 rounded-lg">
@@ -159,22 +158,11 @@
                 return;
             }
 
-            // Combine country code and phone number
             const fullNumber = countryCode + phoneNumber;
-            
-            // Get app URL
             const appUrl = window.location.href.split('?')[0];
-            
-            // Message text
             const message = `🍔 Order delicious food with FoodHub! 📱\n\n✅ Fast delivery\n✅ Fresh food\n✅ Best prices\n\nDownload now: ${appUrl}\n\n#FoodHub #FoodDelivery`;
-            
-            // WhatsApp API URL
             const whatsappUrl = `https://api.whatsapp.com/send?phone=${fullNumber}&text=${encodeURIComponent(message)}`;
-            
-            // Open WhatsApp
             window.open(whatsappUrl, '_blank');
-            
-            // Close modal
             closeWhatsAppModal();
             alert("✅ Opening WhatsApp!");
         };
@@ -193,24 +181,13 @@
             document.getElementById(`tab-${tab}`).classList.remove('bg-gray-300', 'text-gray-700');
             document.getElementById(`tab-${tab}`).classList.add('bg-red-600', 'text-white');
 
-            // AUTO-SET PICKUP ADDRESS FOR HOTEL
             if(tab === 'hotel') {
                 autoSetPickupAddress();
             }
         };
 
         window.autoSetPickupAddress = () => {
-            const hotelNameField = document.getElementById('hotelName').value;
-            if(hotelNameField) {
-                // Find hotel in database and get its address
-                for(let hId in hotelData) {
-                    if(hotelData[hId].name === hotelNameField) {
-                        const hotelAddress = hotelData[hId].address || hotelNameField;
-                        document.getElementById('custAddress').value = hotelAddress;
-                        break;
-                    }
-                }
-            }
+            // kept for compatibility but pickup address field removed
         };
 
         function updateUI() {
@@ -242,7 +219,6 @@
                                     <p class="text-xs text-gray-500 truncate">Delicious homemade food</p>
                                 </div>
 
-                                <!-- QUANTITY DROPDOWN - SELECT 0-10 -->
                                 <select onchange="changeQty('${mId}', '${m.dish}', '${m.price}', this.value, '${hotelId}')" class="px-3 py-2 border-2 border-red-600 rounded-lg font-black text-red-600 bg-white text-sm w-16 flex-shrink-0">
                                     <option value="0">0</option>
                                     <option value="1" ${currentQty === 1 ? 'selected' : ''}>1</option>
@@ -279,12 +255,10 @@
         window.placeOrder = () => {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            const address = document.getElementById('custAddress').value;
             
-            if(!name || !phone || !address) return alert("❌ Please enter name, phone and pickup location!");
+            if(!name || !phone) return alert("❌ Please enter name and phone!");
             if(Object.keys(cart).length === 0) return alert("❌ Cart is empty!");
             
-            // Get hotel address from cart
             let pickupHotelAddress = "";
             const firstItem = Object.values(cart)[0];
             if(firstItem && firstItem.hotelId) {
@@ -323,7 +297,6 @@
             push(ref(db, 'orders'), {
                 customerName: name,
                 customerPhone: phone,
-                customerAddress: address,
                 pickupHotelAddress: pickupHotelAddress,
                 travelInfo: travelInfo,
                 items: itemsList,
@@ -335,7 +308,6 @@
                 cart = {};
                 document.getElementById('custName').value = "";
                 document.getElementById('custPhone').value = "";
-                document.getElementById('custAddress').value = "";
                 updateUI();
                 renderMenu();
             }).catch(err => {
