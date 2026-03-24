@@ -3,315 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodHub Delivery Dashboard</title>
+    <title>Delivery - FoodHub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 text-gray-800 pb-20">
+<body class="bg-green-50 pb-24">
+    <header class="bg-white p-5 shadow-md sticky top-0 z-50 border-b-4 border-green-600">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-black text-green-600">🚚 Delivery Dashboard</h1>
+            <button onclick="location.reload()" class="text-[10px] font-bold bg-gray-100 px-3 py-1 rounded-full uppercase">Refresh</button>
+        </div>
+    </header>
 
-    <!-- LOGIN SCREEN -->
-    <div id="loginScreen" class="fixed inset-0 bg-red-600 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl">
-            <h1 class="text-2xl font-black text-center mb-2">🚗 Delivery Login</h1>
-            <p class="text-xs text-center text-gray-600 mb-6">Enter your credentials</p>
-            
-            <div class="space-y-4">
-                <input id="loginUsername" type="text" placeholder="Username" class="w-full p-4 border-2 rounded-xl font-bold text-sm">
-                <input id="loginPassword" type="password" placeholder="Password" class="w-full p-4 border-2 rounded-xl font-bold text-sm">
-                <button onclick="driverLogin()" class="w-full bg-red-600 text-white py-4 rounded-xl font-black uppercase text-lg">LOGIN</button>
+    <!-- LOGIN PANEL -->
+    <div id="login-panel" class="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl">
+            <h2 class="text-2xl font-black text-gray-800 mb-4">🚚 Driver Login</h2>
+            <div class="space-y-3">
+                <input type="text" id="driverSelect" placeholder="Select Your Name" class="w-full p-3 border rounded-lg bg-gray-50 text-sm font-bold" list="drivers-list">
+                <datalist id="drivers-list"></datalist>
+                <button onclick="driverLogin()" class="w-full bg-green-600 text-white p-4 rounded-lg font-black uppercase shadow-lg">Login as Driver</button>
             </div>
-            <p id="loginError" class="text-xs text-red-600 text-center mt-4 font-black"></p>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD (Hidden until logged in) -->
-    <div id="mainDashboard" class="hidden">
-        <header class="bg-red-600 text-white p-5 shadow-lg sticky top-0 z-40">
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-black">🚗 Delivery Dashboard</h1>
-                <button onclick="driverLogout()" class="px-4 py-2 rounded-lg border-2 border-white font-black text-sm">LOGOUT</button>
-            </div>
-            <p id="driverInfo" class="text-xs mt-2"></p>
-        </header>
+    <div class="max-w-6xl mx-auto p-4">
+        <!-- DRIVER INFO -->
+        <div id="driver-info" class="hidden bg-green-600 text-white p-6 rounded-2xl shadow-md mb-6">
+            <p class="text-xs font-bold uppercase mb-2 opacity-90">Driver Logged In</p>
+            <h2 id="driver-name-display" class="text-2xl font-black">--</h2>
+            <p id="driver-earnings" class="text-3xl font-black text-green-100 mt-3">₹0</p>
+            <p class="text-xs text-green-100 mt-1">Today's Earnings (10% commission)</p>
+        </div>
 
         <!-- TABS -->
-        <div class="bg-white border-b flex gap-0">
-            <button onclick="switchTab('ready')" id="tab-ready" class="flex-1 py-3 font-black text-red-600 border-b-4 border-red-600 text-sm">📦 READY</button>
-            <button onclick="switchTab('onway')" id="tab-onway" class="flex-1 py-3 font-black text-gray-600 text-sm">🚗 ON WAY</button>
-            <button onclick="switchTab('delivered')" id="tab-delivered" class="flex-1 py-3 font-black text-gray-600 text-sm">✅ DELIVERED</button>
+        <div class="flex gap-2 bg-white p-2 rounded-xl shadow-md flex-wrap mb-6 sticky top-20 z-40">
+            <button onclick="switchTab('ready')" id="tab-ready" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-blue-600 text-white">🟦 Ready</button>
+            <button onclick="switchTab('onway')" id="tab-onway" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">🟧 On Way</button>
+            <button onclick="switchTab('delivered')" id="tab-delivered" class="py-2 px-4 rounded-lg text-xs font-black uppercase bg-gray-200 text-gray-700">✅ Delivered</button>
         </div>
 
-        <div class="p-4 space-y-4">
-
-            <!-- ========== READY ORDERS ========== -->
-            <div id="section-ready">
-                <h2 class="text-lg font-black mb-3">📦 Ready for Pickup</h2>
-                <div id="ready-list" class="space-y-3"></div>
-            </div>
-
-            <!-- ========== ON THE WAY ========== -->
-            <div id="section-onway" class="hidden">
-                <h2 class="text-lg font-black mb-3">🚗 On The Way</h2>
-                <div id="onway-list" class="space-y-3"></div>
-            </div>
-
-            <!-- ========== DELIVERED ========== -->
-            <div id="section-delivered" class="hidden">
-                <h2 class="text-lg font-black mb-3">✅ Delivered Today</h2>
-                <div id="delivered-list" class="space-y-3"></div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- STATS FOOTER -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t-4 border-red-600 p-4">
-        <div class="flex gap-4 justify-center">
+        <!-- STATS -->
+        <div class="grid grid-cols-3 gap-3 mb-6 bg-white p-4 rounded-xl shadow-md">
             <div class="text-center">
-                <p class="text-xs font-black text-gray-600">Ready</p>
-                <p id="stat-ready" class="text-xl font-black text-red-600">0</p>
+                <p id="stat-ready" class="text-3xl font-black text-blue-600">0</p>
+                <p class="text-xs text-gray-500">Ready</p>
             </div>
             <div class="text-center">
-                <p class="text-xs font-black text-gray-600">On Way</p>
-                <p id="stat-onway" class="text-xl font-black text-blue-600">0</p>
+                <p id="stat-onway" class="text-3xl font-black text-orange-600">0</p>
+                <p class="text-xs text-gray-500">On Way</p>
             </div>
             <div class="text-center">
-                <p class="text-xs font-black text-gray-600">Delivered</p>
-                <p id="stat-delivered" class="text-xl font-black text-green-600">0</p>
-            </div>
-            <div class="text-center">
-                <p class="text-xs font-black text-gray-600">Earnings</p>
-                <p id="stat-earnings" class="text-xl font-black text-green-600">₹0</p>
+                <p id="stat-delivered" class="text-3xl font-black text-green-600">0</p>
+                <p class="text-xs text-gray-500">Delivered</p>
             </div>
         </div>
+
+        <!-- READY ORDERS -->
+        <div id="section-ready" class="space-y-4">
+            <h2 class="text-xl font-black text-gray-800 mb-4">🟦 Ready for Pickup</h2>
+            <div id="ready-orders" class="space-y-4"></div>
+        </div>
+
+        <!-- ON WAY ORDERS -->
+        <div id="section-onway" class="hidden space-y-4">
+            <h2 class="text-xl font-black text-gray-800 mb-4">🟧 Orders On The Way</h2>
+            <div id="onway-orders" class="space-y-4"></div>
+        </div>
+
+        <!-- DELIVERED ORDERS -->
+        <div id="section-delivered" class="hidden space-y-4">
+            <h2 class="text-xl font-black text-gray-800 mb-4">✅ Delivered Today</h2>
+            <div id="delivered-orders" class="space-y-4"></div>
+        </div>
+
+        <button id="logout-btn" onclick="logout()" class="hidden fixed bottom-20 right-4 bg-red-600 text-white px-6 py-3 rounded-full font-black uppercase shadow-lg">Logout</button>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        const firebaseConfig = { 
-            apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
-            authDomain: "train-parcel.firebaseapp.com",
-            databaseURL: "https://train-parcel-default-rtdb.firebaseio.com",
-            projectId: "train-parcel",
-            storageBucket: "train-parcel.firebasestorage.app",
-            messagingSenderId: "357680905494",
-            appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDMz8C0GSPbsYKinLVpUT1PLejBscKw_pc",
+        authDomain: "train-parcel.firebaseapp.com",
+        databaseURL: "https://train-parcel-default-rtdb.firebaseio.com",
+        projectId: "train-parcel",
+        storageBucket: "train-parcel.firebasestorage.app",
+        messagingSenderId: "357680905494",
+        appId: "1:357680905494:web:072f547f8fc7c05a1ce437"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        let currentDriver = null;
-        let driversData = {};
-        let ordersData = {};
-        let hotelsData = {};
-        let commission = 10;
+    let driverId = localStorage.getItem('driver_id');
+    let driverName = localStorage.getItem('driver_name');
+    let hotelsData = {};
+    const COMMISSION_RATE = 10;
 
-        // Helper function to get hotel address from travelInfo
-        function getHotelAddress(travelInfo) {
-            if(!travelInfo || !travelInfo.includes('Hotel:')) return travelInfo;
-            
-            const hotelMatch = travelInfo.match(/Hotel:\s*([^|]+)/);
-            if(!hotelMatch) return travelInfo;
-            
-            const hotelName = hotelMatch[1].trim();
-            
-            for(let hId in hotelsData) {
-                if(hotelsData[hId].name === hotelName) {
-                    const address = hotelsData[hId].address || 'No address';
-                    return `🏨 ${travelInfo.replace(/Location:[^|]*/, `Location: ${address}`)}`;
-                }
+    // Helper function to get hotel address from travelInfo
+    function getHotelAddress(travelInfo) {
+        if(!travelInfo || !travelInfo.includes('Hotel:')) return travelInfo;
+        
+        const hotelMatch = travelInfo.match(/Hotel:\s*([^|]+)/);
+        if(!hotelMatch) return travelInfo;
+        
+        const hotelName = hotelMatch[1].trim();
+        
+        for(let hId in hotelsData) {
+            if(hotelsData[hId].name === hotelName) {
+                const address = hotelsData[hId].address || 'No address';
+                return `🏨 ${travelInfo.replace(/Location:[^|]*/, `Location: ${address}`)}`;
             }
-            
-            return travelInfo;
         }
+        
+        return travelInfo;
+    }
 
-        window.driverLogin = () => {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            if(!username || !password) {
-                document.getElementById('loginError').innerText = "❌ Enter username and password";
-                return;
-            }
+    window.switchTab = (tab) => {
+        document.getElementById('section-ready').classList.add('hidden');
+        document.getElementById('section-onway').classList.add('hidden');
+        document.getElementById('section-delivered').classList.add('hidden');
+        document.getElementById(`section-${tab}`).classList.remove('hidden');
 
-            // Find driver with matching username and password
-            let foundDriver = null;
-            Object.keys(driversData).forEach(dId => {
-                const driver = driversData[dId];
-                if(driver.username === username && driver.password === password) {
-                    foundDriver = { id: dId, ...driver };
-                }
-            });
+        ['ready', 'onway', 'delivered'].forEach(t => {
+            document.getElementById(`tab-${t}`).classList.remove('bg-blue-600', 'bg-orange-600', 'bg-green-600', 'text-white');
+            document.getElementById(`tab-${t}`).classList.add('bg-gray-200', 'text-gray-700');
+        });
+        
+        if(tab === 'ready') document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700'), document.getElementById(`tab-${tab}`).classList.add('bg-blue-600', 'text-white');
+        else if(tab === 'onway') document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700'), document.getElementById(`tab-${tab}`).classList.add('bg-orange-600', 'text-white');
+        else if(tab === 'delivered') document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700'), document.getElementById(`tab-${tab}`).classList.add('bg-green-600', 'text-white');
+    };
 
-            if(!foundDriver) {
-                document.getElementById('loginError').innerText = "❌ Invalid username or password";
-                return;
-            }
+    window.driverLogin = () => {
+        const name = document.getElementById('driverSelect').value;
+        if(!name) return alert("Select a driver");
 
-            // Successful login
-            currentDriver = foundDriver;
-            localStorage.setItem('deliveryDriver', JSON.stringify(currentDriver));
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('mainDashboard').classList.remove('hidden');
-            document.getElementById('driverInfo').innerText = `👤 ${foundDriver.name} (${foundDriver.vehicle}) - Logged In`;
-            renderOrders();
-        };
-
-        window.driverLogout = () => {
-            if(confirm("Logout?")) {
-                currentDriver = null;
-                localStorage.removeItem('deliveryDriver');
-                document.getElementById('loginScreen').classList.remove('hidden');
-                document.getElementById('mainDashboard').classList.add('hidden');
-                document.getElementById('loginUsername').value = "";
-                document.getElementById('loginPassword').value = "";
-                document.getElementById('loginError').innerText = "";
-            }
-        };
-
-        window.switchTab = (tab) => {
-            ['ready', 'onway', 'delivered'].forEach(t => {
-                document.getElementById(`section-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).classList.remove('border-b-4', 'border-red-600', 'text-red-600');
-                document.getElementById(`tab-${t}`).classList.add('text-gray-600');
-            });
-            document.getElementById(`section-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).classList.add('border-b-4', 'border-red-600', 'text-red-600');
-        };
-
-        window.pickOrder = (orderId) => {
-            if(!currentDriver) {
-                alert("❌ Please login first");
-                return;
-            }
-            update(ref(db, `orders/${orderId}`), {
-                status: "on-way",
-                deliveryDriver: currentDriver.id,
-                deliveryName: currentDriver.name,
-                pickedAt: Date.now()
-            });
-        };
-
-        window.deliverOrder = (orderId) => {
-            update(ref(db, `orders/${orderId}`), {
-                status: "delivered",
-                deliveredAt: Date.now()
-            });
-        };
-
-        function renderOrders() {
-            const readyList = document.getElementById('ready-list');
-            const onwayList = document.getElementById('onway-list');
-            const deliveredList = document.getElementById('delivered-list');
-            
-            readyList.innerHTML = "";
-            onwayList.innerHTML = "";
-            deliveredList.innerHTML = "";
-
-            let readyCount = 0, onwayCount = 0, deliveredCount = 0, totalEarnings = 0;
-
-            Object.keys(ordersData).forEach(orderId => {
-                const order = ordersData[orderId];
-
-                // READY ORDERS (status = ready)
-                if(order.status === "ready") {
-                    readyCount++;
-                    readyList.innerHTML += `
-                    <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-orange-600">
-                        <div class="mb-3">
-                            <h3 class="font-black text-sm">👤 ${order.customerName}</h3>
-                            <p class="text-xs text-gray-600 mt-1">📞 <a href="tel:${order.customerPhone}" class="text-blue-600 underline">${order.customerPhone}</a></p>
-                            <p class="text-xs text-gray-600 mt-1">📍 <strong>Pickup:</strong> ${order.customerAddress || 'N/A'}</p>
-                            <p class="text-xs text-green-600 font-semibold mt-1">🎯 <strong>Deliver to:</strong> ${getHotelAddress(order.travelInfo) || 'N/A'}</p>
-                            <p class="text-xs text-gray-600 mt-1">📦 <strong>Items:</strong> ${order.items}</p>
-                            <p class="font-black text-red-600 mt-2">₹${order.totalAmount}</p>
-                        </div>
-                        <button onclick="pickOrder('${orderId}')" class="w-full bg-orange-600 text-white py-2 rounded-lg font-black text-xs">PICK UP</button>
-                    </div>`;
-                }
-
-                // ON THE WAY ORDERS (status = on-way, assigned to current driver)
-                if(order.status === "on-way" && currentDriver && order.deliveryDriver === currentDriver.id) {
-                    onwayCount++;
-                    totalEarnings += (order.totalAmount * commission / 100);
-                    onwayList.innerHTML += `
-                    <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-blue-600">
-                        <div class="mb-3">
-                            <h3 class="font-black text-sm">👤 ${order.customerName}</h3>
-                            <p class="text-xs text-gray-600 mt-1">📞 <a href="tel:${order.customerPhone}" class="text-blue-600 underline">${order.customerPhone}</a></p>
-                            <p class="text-xs text-gray-600 mt-1">📍 <strong>Pickup:</strong> ${order.customerAddress || 'N/A'}</p>
-                            <p class="text-xs text-green-600 font-black mt-1">🎯 <strong>Delivery:</strong> ${getHotelAddress(order.travelInfo) || 'N/A'}</p>
-                            <p class="text-xs text-gray-600 mt-1">📦 <strong>Items:</strong> ${order.items}</p>
-                            <p class="font-black text-red-600 mt-2">₹${order.totalAmount} | 💰 Your: ₹${Math.round(order.totalAmount * commission / 100)}</p>
-                        </div>
-                        <button onclick="deliverOrder('${orderId}')" class="w-full bg-green-600 text-white py-2 rounded-lg font-black text-xs">DELIVERED ✅</button>
-                    </div>`;
-                }
-
-                // DELIVERED ORDERS (status = delivered, assigned to current driver)
-                if(order.status === "delivered" && currentDriver && order.deliveryDriver === currentDriver.id) {
-                    deliveredCount++;
-                    totalEarnings += (order.totalAmount * commission / 100);
-                    deliveredList.innerHTML += `
-                    <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-green-600">
-                        <div>
-                            <h3 class="font-black text-sm">✅ ${order.customerName}</h3>
-                            <p class="text-xs text-gray-600 mt-1">📞 ${order.customerPhone}</p>
-                            <p class="text-xs text-gray-600 mt-1">📍 <strong>Delivered to:</strong> ${getHotelAddress(order.travelInfo) || 'N/A'}</p>
-                            <p class="text-xs text-gray-600 mt-1">📦 ${order.items}</p>
-                            <p class="font-black text-green-600 mt-2">₹${order.totalAmount} | 💰 You earned: ₹${Math.round(order.totalAmount * commission / 100)}</p>
-                        </div>
-                    </div>`;
-                }
-            });
-
-            document.getElementById('stat-ready').innerText = readyCount;
-            document.getElementById('stat-onway').innerText = onwayCount;
-            document.getElementById('stat-delivered').innerText = deliveredCount;
-            document.getElementById('stat-earnings').innerText = "₹" + Math.round(totalEarnings);
-        }
-
-        // LOAD DATA
         onValue(ref(db, 'drivers'), (snap) => {
-            driversData = snap.val() || {};
-            
-            // Auto-login if saved
-            const saved = localStorage.getItem('deliveryDriver');
-            if(saved) {
-                try {
-                    const driver = JSON.parse(saved);
-                    // Verify driver still exists
-                    if(driversData[driver.id]) {
-                        currentDriver = driver;
-                        document.getElementById('loginScreen').classList.add('hidden');
-                        document.getElementById('mainDashboard').classList.remove('hidden');
-                        document.getElementById('driverInfo').innerText = `👤 ${driver.name} (${driver.vehicle}) - Logged In`;
-                        renderOrders();
-                    } else {
-                        localStorage.removeItem('deliveryDriver');
-                    }
-                } catch(e) {
-                    console.log("Error loading saved driver");
+            let found = false;
+            snap.forEach(child => {
+                if(child.val().name === name) {
+                    driverId = child.key;
+                    driverName = name;
+                    localStorage.setItem('driver_id', driverId);
+                    localStorage.setItem('driver_name', driverName);
+                    document.getElementById('login-panel').classList.add('hidden');
+                    document.getElementById('driver-info').classList.remove('hidden');
+                    document.getElementById('logout-btn').classList.remove('hidden');
+                    document.getElementById('driver-name-display').textContent = driverName;
+                    loadOrders();
+                    found = true;
                 }
-            }
-        });
+            });
+            if(!found) alert("Driver not found");
+        }, { onlyOnce: true });
+    };
 
+    window.logout = () => {
+        localStorage.removeItem('driver_id');
+        localStorage.removeItem('driver_name');
+        location.reload();
+    };
+
+    window.updateStatus = (orderId, newStatus) => {
+        update(ref(db, `orders/${orderId}`), { status: newStatus, deliveryDriver: driverId, deliveryName: driverName });
+    };
+
+    function loadDriversList() {
+        onValue(ref(db, 'drivers'), (snap) => {
+            const list = document.getElementById('drivers-list');
+            list.innerHTML = '';
+            snap.forEach(child => {
+                const option = document.createElement('option');
+                option.value = child.val().name;
+                list.appendChild(option);
+            });
+        });
+    }
+
+    function loadOrders() {
         onValue(ref(db, 'orders'), (snap) => {
-            ordersData = snap.val() || {};
-            renderOrders();
-        });
+            const allOrders = snap.val() || {};
+            
+            const ready = Object.entries(allOrders).filter(([_, o]) => o.status === "ready").reverse();
+            const onway = Object.entries(allOrders).filter(([_, o]) => o.status === "on-way" && o.deliveryDriver === driverId).reverse();
+            const delivered = Object.entries(allOrders).filter(([_, o]) => o.status === "delivered" && o.deliveryDriver === driverId).reverse();
 
-        onValue(ref(db, 'settings/commission'), (snap) => {
-            commission = snap.val() || 10;
-            renderOrders();
+            document.getElementById('stat-ready').textContent = ready.length;
+            document.getElementById('stat-onway').textContent = onway.length;
+            document.getElementById('stat-delivered').textContent = delivered.length;
+
+            // Calculate earnings
+            let earnings = 0;
+            delivered.forEach(([_, o]) => {
+                earnings += (o.totalAmount * COMMISSION_RATE / 100);
+            });
+            document.getElementById('driver-earnings').textContent = '₹' + earnings.toFixed(0);
+
+            displayOrders('ready-orders', ready);
+            displayOrders('onway-orders', onway);
+            displayOrders('delivered-orders', delivered);
         });
 
         onValue(ref(db, 'hotels'), (snap) => {
             hotelsData = snap.val() || {};
-            renderOrders();
+            loadOrders(); // Reload to update with new hotel data
         });
-    </script>
+    }
+
+    function displayOrders(containerId, orders) {
+        const container = document.getElementById(containerId);
+        if(orders.length === 0) {
+            container.innerHTML = '<p class="text-center text-gray-500 py-8">No orders</p>';
+            return;
+        }
+
+        container.innerHTML = orders.map(([orderId, order]) => {
+            const commission = (order.totalAmount * COMMISSION_RATE / 100).toFixed(0);
+            const itemsList = typeof order.items === 'string' ? order.items : (Array.isArray(order.items) ? order.items.join(", ") : "");
+            return `
+            <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-green-600">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-sm font-black text-gray-400 uppercase">Order ID</p>
+                        <p class="text-lg font-black text-gray-800">#${orderId.substring(0, 8)}</p>
+                    </div>
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-black uppercase">${order.status}</span>
+                </div>
+
+                <div class="bg-yellow-50 p-4 rounded-lg mb-4 border-l-2 border-yellow-600">
+                    <p class="font-bold text-gray-800">${order.customerName}</p>
+                    <p class="text-sm text-gray-600">📱 <a href="tel:${order.customerPhone}" class="text-blue-600 hover:underline">${order.customerPhone}</a></p>
+                    <p class="text-sm text-gray-600">📍 <strong>Pickup From:</strong> ${order.pickupHotelAddress || 'Restaurant'}</p>
+                    <p class="text-sm text-green-600 font-semibold mt-1">🎯 <strong>Deliver to:</strong> ${getHotelAddress(order.travelInfo) || 'N/A'}</p>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                    <h4 class="font-bold text-gray-800 text-sm mb-2">📦 Items:</h4>
+                    <p class="text-sm text-gray-700">${itemsList}</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div class="bg-purple-50 p-3 rounded-lg text-center">
+                        <p class="text-xs text-gray-600">Total Amount</p>
+                        <p class="text-2xl font-black text-purple-600">₹${order.totalAmount}</p>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg text-center">
+                        <p class="text-xs text-gray-600">Your Commission</p>
+                        <p class="text-2xl font-black text-green-600">₹${commission}</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    ${order.status === 'ready' ? `
+                        <button onclick="updateStatus('${orderId}', 'on-way')" class="flex-1 bg-orange-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">Pickup Order</button>
+                    ` : order.status === 'on-way' ? `
+                        <button onclick="updateStatus('${orderId}', 'delivered')" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase active:scale-95">Mark Delivered</button>
+                    ` : `
+                        <span class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase text-center">✅ DELIVERED</span>
+                    `}
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    if(driverId) {
+        document.getElementById('login-panel').classList.add('hidden');
+        document.getElementById('driver-info').classList.remove('hidden');
+        document.getElementById('logout-btn').classList.remove('hidden');
+        document.getElementById('driver-name-display').textContent = driverName;
+        loadOrders();
+    } else {
+        document.getElementById('login-panel').classList.remove('hidden');
+        loadDriversList();
+    }
+</script>
 </body>
 </html>
