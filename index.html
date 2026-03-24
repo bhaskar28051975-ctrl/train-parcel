@@ -16,10 +16,35 @@
 
     <header class="bg-white p-5 shadow-sm sticky top-0 z-40 flex justify-between items-center border-b-4 border-red-600">
         <h1 class="text-xl font-black text-red-600 italic uppercase">🍔 FoodHub</h1>
-        <button onclick="location.reload()" class="text-[10px] font-bold bg-gray-100 px-3 py-1 rounded-full uppercase">Refresh</button>
+        <div class="flex gap-2">
+            <button onclick="shareOnWhatsApp()" class="text-sm font-bold bg-green-600 text-white px-4 py-2 rounded-full uppercase hover:bg-green-700 transition">📱 Share</button>
+            <button onclick="location.reload()" class="text-[10px] font-bold bg-gray-100 px-3 py-1 rounded-full uppercase">Refresh</button>
+        </div>
     </header>
 
     <div id="customer-list" class="p-4 space-y-6"></div>
+
+    <!-- WHATSAPP SHARE MODAL -->
+    <div id="whatsappModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <h2 class="text-lg font-black text-gray-800 mb-2">📱 Share FoodHub</h2>
+            <p class="text-xs text-gray-600 mb-4">Enter phone number to send app link via WhatsApp</p>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs font-black text-gray-700">Country Code:</label>
+                    <input id="countryCode" type="text" placeholder="+91" value="+91" class="w-full p-3 border-2 rounded-lg text-sm font-bold bg-gray-50">
+                </div>
+                <div>
+                    <label class="text-xs font-black text-gray-700">Phone Number:</label>
+                    <input id="phoneNumber" type="tel" placeholder="e.g. 9154095125" class="w-full p-3 border-2 rounded-lg text-sm font-bold" maxlength="10">
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="sendWhatsAppMessage()" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-black uppercase">📨 Send via WhatsApp</button>
+                    <button onclick="closeWhatsAppModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-black uppercase">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- CHECKOUT PANEL - ONLY SHOWS WHEN ITEM HAS QUANTITY -->
     <div id="checkout-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[3rem] shadow-2xl p-4 border-t z-30 max-h-[50vh] overflow-y-auto">
@@ -111,6 +136,47 @@
             cart = {};
             updateUI();
             renderMenu();
+        };
+
+        // WHATSAPP SHARING FUNCTIONS
+        window.shareOnWhatsApp = () => {
+            document.getElementById('whatsappModal').classList.remove('hidden');
+            document.getElementById('phoneNumber').focus();
+        };
+
+        window.closeWhatsAppModal = () => {
+            document.getElementById('whatsappModal').classList.add('hidden');
+            document.getElementById('phoneNumber').value = "";
+            document.getElementById('countryCode').value = "+91";
+        };
+
+        window.sendWhatsAppMessage = () => {
+            const countryCode = document.getElementById('countryCode').value.replace(/\D/g, '');
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            
+            if(!phoneNumber || phoneNumber.length < 10) {
+                alert("❌ Please enter valid phone number (10 digits)");
+                return;
+            }
+
+            // Combine country code and phone number
+            const fullNumber = countryCode + phoneNumber;
+            
+            // Get app URL
+            const appUrl = window.location.href.split('?')[0];
+            
+            // Message text
+            const message = `🍔 Order delicious food with FoodHub! 📱\n\n✅ Fast delivery\n✅ Fresh food\n✅ Best prices\n\nDownload now: ${appUrl}\n\n#FoodHub #FoodDelivery`;
+            
+            // WhatsApp API URL
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${fullNumber}&text=${encodeURIComponent(message)}`;
+            
+            // Open WhatsApp
+            window.open(whatsappUrl, '_blank');
+            
+            // Close modal
+            closeWhatsAppModal();
+            alert("✅ Opening WhatsApp!");
         };
 
         window.switchTab = (tab) => {
