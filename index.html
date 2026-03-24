@@ -94,13 +94,14 @@
         let selectedTab = 'train';
 
         // UPDATE QUANTITY FROM DROPDOWN
-        window.changeQty = (id, dish, price, newQty) => {
+        window.changeQty = (id, dish, price, newQty, hotelId) => {
             newQty = parseInt(newQty);
             if(newQty <= 0) {
                 delete cart[id];
             } else {
-                if(!cart[id]) cart[id] = { dish, price: parseInt(price), qty: 0 };
+                if(!cart[id]) cart[id] = { dish, price: parseInt(price), qty: 0, hotelId: hotelId };
                 cart[id].qty = newQty;
+                cart[id].hotelId = hotelId;
             }
             updateUI();
             renderMenu();
@@ -176,7 +177,7 @@
                                 </div>
 
                                 <!-- QUANTITY DROPDOWN - SELECT 0-10 -->
-                                <select onchange="changeQty('${mId}', '${m.dish}', '${m.price}', this.value)" class="px-3 py-2 border-2 border-red-600 rounded-lg font-black text-red-600 bg-white text-sm w-16 flex-shrink-0">
+                                <select onchange="changeQty('${mId}', '${m.dish}', '${m.price}', this.value, '${hotelId}')" class="px-3 py-2 border-2 border-red-600 rounded-lg font-black text-red-600 bg-white text-sm w-16 flex-shrink-0">
                                     <option value="0">0</option>
                                     <option value="1" ${currentQty === 1 ? 'selected' : ''}>1</option>
                                     <option value="2" ${currentQty === 2 ? 'selected' : ''}>2</option>
@@ -217,6 +218,16 @@
             if(!name || !phone || !address) return alert("❌ Please enter name, phone and pickup location!");
             if(Object.keys(cart).length === 0) return alert("❌ Cart is empty!");
             
+            // Get hotel address from cart
+            let pickupHotelAddress = "";
+            const firstItem = Object.values(cart)[0];
+            if(firstItem && firstItem.hotelId) {
+                const hotel = hotelData[firstItem.hotelId];
+                if(hotel) {
+                    pickupHotelAddress = hotel.address || hotel.name;
+                }
+            }
+            
             let travelInfo = "";
             if(selectedTab === 'train') {
                 const trainName = document.getElementById('trainName').value;
@@ -247,6 +258,7 @@
                 customerName: name,
                 customerPhone: phone,
                 customerAddress: address,
+                pickupHotelAddress: pickupHotelAddress,
                 travelInfo: travelInfo,
                 items: itemsList,
                 totalAmount: totalAmount,
